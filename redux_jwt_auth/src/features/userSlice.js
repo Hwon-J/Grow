@@ -9,7 +9,7 @@ const initialState = {
 }
 
 export const signUpUser = createAsyncThunk('signUpUser', async(body)=> {
-const res = await fetch("url주소", {
+const res = await fetch("http://localhost:5000", {
   method: "post",
   headers: {
     'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ return await res.json();
 })
 
 export const loginUser = createAsyncThunk('loginUser', async(body)=> {
-  const res = await fetch("url주소", {
+  const res = await fetch("http://localhost:5000", {
     method: "post",
     headers: {
       'Content-Type': 'application/json'

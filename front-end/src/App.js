@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import NavTop from './components/NavTop';
 import Footer from './components/Footer';
+import registerNumber from './pages/registerNumber';
 import './App.css';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           {/* NavTop과 Footer가 있는 라우트 */}
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/register" element={<registerNumber />} />
 
           {/* fallback 라우트: 모든 경로에 대한 처리 */}
           <Route path="*" element={<NotFound />} />

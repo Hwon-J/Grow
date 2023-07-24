@@ -11,7 +11,7 @@ function NavTop() {
           <Nav className="me-auto">
             <img height="50px" src={process.env.PUBLIC_URL +  `img/logo.png`} alt="error" />
             <Nav.Link href="/home" className="ml-3">Home</Nav.Link> 
-            <Nav.Link href="/About" className="ml-3">About</Nav.Link>
+            <Nav.Link href="/profile" className="ml-3">Profile</Nav.Link>
             <Nav.Link href="/Login" className="ml-3">Login</Nav.Link>
             <Nav.Link href="/SignUp" className="ml-3">SignUp</Nav.Link>
           </Nav>
