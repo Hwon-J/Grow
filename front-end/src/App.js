@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Home from './pages/Home';
-import About from './pages/About';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
@@ -18,7 +18,8 @@ const App = () => {
         <Route path="/" element={<Outlet />}>
           {/* NavTop과 Footer가 있는 라우트 */}
           <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
+
           {/* fallback 라우트: 모든 경로에 대한 처리 */}
           <Route path="*" element={<NotFound />} />
         </Route>
