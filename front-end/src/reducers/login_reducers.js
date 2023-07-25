@@ -1,11 +1,11 @@
 import {LOGIN_USER} from '../types/types';
 
 const initialState = {
-    id: 0,
-    name: "",
-    email: "",
-    accessToken: "",
-    refreshToken: "",
+    id: "",
+    pw: "",
+    // email: "",
+    // accessToken: "",
+    // refreshToken: "",
 };
 
 const loginUserReducer = (state=initialState, action) => {
