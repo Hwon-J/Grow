@@ -10,7 +10,7 @@ const Profile = () => {
   const [open, setOpen] = useState([]);
   useEffect(() => {
     waterPlanData();
-  })
+  }, [])
   const waterPlanData = async () => {
     try {
       const response = await axios.get('물준 axios주소');
@@ -28,7 +28,7 @@ const Profile = () => {
   
   useEffect(() => {
     plantData(); potData();
-  })
+  }, [])
   // 화분 데이터 받아와서 화분데이터 저장
   const potData = async () => {
     try {
