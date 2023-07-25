@@ -1,6 +1,29 @@
 const User = require("../models/user-model.js");
 const connection = require("../models/db-model.js");
 
+exports.idCheck = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const isExist = false;
+    // console.log(id);
+
+    // 데이터베이스에서 해당 아이디 존재하는지 체크
+    let query = "select id from `member` where id=?";
+    await connection.query(query, [id], (error, result) => {
+      if (error) {
+        throw error;
+      }
+      if (result.length > 0){
+        return res.status(401).json({ message: "이미 존재하는 아이디입니다"});
+      }
+      return res.status(200).json({ message: "사용할 수 있는 아이디입니다"});
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "서버 오류" });
+  }
+}
+
 exports.signup = async (req, res, next) => {
   try {
     const { id, pw, name, email, emailDomain } = req.body;
