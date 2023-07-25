@@ -31,18 +31,13 @@ const SignUp = () => {
     }
 
     let body = {
-      username,
-      email,
-      password,
+      id:username,
+      pw:password,
+      name:"김태형",
+      email:email,
+      emailDomain: "하이.com"
     };
-    dispatch(registerUser(body)).then((res) => {
-      if (res.payload.success) {
-        // 로그인 페이지로 리다이렉션
-        window.location.href = "/profile";
-      } else {
-        alert("회원가입에 실패했습니다.");
-      }
-    });
+    dispatch(registerUser(body))
   };
 
   return (

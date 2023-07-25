@@ -2,10 +2,12 @@ import {REGISTER_USER} from '../types/types';
 
 const initialState = {
   id: 0,
+  pw: "",
   name: "",
   email: "",
-  accessToken: "",
-  refreshToken: "",
+  emailDomain: ""
+  // accessToken: "",
+  // refreshToken: "",
 }
 
 const userReducer = (state=initialState, action) => {

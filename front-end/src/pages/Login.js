@@ -22,22 +22,11 @@ const Login = () => {
     e.preventDefault();
 
     let body = {
-      email,
-      password,
+      id:email,
+      pw:password,
     };
 
     dispatch(loginUserAction(body))
-      .then((res) => {
-        if (res.payload.success) {
-          // 로그인이 완료된 후 메인 페이지로 리다이렉션
-          window.location.href = "/";
-        } else {
-          setError("로그인에 실패했습니다.");
-        }
-      })
-      .catch((error) => {
-        setError("로그인에 실패했습니다.");
-      });
   };
 
   return (
