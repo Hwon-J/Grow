@@ -1,9 +1,9 @@
 import React from 'react'
 
-const registerNumber = () => {
+const RegisterNumber = () => {
   return (
     <div>registerNumber</div>
   )
 }
 
-export default registerNumber
+export default RegisterNumber
