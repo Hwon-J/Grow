@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const gpt = require("./call-gpt");
+require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: 30002 });
 
@@ -7,6 +8,12 @@ const wss = new WebSocket.Server({ port: 30002 });
 let clients = new Map();
 
 wss.on("connection", (ws, req) => {
+  // 부모님이 설정한 대화를 나누기 위한 프리셋 부분
+  // 대화를 나눈 횟수
+  let count = 0;
+  // 부모님 설정 대화를 꺼낼 랜덤 값. count가 이 값과 같아지면 부모님 질문을 끼워 넣음
+  let randomPoint = Math.floor(Math.random() * (process.env.RANDOM_MAX - process.env.RANDOM_MIN)) + process.env.RANDOM_MIN;
+
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
   // 만약 이미 해당 IP의 클라이언트가 있다면
@@ -31,20 +38,24 @@ wss.on("connection", (ws, req) => {
       `message from client[${ip}]: ${msgJson.message}, ${msgJson.number}`
     );
 
+    // 1. gpt에게 답변을 받는다.
+    // 2. count를 1증가 시킨다.
+    // 3. gpt의 답변 맨 마지막에 ?가 들어 있으면 count를 다시 1 감소 시킨다.
+    // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위 
     (async () => {
       const result = await gpt(msgJson.message);
-
+      
+      console.log(`gpt answer: ${result}`);
+      // ws.send(`gpt answer: ${result}`);
       // IP가 '특정 IP'인 클라이언트들에게 메시지를 전송
       if (clients.has(ip)) {
         clients.get(ip).forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
+            client.send(`gpt answer: ${result}`);
           }
         });
       }
 
-      console.log(`gpt answer: ${result}`);
-      ws.send(`gpt answer: ${result}`);
     })();
   });
 
