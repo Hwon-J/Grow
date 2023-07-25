@@ -13,9 +13,10 @@
   - feature
     - 개별 기능 구현 브랜치
     - 기능 개발 완료 시 삭제
-    - 네이밍 규칙
-      - feature/기능
-      - 예) feature/login
+  - 네이밍 규칙
+    - 마지막에 본인 이니셜 붙이기
+    - feature/기능/이니셜
+    - 예) feature/login/HC
 
 # Git Commit Convention
 
