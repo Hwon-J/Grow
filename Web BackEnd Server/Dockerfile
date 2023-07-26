@@ -1,6 +1,6 @@
 FROM node:alpine
-WORKDIR /app
-ADD . /app
+WORKDIR /server
+ADD . /server
 RUN npm install
-EXPOSE 30002
+EXPOSE 30001
 CMD npm start
