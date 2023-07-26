@@ -106,3 +106,11 @@ footer;
   - 한 줄은 최대 79자까지
   - 클래스 명은 카멜케이스(CamelCase)로 작성합니다.
   - 함수명은 소문자로 구성하되 필요하면 밑줄로 나눕니다.
+
+# port
+- ChatGPT server : 30002
+- backend server : 30001
+- DB server : 3306
+- display : 3000
+- front server : 3001
+
