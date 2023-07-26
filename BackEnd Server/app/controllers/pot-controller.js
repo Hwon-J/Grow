@@ -1,5 +1,5 @@
 const Pot = require("../models/pot-model.js");
-let connection = require("../models/db-model.js");
+const connection = require("../config/connection.js");
 
 exports.checkSerial = async (req, res, next) => {
   try {

@@ -1,5 +1,5 @@
 const User = require("../models/user-model.js");
-const connection = require("../models/db-model.js");
+const connection = require("../config/connection.js");
 
 exports.idCheck = async (req, res, next) => {
   try {
@@ -51,6 +51,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res) => {
+  console.log(`userController login called. id: ${req.body.id}, pw: ${req.body.pw}`);
   try {
     const { id, pw } = req.body;
     let user = null;
