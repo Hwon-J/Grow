@@ -1,9 +1,9 @@
 //김태형
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../actions/user_action";
+
 import { TextField, Button, Grid } from "@mui/material";
-import {registerUserAction} from "../redux/store"
+import { registerUserAction } from "../reducers/userSlice";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ const SignUp = () => {
       email:email,
       emailDomain: "하이.com"
     };
-    dispatch(registerUser(body))
+    dispatch(registerUserAction(body))
   };
 
   return (
