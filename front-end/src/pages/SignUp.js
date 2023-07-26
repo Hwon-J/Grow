@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../actions/user_action";
 import { TextField, Button, Grid } from "@mui/material";
+import {registerUserAction} from "../redux/store"
+
 const SignUp = () => {
   const dispatch = useDispatch();
 
@@ -30,7 +32,7 @@ const SignUp = () => {
     if (password !== confirmPassword) {
       return alert("입력한 비밀번호가 다릅니다!");
     }
-
+    
     let body = {
       id:username,
       pw:password,
