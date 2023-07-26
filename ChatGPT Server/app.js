@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
-const connection = require("./util/db.js");
+const dbConnection = require("./util/db.js");
 const deleteEmoji = require("./util/delete-emoji");
 require("dotenv").config();
 
