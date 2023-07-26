@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@mui/material';
 import { useDispatch } from "react-redux";
-import { loginUserAction } from "../actions/user_action";
-import {loginUserAction} from "../redux/store"
+import { loginUserAction } from "../reducers/userSlice";
+
 const Login = () => {
   const dispatch = useDispatch();
 
