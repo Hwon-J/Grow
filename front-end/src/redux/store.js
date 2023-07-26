@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { userSlice } from '../reducers/userSlice'; // userSlice.js 파일 경로에 맞게 수정
+import userSlice, { reducer as currentUser } from '../reducers/userSlice'; // userSlice.js에서 reducer를 명시적으로 가져옴
 
 export default configureStore({
   reducer: {
-    currentUser: userSlice,
+    currentUser: currentUser,
   }
 });
