@@ -1,0 +1,30 @@
+.home-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .home {
+    flex: 1;
+    padding: 20px;
+
+    h1 {
+      font-size: 24px;
+    }
+
+    h4 {
+      font-size: 16px;
+    }
+  }
+
+.image-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+}
