@@ -28,17 +28,24 @@ function SerialRegister() {
         console.log(event.target.number.value)
         const serial_number = event.target.number.value
         // navigate('/conversation')
-        try {
-          const response = axios.get(`http://192.168.100.37:3000/api/pot/${serial_number}`);
+        // try {
+        //   const response = axios.get(`http://localhost:3000/api/pot/${serial_number}`,{ withCredentials: false  });
     
-          // 서버에서 오는 응답에 따라 추가적인 처리를 할 수 있습니다.
-          // 예: 회원가입 성공 메시지 띄우기 등
-          console.log(response)
-          console.log('응답 데이터:', response);
-        } catch (error) {
-          // 요청 실패 또는 서버에서 에러 응답이 온 경우 처리
-          console.error('에러 발생:', error);
-        }
+        //   // 서버에서 오는 응답에 따라 추가적인 처리를 할 수 있습니다.
+        //   // 예: 회원가입 성공 메시지 띄우기 등
+        //   console.log(response)
+        //   console.log('응답 데이터:', response);
+        // } catch (error) {
+        //   // 요청 실패 또는 서버에서 에러 응답이 온 경우 처리
+        //   console.error('에러 발생:', error);
+        // }
+        axios.get(`http://localhost:3000/api/pot/${serial_number}`, { withCredentials: false })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }}>
 
         <input placeholder="SerialNumber" name="number" />
