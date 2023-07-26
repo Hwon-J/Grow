@@ -1,19 +1,20 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Container, Nav } from 'react-bootstrap';
+import './NavTop.scss';
 
 function NavTop() {
   return (
     <>
       <Navbar className='navbarColor' data-bs-theme="dark">
-        <Container className="d-flex justify-content-between align-items-center">
-          <Nav className="me-auto">
-            <img height="50px" src={process.env.PUBLIC_URL +  `img/logo.png`} alt="error" />
-            <Nav.Link href="/home" className="ml-3">Home</Nav.Link> 
-            <Nav.Link href="/profile" className="ml-3">Profile</Nav.Link>
-            <Nav.Link href="/Login" className="ml-3">Login</Nav.Link>
-            <Nav.Link href="/SignUp" className="ml-3">SignUp</Nav.Link>
+      <Container className="navbarContent">
+          <Nav className="navLinks">
+            <img className="logo" src={process.env.PUBLIC_URL + 'img/logo.png'} alt="error" />
+          </Nav>
+          <Nav className="navLinks right"> {/* right 클래스 추가 */}
+            <Nav.Link href="/home">Home</Nav.Link> 
+            <Nav.Link href="/profile">Profile</Nav.Link>
+            <Nav.Link href="/Login">Login</Nav.Link>
+            <Nav.Link href="/SignUp">SignUp</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
