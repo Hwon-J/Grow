@@ -2,7 +2,6 @@
 const express = require("express")
 const cors = require("cors");
 const app = express();
-
 require("dotenv").config();
 
 const bodyParser = require("body-parser");
@@ -19,21 +18,9 @@ app.use('/api/pot', potRoutes);
 // const PORT = process.env.PORT || 3000;
 const PORT = process.env.PORT;
 
-// 클라이언트 도메인 주소를 지정하여 CORS 허용
-// const allowedOrigins = ['192.168.100.38'];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (allowedOrigins.includes(origin) || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
 
-// app.use(cors(corsOptions));
 app.use( function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3001/");
+    res.header("Access-Control-Allow-Origin", process.env.ALLOWED_IP + ":" + process.env.CLIENT_PORT);
     // res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Credentials", "true");

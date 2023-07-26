@@ -2,5 +2,5 @@ FROM node:alpine
 WORKDIR /app
 ADD . /app
 RUN npm install
-EXPOSE 30002
+EXPOSE 3000
 CMD npm start
