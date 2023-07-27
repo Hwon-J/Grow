@@ -4,14 +4,14 @@ require("dotenv").config();
 
 async function callGpt(user_input) {
   const configuration = new Configuration({
-    apiKey: process.env.API_KEY,
+    apiKey: API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 
   // const history = [];
 
   // const user_input = readlineSync.question("Your input: ");
-  console.log(` ${user_input[user_input.length - 1]}`);
+  // console.log(` ${user_input[user_input.length - 1]}`);
 
   // const messages = [];
   // messages.push({
