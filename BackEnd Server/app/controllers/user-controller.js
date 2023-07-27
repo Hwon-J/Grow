@@ -24,6 +24,14 @@ exports.idCheck = async (req, res, next) => {
   }
 }
 
+/**
+ * 아이디, 비밀번호, 이름, 인증용 아이디, 인증용 아이디 도메인을 받아 회원가입 절차를 진행하는 함수.
+ * 먼저 아이디 중복을 확인 한 후, 회원 가입 절차 진행
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 exports.signup = async (req, res, next) => {
   try {
     const { id, pw, name, email, emailDomain } = req.body;
