@@ -6,7 +6,7 @@ body {
   }
   
   footer {
-    position: sticky;
+    /* position: fixed; */
     bottom: 0;
     width: 100%;
     background-color: #f0f0f0;
@@ -15,7 +15,7 @@ body {
   }
   .navbarColor {
     font-size: 30px;
-    background-color: #eda8a8;
+    background-color: #5ab25b;
     color: black;
     margin-bottom: 30px;
   }

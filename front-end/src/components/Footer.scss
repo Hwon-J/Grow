@@ -1,0 +1,22 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #9e9999;
+    padding: 20px;
+    text-align: center;
+
+    p {
+        margin: 0; // 단락 태그의 기본 마진 제거
+      }
+      
+      a {
+        text-decoration: none; // 링크 밑줄 제거
+        color: inherit; // 부모 요소의 글씨색 상속
+      }
+    
+      address {
+        font-style: normal; // address 태그 기울임 효과 제거
+      }
+  }
