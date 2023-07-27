@@ -4,7 +4,7 @@ require("dotenv").config();
 
 async function callGpt(user_input) {
   const configuration = new Configuration({
-    apiKey: API_KEY,
+    apiKey: process.env.API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 
