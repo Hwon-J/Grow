@@ -42,14 +42,11 @@ const userSlice  = createSlice({
     name: 'user',
     initialState: {
         id: "",
-        pw: "",
         name: "",
         email: "",
         email_domain: "",
-        register_date: "",
-        salt: "",
         token: "",
-        status: "idle", // 상태 초기값 추가
+        status: "", // 상태 초기값 추가
         error: null, // 에러 초기값 추가
         isAuth: false, // 인증 상태 초기값 추가
     },
@@ -68,7 +65,6 @@ const userSlice  = createSlice({
         builder.addCase(registerUserAction.fulfilled, (state, action) => {
         state.status = "success";
         state.isAuth = true;
-        state.user = action.payload;
         });
         //registerUserAction이 실패했을때 상태값 바꿔주기
         // 에러메세지 변경
@@ -85,7 +81,7 @@ const userSlice  = createSlice({
         builder.addCase(loginUserAction.fulfilled, (state, action) => {
         state.status = "success";
         state.isAuth = true;
-        state.user = action.payload;
+        state.currentUser = action.payload;
         });
         builder.addCase(loginUserAction.rejected, (state, action) => {
         state.status = "failed";
