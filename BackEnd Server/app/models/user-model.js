@@ -1,7 +1,7 @@
 // const sql = require("./db-model.js")
 
 // 생성자
-const User = function(user){
+function User(user){
     this.id = user.id;
     this.pw = user.pw;
     this.name = user.name;
