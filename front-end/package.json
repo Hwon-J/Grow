@@ -16,7 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.8.6",
     "axios": "^0.21.0",
-    "bootstrap": "^5.3.0",
+    "bootstrap": "^5.3.1",
     "date-fns": "^2.30.0",
     "http-proxy-middleware": "^1.0.6",
     "moment": "^2.29.4",
@@ -58,6 +58,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://192.168.100.38:3000"
+  }
 }

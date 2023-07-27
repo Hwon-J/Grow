@@ -3,16 +3,16 @@ import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@mui/material';
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 const Login = () => {
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value);
+  const onChangeId = (e) => {
+    setId(e.target.value);
   };
   
   const onChangePassword = (e) => {
@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
 
     let body = {
-      id:email,
+      id:id,
       pw:password,
     };
 
@@ -31,44 +31,51 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Grid
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-          style={{ height: "100vh" }}
-        >
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="이메일"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              value={email}
-              onChange={onChangeEmail}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="비밀번호"
-              fullWidth
-              type="password"
-              variant="outlined"
-              margin="normal"
-              value={password}
-              onChange={onChangePassword}
-            />
-          </Grid>
+    
+    <div className='containerbox'>
+      <div className="flexbox-left">
 
-          <Grid item xs={12} sm={6} md={4}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              로그인
-            </Button>
+      </div>
+      <div className="flexbox-right">
+      <h2>로 그 인</h2>
+        <form onSubmit={handleSubmit}>
+          <Grid
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+
+          >
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="ID"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                value={id}
+                onChange={onChangeId}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="비밀번호"
+                fullWidth
+                type="password"
+                variant="outlined"
+                margin="normal"
+                value={password}
+                onChange={onChangePassword}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                로그인
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </form>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };
