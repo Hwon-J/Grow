@@ -4,7 +4,7 @@ const gpt = require("./util/call-gpt");
 const deleteEmoji = require("./util/delete-emoji");
 require("dotenv").config();
 
-const wss = new WebSocket.Server({ port: process.env.PORT });
+const wss = new WebSocket.Server({ port: PORT });
 
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
@@ -16,8 +16,8 @@ wss.on("connection", (ws, req) => {
   // 부모님 설정 대화를 꺼낼 랜덤 값. count가 이 값과 같아지면 부모님 질문을 끼워 넣음
   let randomPoint =
     Math.floor(
-      Math.random() * (process.env.RANDOM_MAX - process.env.RANDOM_MIN)
-    ) + process.env.RANDOM_MIN;
+      Math.random() * (RANDOM_MAX - RANDOM_MIN)
+    ) + RANDOM_MIN;
 
   // 현재까지 해당 ip에서 나눈 대화기록
   const history = [];
