@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { TextField, Button, Grid } from "@mui/material";
 import { registerUserAction } from "../reducers/userSlice";
-
+import "./signup.css"
 const SignUp = () => {
   const dispatch = useDispatch();
 
@@ -44,63 +44,73 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Grid
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-          style={{ height: "100vh" }}
-        >
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="이름"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              value={username}
-              onChange={onChangeName}
-            />
+<div className="bgimg">
+    <div className="containerbox ">
+      <div className="flexbox-left">
+       
+      </div>
+      <div className="flexbox-right container">
+        <h2>회 원 가 입</h2>
+        <form onSubmit={handleSubmit}>
+          <Grid
+            className="input-field"
+   
+            justifyContent="center"
+            alignItems="center"
+            
+          >
+            
+            <Grid>
+              <TextField
+                label="이름"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                value={username}
+                onChange={onChangeName}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                label="이메일"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                value={email}
+                onChange={onChangeEmail}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                label="비밀번호"
+                fullWidth
+                type="password"
+                variant="outlined"
+                margin="normal"
+                value={password}
+                onChange={onChangePassword}
+              />
+            </Grid>
+            <Grid >
+              <TextField
+                label="비밀번호"
+                fullWidth
+                type="password"
+                variant="outlined"
+                margin="normal"
+                value={confirmPassword}
+                onChange={onChangeConfirmPassword}
+              />
+            </Grid>
+            <Grid>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                회원가입
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="이메일"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              value={email}
-              onChange={onChangeEmail}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="비밀번호"
-              fullWidth
-              type="password"
-              variant="outlined"
-              margin="normal"
-              value={password}
-              onChange={onChangePassword}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="비밀번호"
-              fullWidth
-              type="password"
-              variant="outlined"
-              margin="normal"
-              value={confirmPassword}
-              onChange={onChangeConfirmPassword}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              회원가입
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </div>
+    </div>
     </div>
   );
 };
