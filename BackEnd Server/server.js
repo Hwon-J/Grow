@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
@@ -19,9 +19,9 @@ app.use('/api/pot', potRoutes);
 const PORT = process.env.PORT;
 
 
-app.use( function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", process.env.ALLOWED_IP + ":" + process.env.CLIENT_PORT);
-    // res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Credentials", "true");
         // next();
