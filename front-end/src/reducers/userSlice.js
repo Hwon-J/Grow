@@ -81,7 +81,12 @@ const userSlice  = createSlice({
         builder.addCase(loginUserAction.fulfilled, (state, action) => {
         state.status = "success";
         state.isAuth = true;
-        state.currentUser = action.payload;
+        state.token = action.payload.token; // 응답 데이터에서 JWT 토큰을 저장합니다.
+        // 필요한 경우 응답으로부터 사용자 데이터를 저장할 수도 있습니다.
+        state.id = action.payload.id;
+        state.name = action.payload.name;
+        state.email = action.payload.email;
+        state.email_domain = action.payload.email_domain;
         });
         builder.addCase(loginUserAction.rejected, (state, action) => {
         state.status = "failed";

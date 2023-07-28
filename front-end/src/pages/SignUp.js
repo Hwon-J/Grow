@@ -1,18 +1,19 @@
 //김태형
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
 import { TextField, Button, Grid } from "@mui/material";
 import { registerUserAction } from "../reducers/userSlice";
 import "./signup.css"
+
 const SignUp = () => {
+  // usdDispatch: dispatch를 사용하겠다 선언
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  // username, email, password, confirmPassword 를 비동기로 저장하기 위해 설정
   const onChangeName = (e) => {
     setUsername(e.target.value);
   };
@@ -26,6 +27,7 @@ const SignUp = () => {
     setConfirmPassword(e.target.value);
   };
 
+  //회원가입시
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -42,6 +44,7 @@ const SignUp = () => {
     };
     dispatch(registerUserAction(body))
   };
+  // registerUserAction을 부르고 body변수를 props로 전달
 
   return (
 <div className="bgimg">
