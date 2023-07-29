@@ -20,6 +20,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Outlet />}>
             {/* NavTop과 Footer가 있는 라우트 */}
+            <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/register" element={<RegisterNumber />} />
