@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
 import 'bootstrap/dist/css/bootstrap.min.css';
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // dispatch 사용할 예정
 
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -22,12 +22,12 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let body = {
+    let body = { // 해당 폼으로 dispatch전달할 예정
       id:id,
       pw:password,
     };
 
-    dispatch(loginUserAction(body))
+    dispatch(loginUserAction(body)) //loginUserAction액션에 body전달  'useSlice확인'
   };
 
   return (
