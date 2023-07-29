@@ -4,7 +4,8 @@ import PlantCard from '../components/plantCard';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import NavTop from '../components/NavTop';
+import Footer from '../components/Footer';
 
 // 물 데이터 서버 켜졌을 때 자동으로 받아보는 코드
 const Profile = () => {
@@ -26,6 +27,7 @@ const Profile = () => {
   }, [])
 
   const waterPlanData = async () => {
+    console.log(currentUser)
     try {
       const response = await axios.get('물준 axios주소', {
         headers: {
@@ -88,6 +90,7 @@ const Profile = () => {
 
   return (
     <React.Fragment>
+      <NavTop/>
       <div>
         {/* authToken이 있을 때 */}
         {authToken ? (
@@ -109,6 +112,7 @@ const Profile = () => {
           <h1>로그인 후 사용 해 주시오!</h1>
           </div>}
       </div>
+      <Footer/>
     </React.Fragment>
   );
 };

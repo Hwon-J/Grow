@@ -31,18 +31,18 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword) { // 비밀번호 다르면 실패
       return alert("입력한 비밀번호가 다릅니다!");
     }
     
-    let body = {
+    let body = {  // 해당 폼으로 전달할 예정
       id:username,
       pw:password,
       name:"김태형",
       email:email,
       emailDomain: "하이.com"
     };
-    dispatch(registerUserAction(body))
+    dispatch(registerUserAction(body)) // registerUserAction에 body폼으로 전달  'useSlice확인'
   };
   // registerUserAction을 부르고 body변수를 props로 전달
 

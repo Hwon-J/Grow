@@ -25,7 +25,9 @@ export const registerUserAction = createAsyncThunk(
 export const loginUserAction  = createAsyncThunk(
 "user/login",
 async (loginData) => {
+    console.log('로그인요청'+ loginData)
     console.log(loginData)
+    
     try {
     const response = await axios.post(`${API_URL}/api/user/login`, loginData);
     return response.data;
@@ -50,7 +52,20 @@ const userSlice  = createSlice({
         error: null, // 에러 초기값 추가
         isAuth: false, // 인증 상태 초기값 추가
     },
-    reducers: {},
+    reducers: {
+      logoutUser: (state) => { // 로그아웃 reducer의 logoutUser액션이 불려졌을때 초기값으로 만들어 주는 코드
+        return {
+          id: '',
+          name: '',
+          email: '',
+          email_domain: '',
+          token: '',
+          status: '',
+          error: null,
+          isAuth: false,
+        };
+      },
+    },
     // 동기적으로 사용할 action들을 모아놓는 reducers
 
     extraReducers: (builder) => {
@@ -95,5 +110,6 @@ const userSlice  = createSlice({
     },
 });
 
-export const { reducer } = userSlice;
+export const { reducer, actions } = userSlice;
+export const { logoutUser } = actions;  // 다른 component에서 logoutUser를 사용하기 위해서 export
 export default userSlice;
