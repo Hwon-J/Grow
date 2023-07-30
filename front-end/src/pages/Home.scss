@@ -1,28 +1,31 @@
 .home_container {
-  /* Set the background image */
   background-image: url(../assets/bg_img1.png);
-  background-size: fixed; // Adjust the background-size as per your requirement
-  background-repeat: no-repeat; // Prevent the background image from repeating
-  background-position: center center; // 이미지를 가운데로 정렬
+  background-size: contain; /* 이미지를 비율을 유지하면서 요소에 꽉 차도록 설정 */
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 80vh;
+  min-width: 80vh;
 
-  /* Add other styles for the container */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 
   .home_title {
+    position: absolute;
+    left: 20%;
     flex: 1;
     padding: 20px;
 
     h1 {
-      font-size: 24px;
-      color: #ce8b8b; // Change the color of the h1 element if needed
+      font-size: 50px;
+      font-weight: bold;
+      color: #000000;
     }
 
     h4 {
-      font-size: 16px;
-      color: #a51313; // Change the color of the h4 element if needed
+      font-size: 20px;
+      color: #000000;
     }
   }
 }
