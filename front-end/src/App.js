@@ -5,7 +5,8 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
-
+import NavTop from './components/NavTop';
+import Footer from './components/Footer';
 import RegisterNumber from './pages/RegisterNumber';
 import PlantDiary from './pages/PlantDiary';
 import PlantSpecies from './pages/PlantSpecies';
@@ -17,12 +18,11 @@ const App = () => {
   return (
     <React.Fragment>
         <div class="`navbarColor">
-
+        <NavTop />
         <Routes>
           <Route path="/" element={<Outlet />}>
             {/* NavTop과 Footer가 있는 라우트 */}
             <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/register" element={<RegisterNumber />} />
             <Route path="/diary" element={<PlantDiary />} />
@@ -37,7 +37,7 @@ const App = () => {
 
           {/* <Route path="*" element={<NotFound />} /> */}
 
-        {/* <Footer/> */}
+        <Footer/>
       </div>
     </React.Fragment>
   );
