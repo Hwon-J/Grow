@@ -2,3 +2,10 @@
     margin-right: 100px;
     margin-bottom: 50px;
 }
+
+.registerbtn {
+    background: transparent;
+    border: none;
+    padding: 0px;
+    margin-left: 5px;
+}
