@@ -30,8 +30,8 @@ const RegisterNumber = () => {
 
     // /plantinfo 페이지로 데이터(state)와 함께 이동
     navigate('/plantinfo', { state : data }); 
-
   };
+  
   return (
     <>
       <NavTop />
@@ -45,7 +45,9 @@ const RegisterNumber = () => {
             <TbLeaf/>  <input onChange={onChangeNickname}/><hr/>
             <p>시리얼 넘버 등록</p>
             <CiLock /> <input onChange={onChangeSerialNum} />
-            <MdSend onClick={handleSerial} />
+            <button className="registerbtn" type="submit" >
+              <MdSend onClick={handleSerial} />
+            </button>
           </form>
           
         </div>
