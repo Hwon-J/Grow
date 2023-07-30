@@ -55,7 +55,7 @@ function NavTop() {
             </div>
             <ul className={`nav-list ${isNavOpen ? 'open' : ''}`}>
               <li>
-                <Link to="/home">Home</Link>
+                <Link to="/">Home</Link>
               </li>
               <li>
                 <Link to="/profile">Profile</Link>

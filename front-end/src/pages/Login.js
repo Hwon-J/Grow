@@ -1,9 +1,10 @@
 // 김태형
 import React, { useState } from 'react';
-import { TextField, Button, Grid } from '@mui/material';
+import { TextField, Button, Grid, Container } from '@mui/material';
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import './Login.scss';
 const Login = () => {
   const dispatch = useDispatch(); // dispatch 사용할 예정
 
@@ -31,21 +32,19 @@ const Login = () => {
   };
 
   return (
-    
-    <div className='containerbox'>
+    <Container maxWidth="md">
+      <div className="container_box ">
       <div className="flexbox-left">
-
       </div>
       <div className="flexbox-right">
-      <h2>로 그 인</h2>
+      <h2>LOG IN</h2>
         <form onSubmit={handleSubmit}>
           <Grid
             spacing={2}
             justifyContent="center"
             alignItems="center"
-
           >
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12}>
               <TextField
                 label="ID"
                 fullWidth
@@ -55,7 +54,7 @@ const Login = () => {
                 onChange={onChangeId}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12}>
               <TextField
                 label="비밀번호"
                 fullWidth
@@ -66,17 +65,19 @@ const Login = () => {
                 onChange={onChangePassword}
               />
             </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
+            <p style={{ marginTop: "4px" }}>Forgot password?</p>
+            <Grid item xs={12}>
+              {/* <Button type="submit" variant="contained" color="secondary" fullWidth>
                 로그인
-              </Button>
+              </Button> */}
+              <button type="submit" variant="contained" className="btn-hover color-5">Login</button>
             </Grid>
           </Grid>
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       </div>
-    </div>
+      </div>
+    </Container>
   );
 };
 
