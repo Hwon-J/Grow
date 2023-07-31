@@ -4,13 +4,14 @@
 import './App.css';
 import backgroundImage from './assets/background.PNG';
 import flowercharacter from './assets/flowercharacter.png';
-import potcharacter from './assets/potcharacter.png';
+// import potcharacter from './assets/potcharacter.png';
 import logo from './assets/logo.png';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { createStore } from 'redux';
 import { Provider, useSelector, useDispatch} from 'react-redux';
 import WebSocketComponent from './Websocket';
+import { useEffect } from 'react';
 
 function serial_reducer(current_serial, action) {
   if (current_serial === undefined) {
@@ -18,21 +19,28 @@ function serial_reducer(current_serial, action) {
       serial_number : false
     }
   }
-  else {
-    if (action.type === 'SUCCESS') {
+  
+  if (action.type === 'SUCCESS') {
 
-      const new_serial = {...current_serial}
-      new_serial.serial_number = true
-      console.log(new_serial)
-      return new_serial
-    }
+    const new_serial = {...current_serial}
+    new_serial.serial_number = true
+    console.log(new_serial)
+    return new_serial
   }
-  console.log('serial', current_serial)
+  
+  // console.log('serial', current_serial)
 }
 const store = createStore(serial_reducer)
 
 
 function Conversation() {
+  const state_serial_number = useSelector((state) => 
+     state.serial_number
+  )
+  useEffect(() => {
+    console.log(state_serial_number); // 처음 렌더링 시에만 출력
+  }, [])
+
   const character_style = {
     height : '300px'
 
@@ -42,6 +50,7 @@ function Conversation() {
   return (
     <div>
       <img src={flowercharacter} alt="cancel" style={character_style} />
+      <h1>{state_serial_number}</h1>
       <WebSocketComponent />
     </div>
   )
@@ -50,12 +59,13 @@ function Conversation() {
 function SerialRegister() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  function f(state) {
-    return state
-  }
-  const state_serial_number = useSelector(f)
+  
+  const state_serial_number = useSelector((state) => {
+    return state.serial_number
+  })
   return (
     <div>
+      
       <h3>해당 기기의 시리얼 넘버를 입력해주세요.</h3>
       <form onSubmit={(event)=>{
         event.preventDefault()
@@ -77,10 +87,20 @@ function SerialRegister() {
         // 현재는 한 컴퓨너 안에서 작업에서 로컬로 돼있지만 나중에는 위 url을 외부 url로 바꿔줘야 함.
         .then(response => {
           console.log(response)
-          alert('등록 성공! 대화 페이지로 이동합니다.')
+          const status = response.status
+          console.log(status)
+          if ( status === 200) {
+            alert('등록 성공! 대화 페이지로 이동합니다.')
           navigate('/conversation')
           dispatch({type : 'SUCCESS'})
           console.log(state_serial_number)
+          // console.log(state)
+          
+          }
+          else if (status === 202) {
+            alert('시리얼 번호를 다시 확인해주세요.')
+          }
+          
         })
         .catch(err => {
           console.log(err)
