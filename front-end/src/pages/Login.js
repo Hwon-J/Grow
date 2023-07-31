@@ -47,7 +47,6 @@ const Login = () => {
       <h2>LOG IN</h2>
         <form onSubmit={handleSubmit}>
           <Grid
-            spacing={2}
             justifyContent="center"
             alignItems="center"
           >
@@ -72,11 +71,12 @@ const Login = () => {
                 onChange={onChangePassword}
               />
             </Grid>
-            <p style={{ marginTop: "4px" }}>Forgot password?</p>
+            
             <Grid item xs={12}>
               {/* <Button type="submit" variant="contained" color="secondary" fullWidth>
                 로그인
               </Button> */}
+              <p>Forgot password?</p>
               <button type="submit" variant="contained" className="btn-hover color-5">Login</button>
             </Grid>
           </Grid>
