@@ -15,7 +15,7 @@ import './App.css';
 const App = () => {
   return (
     <React.Fragment>
-        <div class="`navbarColor">
+        <div>
         <Routes>
           <Route path="/" element={<Outlet />}>
             {/* NavTop과 Footer가 있는 라우트 */}

@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <>
       <NavTop/>
-      <div className="home_container" maxWidth="lg">
+      <div className="home_container">
         <div className="home_title">
           <h1>Find friend for your kids</h1>
           <h4>This service makes plant friends for children</h4>
