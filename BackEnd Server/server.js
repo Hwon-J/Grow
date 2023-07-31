@@ -49,6 +49,9 @@ app.use("/api/user", userRoutes);
 const potRoutes = require("./app/routes/pot-router");
 app.use("/api/pot", potRoutes);
 
+const sensorRoutes = require("./app/routes/sensor-router");
+app.use("/api/sensor", sensorRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
