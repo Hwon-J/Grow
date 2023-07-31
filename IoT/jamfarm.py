@@ -6,9 +6,10 @@ import sys
 import RPi.GPIO as GPIO
 import time
 import threading
-import asyncio
+import asyncio 
 import websockets
 import json
+
 # 초음파 센서 세팅
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -22,9 +23,9 @@ RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 uw = 0
-exit_flag = False  # 종료 여부를 확인하기 위한 플래그
-thread=None
-
+#exit_flag = False  # 종료 여부를 확인하기 위한 플래그
+exit_flag=threading.Event()
+send_msg=""
 serial_num=1111
 
 class Stack:
@@ -58,18 +59,30 @@ class Stack:
 stack=Stack()
 
 def stream_generator(stream):
-    while not exit_flag:
+    while True:
         data = stream.read(CHUNK)
         yield data
 
+def send_and_receive_message(send_msg):
+    uri = "ws://i9c103.p.ssafy.io:30002/"
+    websocket=websockets.connect(uri)
+    
+    print("msg sending")
+    websocket.send(json.dumps({"role":"handshake", "number":1111}))
+    data = {"role": "gpt","message": send_msg, "number": 1111}
+    websocket.send(json.dumps(data))
+
+    # Receive and immediately print the response
+    response = websocket.recv()
+    print(f"Received: {response}")
+
 def listen_print_loop(responses):
-    global uw, stack, exit_flag
+    send_msg=""
     stack.push("test string")
     num_chars_printed = 0
     for response in responses:
-        if exit_flag:
-            break
-
+        #print(stack.pop())
+                    
         if not response.results:
             continue
 
@@ -83,7 +96,22 @@ def listen_print_loop(responses):
 
         if not result.is_final:
             stack.push(transcript + overwrite_chars)
-
+            # stt와 sense모두 돌아가야함
+            # sense가 가까워 지는경우 전역에 저장해 준뒤 보내줌
+            # sense와의 연동
+            # exit_flag true인 경우 
+            # string으로 보내주기
+            # stack clear
+            if exit_flag.is_set():
+                send_msg=stack.peek()
+                print(send_msg)
+                
+        else:
+            print("send message is ",send_msg,end=" ")
+            print()
+            send_msg=""
+            stack.clear()
+                
 def stt():
     global uw, exit_flag
     client = google.cloud.speech.SpeechClient()
@@ -128,9 +156,8 @@ def stt():
 
     listen_print_loop(responses)
 
-
 def sense():
-    global uw, exit_flag,thread
+    global uw, exit_flag
     while True:
         GPIO.output(17, False)
         time.sleep(0.5)
@@ -148,54 +175,45 @@ def sense():
         time_interval = stop - start
         uw = time_interval * 17000
         uw = round(uw, 2)
-        print(uw)
+        print(uw,end=" ")
         
         # 먼 경우
         if uw > 100:
             # thread가 존재 할때 종료 3. 멀어졌을때 종료하고 초기화
-            if thread != None:
-                String=stack.pop()
-                exit_flag = True  # 특정 값 이상일 때, 프로그램 종료 플래그 설정
-                thread.join()
-                dict={
-                "serialnumber":serial_num,
-                "text":String
-                }
-                send_json=json.dumps(dict,ensure_ascii=False)
-                print(send_json)
-                print(uw, String)
-                stack.clear()
-                thread=None
-            # 1.가까이로
-            else:
-                print("센서 가까이로")
-                continue
+            print("remote")
+            exit_flag.set()
         # 가까운 경우
         else:
             # thread가 미존재시 생성 2.스레드 생성해 입력 받기
-            if thread == None:
-                exit_flag = False
-                thread = threading.Thread(target=stt)
-                thread.start()
-            # 스레드가 존재하고 가까울때 계속 입력 받아야함
-            else:
-                exit_flag = False
-                pass
+            print("close")
+            exit_flag.clear()
+
 
 def main():
-    global uw, exit_flag,serial_num
-    #thread_stt = threading.Thread(target=stt)
-    thread_sense = threading.Thread(target=sense)
 
-    #thread_stt.start()
-    thread_sense.start()
+        global send_msg
+        thread_stt = threading.Thread(target=stt)
+        thread_sense = threading.Thread(target=sense)
 
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
+        thread_stt.start()
         thread_sense.start()
+
+
+        try:
+            while True:
+                '''
+                if exit_flag.is_set():
+                    thread_msg=threading.Thread(target=send_and_receive_message,args=(send_msg,))
+                    thread_msg.start()
+                    send_msg=""
+                    thread_msg.join()
+                time.sleep(1)
+                '''
+        except KeyboardInterrupt:
+            GPIO.cleanup()
+            thread_sense.join()
+            thread_stt.join()
 
 if __name__ == '__main__':
     main()
+
