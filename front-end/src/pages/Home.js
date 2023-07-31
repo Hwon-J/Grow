@@ -2,12 +2,13 @@
 import React from 'react';
 import './Home.scss';
 // import { Container } from '@mui/material';
-// import NavTop from '../components/NavTop';
-// import Footer from '../components/Footer';
+import NavTop from '../components/NavTop';
+import Footer from '../components/Footer';
 const Home = () => {
   
   return (
     <>
+      <NavTop/>
       <div className="home_container" maxWidth="lg">
         <div className="home_title">
           <h1>Find friend for your kids</h1>
@@ -16,6 +17,7 @@ const Home = () => {
           <button>Start</button>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };

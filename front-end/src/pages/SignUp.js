@@ -1,19 +1,24 @@
 //김태형
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { TextField, Button, Grid } from "@mui/material";
+import { TextField, Button, Grid,Container } from "@mui/material";
 import { registerUserAction } from "../reducers/userSlice";
-import "./signup.css"
+import NavTop from '../components/NavTop';
+import "./Login.scss"
 
 const SignUp = () => {
   // usdDispatch: dispatch를 사용하겠다 선언
   const dispatch = useDispatch();
 
+  const [userid, setUserid] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   // username, email, password, confirmPassword 를 비동기로 저장하기 위해 설정
+  const onChangeUserid = (e) => {
+    setUserid(e.target.value);
+  };
   const onChangeName = (e) => {
     setUsername(e.target.value);
   };
@@ -34,87 +39,111 @@ const SignUp = () => {
     if (password !== confirmPassword) { // 비밀번호 다르면 실패
       return alert("입력한 비밀번호가 다릅니다!");
     }
+        // Add additional conditions here to check the validity of the registration information
+    if (username.length < 3 || username.length > 10) {
+      return alert("이름은 3자 이상, 10자 이하로 입력해주세요.");
+    }
+
+    if (!email.includes("@") || !email.includes(".")) {
+      return alert("유효한 이메일 주소를 입력해주세요.");
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!password.match(passwordRegex)) {
+      return alert("비밀번호는 8자 이상이면서 숫자와 영어를 모두 포함해야 합니다.");
+    }
     
+    const [usernamePart, domainPart] = email.split("@");
     let body = {  // 해당 폼으로 전달할 예정
-      id:username,
+      id:userid,
       pw:password,
-      name:"김태형",
-      email:email,
-      emailDomain: "하이.com"
+      name:username,
+      email:usernamePart,
+      emailDomain: domainPart
     };
     dispatch(registerUserAction(body)) // registerUserAction에 body폼으로 전달  'useSlice확인'
   };
   // registerUserAction을 부르고 body변수를 props로 전달
 
   return (
-<div className="bgimg">
-    <div className="containerbox ">
-      <div className="flexbox-left">
-       
+    <>
+    <NavTop />
+      <Container  maxWidth="md" className="bgimg">
+          <div className="container_box ">
+            <div className="flexbox-left">
+            </div>
+            <div className="flexbox-right">
+              <h2>회원가입</h2>
+              <form onSubmit={handleSubmit}>
+                <Grid
+                  className="input-field"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid>
+                <TextField
+                  label="아이디"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  value={userid}
+                  onChange={onChangeUserid}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  label="이름"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  value={username}
+                  onChange={onChangeName}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  label="이메일"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  label="비밀번호"
+                  fullWidth
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+              </Grid>
+              <Grid >
+                <TextField
+                  label="비밀번호"
+                  fullWidth
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  value={confirmPassword}
+                  onChange={onChangeConfirmPassword}
+                />
+              </Grid>
+              <Grid>
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                  회원가입
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
       </div>
-      <div className="flexbox-right container">
-        <h2>회 원 가 입</h2>
-        <form onSubmit={handleSubmit}>
-          <Grid
-            className="input-field"
-   
-            justifyContent="center"
-            alignItems="center"
-            
-          >
-            
-            <Grid>
-              <TextField
-                label="이름"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                value={username}
-                onChange={onChangeName}
-              />
-            </Grid>
-            <Grid>
-              <TextField
-                label="이메일"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                value={email}
-                onChange={onChangeEmail}
-              />
-            </Grid>
-            <Grid>
-              <TextField
-                label="비밀번호"
-                fullWidth
-                type="password"
-                variant="outlined"
-                margin="normal"
-                value={password}
-                onChange={onChangePassword}
-              />
-            </Grid>
-            <Grid >
-              <TextField
-                label="비밀번호"
-                fullWidth
-                type="password"
-                variant="outlined"
-                margin="normal"
-                value={confirmPassword}
-                onChange={onChangeConfirmPassword}
-              />
-            </Grid>
-            <Grid>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                회원가입
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </div>
-    </div>
+      </Container>
+
+    </>
   );
 };
 
