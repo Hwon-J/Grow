@@ -1,30 +1,46 @@
 const Sensor = require("../models/sensor-model.js");
 const connection = require("../config/connection.js");
 
-exports.checkSerial = async (req, res, next) => {
+exports.insertSensorData = async (req, res, next) => {
+  var today = new Date();
+  console.log(
+    `sensorController insertSensorData called. serial: ${req.body.serial_number} (${today})`
+  );
   try {
-    let serial = req.params;
+    const { serial_number: serial, temperture, moisture, light } = req.body;
     console.log(serial);
 
-    // 데이터베이스에서 멤버 조회
-    let query = "select * from `pot` where `serial_number`=?";
+    // 데이터베이스에서 시리얼에 해당하는 식물 번호 조회
+    let query =
+      "select plant.index as index from `plant` join `pot` on plant.pot_index = pot.index where pot.serial_number=?";
 
-    await connection.query(query, [serial.number], (error, result) => {
+    connection.query(query, [serial.number], (error, result) => {
       if (error) {
-        console.log("에러발생!!");
+        console.log("시리얼 넘버 조회중 데이터베이스 에러 발생");
         throw error;
       }
 
       // 시리얼 넘버 유효 체크
       if (result.length == 0) {
-        return res.status(404).json({ message: "존재하지 않는 시리얼 넘버" });
-      }
-
-      // 시리얼 넘버 사용 여부 체크
-      if (result[0].member_index === null) {
-        res.status(200).json({ message: "사용 가능한 시리얼" });
+        res
+          .status(202)
+          .json({ message: "사용중이지 않거나 유효하지 않은 시리얼 넘버" });
       } else {
-        res.status(401).json({ message: "이미 사용한 시리얼 넘버" });
+        // 해당하는 식물 번호가 존재하면, 그 식물 번호에 해당하는 센서값 등록
+        query =
+          "insert into `plant_condition`(plant_index, temperture, moisture, light) values (?, ?, ?, ?)";
+        connection.query(
+          query,
+          [result[0].index, temperture, moisture, light],
+          (error, result) => {
+            if (error) {
+              console.log("센서값 등록중 데이터베이스 에러 발생");
+              res.status(202).json({ message: "등록 실패" });
+            }
+
+            res.status(201).json({ message: "등록 성공" });
+          }
+        );
       }
     });
   } catch (error) {
