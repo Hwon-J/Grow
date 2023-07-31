@@ -39,7 +39,7 @@ const Login = () => {
   return (
     <>
     <NavTop/>
-    <Container maxWidth="md" className="bgimg">
+    <Container className="bgimg">
       <div className="container_box ">
       <div className="flexbox-left">
       </div>

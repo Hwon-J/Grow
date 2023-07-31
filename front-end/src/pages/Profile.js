@@ -10,7 +10,9 @@ import Footer from '../components/Footer';
 // 물 데이터 서버 켜졌을 때 자동으로 받아보는 코드
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const authToken = currentUser.token
+  const authToken = currentUser.token;
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState([]);
   // 식물 데이터 서버 켜졌을 때 자동으로 받아보는 코드 
   const [plant, setPlant] = useState([]);
@@ -18,13 +20,17 @@ const Profile = () => {
   const [growinPlant, setGrowinPlant] = useState([]);
   const [plantComplete, setPlantComplete] = useState([]);
   
-  useEffect(() => {
-    waterPlanData();
-  }, [])
 
   useEffect(() => {
-    plantData(); potData();
-  }, [])
+    if (authToken !== "") {
+      waterPlanData();
+      plantData();
+      potData();
+    } else {
+      navigate('/login')
+    }
+  }, [authToken]);
+
 
   const waterPlanData = async () => {
     console.log(currentUser)
