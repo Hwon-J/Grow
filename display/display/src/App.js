@@ -95,6 +95,7 @@ function SerialRegister() {
           dispatch({type : 'SUCCESS'})
           console.log(state_serial_number)
           // console.log(state)
+          localStorage.setItem('registration', true)
           
           }
           else if (status === 202) {
