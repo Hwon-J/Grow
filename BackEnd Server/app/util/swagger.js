@@ -18,7 +18,7 @@ const options = {
     ],
   },
   // swagger로 관리할 파일들
-  apis: ["./app/routes/pot-router.js"],
+  apis: ["./app/routes/*.js"],
 };
 
 const specs = swaggerJsdoc(options);

@@ -1,5 +1,5 @@
 const Pot = require("../models/pot-model.js");
-const connection = require("../config/connection.js");
+const connection = require("../util/connection.js");
 
 exports.checkSerial = async (req, res, next) => {
   var today = new Date();
