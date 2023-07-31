@@ -68,12 +68,12 @@ const SignUp = () => {
   return (
     <>
     <NavTop />
-      <Container className="bgimg">
+      <Container className="bgimg" >
           <div className="container_box ">
             <div className="flexbox-left">
             </div>
             <div className="flexbox-right">
-              <h2>회원가입</h2>
+              <h2>SignUp</h2>
               <form onSubmit={handleSubmit}>
                 <Grid
                   className="input-field"
@@ -121,9 +121,9 @@ const SignUp = () => {
                   onChange={onChangePassword}
                 />
               </Grid>
-              <Grid >
+              <Grid item xs={12}>
                 <TextField
-                  label="비밀번호"
+                  label="비밀번호 확인"
                   fullWidth
                   type="password"
                   variant="outlined"
@@ -133,9 +133,9 @@ const SignUp = () => {
                 />
               </Grid>
               <Grid>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                  회원가입
-                </Button>
+              <button type="submit" variant="contained" className="btn-hover color-5">
+                SignUp
+              </button>
               </Grid>
             </Grid>
           </form>
