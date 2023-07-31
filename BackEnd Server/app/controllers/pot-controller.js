@@ -2,6 +2,8 @@ const Pot = require("../models/pot-model.js");
 const connection = require("../config/connection.js");
 
 exports.checkSerial = async (req, res, next) => {
+  var today = new Date();
+  console.log(`potController checkSerial called. serial: ${req.params} (${today})`);
   try {
     let serial = req.params;
     console.log(serial);
@@ -17,18 +19,18 @@ exports.checkSerial = async (req, res, next) => {
 
       // 시리얼 넘버 유효 체크
       if (result.length == 0) {
-        return res.status(404).json({ status: 404, message: "존재하지 않는 시리얼 넘버" });
+        return res.status(202).json({message: "존재하지 않는 시리얼 넘버" });
       }
 
       // 시리얼 넘버 사용 여부 체크
       if (result[0].member_index === null) {
-        res.status(200).json({ status: 200, message: "사용 가능한 시리얼" });
+        res.status(200).json({ message: "사용 가능한 시리얼" });
       } else {
-        res.status(401).json({ status: 401, message: "이미 사용한 시리얼 넘버" });
+        res.status(202).json({message: "이미 사용한 시리얼 넘버" });
       }
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: 500, message: "서버 오류" });
+    res.status(500).json({message: "서버 오류" });
   }
 };
