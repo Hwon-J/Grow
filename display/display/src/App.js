@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { createStore } from 'redux';
 import { Provider, useSelector, useDispatch} from 'react-redux';
+import WebSocketComponent from './Websocket';
 
 function serial_reducer(current_serial, action) {
   if (current_serial === undefined) {
@@ -41,6 +42,7 @@ function Conversation() {
   return (
     <div>
       <img src={flowercharacter} alt="cancel" style={character_style} />
+      <WebSocketComponent />
     </div>
   )
 }
@@ -71,7 +73,7 @@ function SerialRegister() {
         //   // 요청 실패 또는 서버에서 에러 응답이 온 경우 처리
         //   console.error('에러 발생:', error);
         // }
-        axios.get(`http://http://i9c103.p.ssafy.io:30001/api/pot/${serial_number}`, { withCredentials: false })
+        axios.get(`http://i9c103.p.ssafy.io:30001/api/pot/${serial_number}`, { withCredentials: false })
         // 현재는 한 컴퓨너 안에서 작업에서 로컬로 돼있지만 나중에는 위 url을 외부 url로 바꿔줘야 함.
         .then(response => {
           console.log(response)
@@ -82,13 +84,13 @@ function SerialRegister() {
         })
         .catch(err => {
           console.log(err)
-          console.log(err.response.status)
+          // console.log(err.response.status)
           const status = err.response.status
           if (status === 401) {
-            alert('부모님께서 PC로 아이와 식물을 등록해주세요.')
+            alert('시리얼 번호를 다시 확인해주세요.')
           }
           else if (status === 404) {
-            alert('시리얼 번호를 다시 확인해주세요')
+            alert('부모님께서 PC로 아이와 식물을 등록해주세요.')
           }
         })
         
