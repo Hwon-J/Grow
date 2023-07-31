@@ -18,5 +18,9 @@
   },
   "author": "강신욱",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  }
 }

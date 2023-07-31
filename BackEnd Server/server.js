@@ -43,7 +43,18 @@ const PORT = process.env.PORT;
 
 app.use(cors());
 
+// Swagger 사용
+const {swaggerUI, specs} = require("./app/config/swagger");
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
+
 const userRoutes = require("./app/routes/user-router");
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: 유저 추가 수정 삭제 조회
+ */
 app.use("/api/user", userRoutes);
 
 const potRoutes = require("./app/routes/pot-router");

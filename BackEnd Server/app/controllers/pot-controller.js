@@ -24,7 +24,7 @@ exports.checkSerial = async (req, res, next) => {
 
       // 시리얼 넘버 사용 여부 체크
       if (result[0].member_index === null) {
-        res.status(200).json({ message: "사용 가능한 시리얼" });
+        res.status(200).json({ message: "사용 가능한 시리얼 넘버" });
       } else {
         res.status(202).json({message: "이미 사용한 시리얼 넘버" });
       }
