@@ -1,5 +1,5 @@
 const Sensor = require("../models/sensor-model.js");
-const connection = require("../config/connection.js");
+const connection = require("../util/connection.js");
 
 exports.insertSensorData = async (req, res, next) => {
   var today = new Date();

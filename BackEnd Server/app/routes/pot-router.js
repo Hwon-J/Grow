@@ -17,7 +17,6 @@ const potController = require("../controllers/pot-controller");
  *        schema:
  *          type: string
  *    responses:
- * 
  *       "200":
  *        description: "사용 가능한 시리얼"
  *        content:

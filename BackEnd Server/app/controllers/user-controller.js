@@ -1,6 +1,7 @@
 const User = require("../models/user-model.js");
-const connection = require("../config/connection.js");
+const connection = require("../util/connection.js");
 const crypto = require("crypto");
+const util = require('util');
 
 exports.signup = async (req, res, next) => {
   var today = new Date();
@@ -10,40 +11,52 @@ exports.signup = async (req, res, next) => {
 
     // 아이디 중복 검사
     let query = "select id from `member` where id=?";
-    connection.query(query, [id], (error, result) => {
-      if (error) {
-        throw error;
-      }
-      if (result.length > 0){
-        return res.status(202).json({ message: "등록 실패, 이미 존재하는 아이디입니다"});
-      }
-    });
+    const queryPromise = util.promisify(connection.query).bind(connection);
+
+    const result = await queryPromise(query, [id]);
+    if (result.length > 0){
+      console.log("발동!");
+      error = { message: "등록 실패, 이미 존재하는 아이디입니다"};
+      throw error;
+      // return res.status(202).json({ message: "등록 실패, 이미 존재하는 아이디입니다"});
+    }
+
+    // await connection.query(query, [id], (error, result) => {
+    //   if (error) {
+    //     throw error;
+    //   }
+    //   console.log(result);
+    // });
 
     // salt 생성
     let salt = crypto.randomBytes(128).toString('base64');
 
     // 비밀번호 암호화
-    const hashedPw = crypto.createHash('sha256').update(inputPassword + salt).digest('hex');
+    const hashedPw = crypto.createHash('sha256').update(pw + salt).digest('hex');
 
     // 데이터베이스에 멤버 저장
     query =
       "insert into `member` (id, pw, name, email, email_domain, salt) values(?,?,?,?,?,?)";
-
-    connection.query(
+      
+    console.log("dho?");
+    await connection.query(
       query,
-      [id, pw, name, email, emailDomain, salt],
+      [id, hashedPw, name, email, emailDomain, salt],
       (error, result) => {
         if (error) {
           throw error;
         }
-        console.log(result);
       }
     );
 
     return res.status(201).json({ message: "회원 가입 성공!" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "서버 오류" });
+    if (error){
+      return res.status(202).json(error);
+    } else {
+      return res.status(500).json({ message: "서버 오류" });
+    }
   }
 };
 
@@ -56,7 +69,7 @@ exports.idCheck = async (req, res, next) => {
 
     // 데이터베이스에서 해당 아이디 존재하는지 체크
     let query = "select id from `member` where id=?";
-    connection.query(query, [id], (error, result) => {
+    await connection.query(query, [id], (error, result) => {
       if (error) {
         throw error;
       }
