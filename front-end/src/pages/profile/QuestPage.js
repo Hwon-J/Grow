@@ -104,8 +104,8 @@ const QuestPage = () => {
               onBlur={handleInputBlur}
             />
           </div>
-          <div class="button_container">
-            <button class="create-quest" onClick={createQuest}><span>Hover me!</span></button>
+          <div className="button_container">
+            <button className="create-quest" onClick={createQuest}><span>Hover me!</span></button>
           </div>
         </div>
         <div className='quest-section container'>

@@ -4,14 +4,3 @@ body {
   height: 100vh; /* body의 높이를 뷰포트 높이로 설정 */
 
   }
-  
-  .navbarColor {
-    font-size: 30px;
-    background-color: #5ab25b;
-    color: black;
-    margin-bottom: 30px;
-  }
-  .logoImg {
-    display: fixed;
-    height: 0px;
-  }
