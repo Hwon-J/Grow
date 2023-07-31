@@ -12,8 +12,8 @@ const options = {
     servers: [
       {
         // 요청 url
-        // url: `http://i9c103.p.ssafy.io:${process.env.PORT}`,
-        url: `http://localhost:${process.env.PORT}`,
+        url: `http://i9c103.p.ssafy.io:${process.env.PORT}`,
+        // url: `http://localhost:${process.env.PORT}`,
       },
     ],
   },

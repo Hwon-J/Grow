@@ -1,47 +1,32 @@
 const User = require("../models/user-model.js");
 const connection = require("../config/connection.js");
+const crypto = require("crypto");
 
-exports.idCheck = async (req, res, next) => {
+exports.signup = async (req, res, next) => {
   var today = new Date();
-  console.log(`userController idCheck called. id: ${req.params.id} (${today})`);
   try {
-    const id = req.params.id;
-    const isExist = false;
-    // console.log(id);
+    const { id, pw, name, email, emailDomain } = req.body;
+    console.log(`userController singup called. id: ${id}, name: ${name} (${today})`);
 
-    // 데이터베이스에서 해당 아이디 존재하는지 체크
+    // 아이디 중복 검사
     let query = "select id from `member` where id=?";
-    await connection.query(query, [id], (error, result) => {
+    connection.query(query, [id], (error, result) => {
       if (error) {
         throw error;
       }
       if (result.length > 0){
-        return res.status(202).json({ message: "이미 존재하는 아이디입니다"});
+        return res.status(202).json({ message: "등록 실패, 이미 존재하는 아이디입니다"});
       }
-      return res.status(200).json({ message: "사용할 수 있는 아이디입니다"});
     });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "서버 오류" });
-  }
-}
 
-/**
- * 아이디, 비밀번호, 이름, 인증용 아이디, 인증용 아이디 도메인을 받아 회원가입 절차를 진행하는 함수.
- * 먼저 아이디 중복을 확인 한 후, 회원 가입 절차 진행
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
-exports.signup = async (req, res, next) => {
-  var today = new Date();
-  console.log(`userController singup called. id: ${req.body.id}, pw: ${req.body.pw} (${today})`);
-  try {
-    const { id, pw, name, email, emailDomain } = req.body;
-    let salt = 1111;
+    // salt 생성
+    let salt = crypto.randomBytes(128).toString('base64');
+
+    // 비밀번호 암호화
+    const hashedPw = crypto.createHash('sha256').update(inputPassword + salt).digest('hex');
+
     // 데이터베이스에 멤버 저장
-    let query =
+    query =
       "insert into `member` (id, pw, name, email, email_domain, salt) values(?,?,?,?,?,?)";
 
     connection.query(
@@ -61,6 +46,31 @@ exports.signup = async (req, res, next) => {
     return res.status(500).json({ message: "서버 오류" });
   }
 };
+
+
+exports.idCheck = async (req, res, next) => {
+  var today = new Date();
+  try {
+    const id = req.params.id;
+    console.log(`userController idCheck called. id: ${id} (${today})`);
+
+    // 데이터베이스에서 해당 아이디 존재하는지 체크
+    let query = "select id from `member` where id=?";
+    connection.query(query, [id], (error, result) => {
+      if (error) {
+        throw error;
+      }
+      if (result.length > 0){
+        return res.status(202).json({ message: "이미 존재하는 아이디입니다"});
+      }
+      return res.status(200).json({ message: "사용할 수 있는 아이디입니다"});
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "서버 오류" });
+  }
+}
+
 
 exports.login = async (req, res) => {
   var today = new Date();
