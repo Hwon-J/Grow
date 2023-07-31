@@ -1,8 +1,9 @@
 // 김태형
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Container } from '@mui/material';
+import { TextField, Grid, Container } from '@mui/material';
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
+import NavTop from '../components/NavTop';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.scss';
 const Login = () => {
@@ -27,12 +28,18 @@ const Login = () => {
       id:id,
       pw:password,
     };
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!password.match(passwordRegex)) {
+      return alert("비밀번호는 8자 이상이면서 숫자와 영어를 모두 포함해야 합니다.");
+    }
 
     dispatch(loginUserAction(body)) //loginUserAction액션에 body전달  'useSlice확인'
   };
 
   return (
-    <Container maxWidth="md">
+    <>
+    <NavTop/>
+    <Container maxWidth="md" className="bgimg">
       <div className="container_box ">
       <div className="flexbox-left">
       </div>
@@ -78,6 +85,7 @@ const Login = () => {
       </div>
       </div>
     </Container>
+    </>
   );
 };
 
