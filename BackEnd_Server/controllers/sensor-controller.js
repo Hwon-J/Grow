@@ -13,7 +13,7 @@ exports.insertSensorData = async (req, res, next) => {
 
     // 데이터베이스에서 시리얼에 해당하는 식물 번호 조회
     let query =
-      "select plant.index as index from `plant` join `pot` on plant.pot_index = pot.index where pot.serial_number=?";
+      "select plant.index as `index` from `plant` join `pot` on plant.pot_index = pot.index where pot.serial_number=?";
 
     let result = null;
     try {
