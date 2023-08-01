@@ -1,11 +1,12 @@
+//김태형
 import React, { useEffect, useState } from "react";
 import PlantCard from "../components/plant/plantCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import NavTop from "../components/NavTop";
-import Footer from "../components/Footer";
-import "../components/plant/Profile.css";
+// import Footer from "../components/Footer";
+import "./Profile.css";
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -13,8 +14,6 @@ const Profile = () => {
   console.log(currentUser, authToken);
   const navigate = useNavigate();
 
-  const [plant, setPlant] = useState([]);
-  const [pot, setPot] = useState([]);
   const [growinPlant, setGrowinPlant] = useState([
     {
       plant_info: "상추",
@@ -43,6 +42,22 @@ const Profile = () => {
       id:3
     },
   ]);
+  // // 식물 종 데이터 변경할 메서드
+  // const getPlants = async () => {
+  //   try {
+  //     const response = await axios.get("식물 데이터 주소");
+  //     const plantsList = response.data;
+  //     const growing = plantsList.filter((plant) => plant.complete === 0);
+  //     const complete = plantsList.filter((plant) => plant.complete === 1);
+  //     setGrowinPlant(growing);
+  //     setPlantComplete(complete);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getPlants();
+  // }, []);
 
   const NotcompleteCardSet = () => {
     return (
@@ -67,24 +82,21 @@ const Profile = () => {
   return (
     <React.Fragment>
       <NavTop />
-      <div>
-        <div>
-          <div className="profile-left">
-            <h1>Profile</h1>
+      <div className="profile-container">
+        <div className="profile-left">
+          <h1>Profile</h1>
+        </div>
+        <div className="profile-right">
+          <div>
+            <h2>키우는 식물</h2>
+            {NotcompleteCardSet()}
           </div>
-          <div className="profile-right">
-            <div>
-              <h2>키우는 식물</h2>
-              {NotcompleteCardSet()}
-            </div>
-            <div>
-              <h2>키운식물</h2>
-              {completeCardSet()}
-            </div>
+          <div>
+            <h2>키운식물</h2>
+            {completeCardSet()}
           </div>
         </div>
       </div>
-      <Footer />
     </React.Fragment>
   );
 };

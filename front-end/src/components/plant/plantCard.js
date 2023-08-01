@@ -1,27 +1,28 @@
 import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-
+import "./plantcard.css";
+import { useNavigate } from "react-router-dom";
 const PlantCard = (props) => {
   const data = props.props;
+  const navigate = useNavigate();
+  const goDiary = () => {
+    navigate(`/diary/${data.id}`)
+  }
 
   return (
-    <Card sx={{ maxWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {data.plant_info}
-        </Typography>
-        <img src={`./plantimg/${data.imgname}.png`} alt="Home" />
-        <Typography variant="h5" component="div">
-          {data.plant_name}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {data.child_name}
-        </Typography>
-        <Typography variant="body2">{data.difficulty}</Typography>
-      </CardContent>
-    </Card>
+    <div className="plantcard">
+      <div className="bg">
+        <div className="plantcard-details">
+          {/* Added className="plantcard-details" */}
+          <p className="text-title">{data.plant_name}</p>
+          <p className="text-body">{data.child_name}의 식물친구</p>
+          <img src={`./plantimg/${data.id}.png`} />
+        </div>
+      </div>
+      <div className="blob"></div>
+      <button className="button type1 plantcard-button" onClick={goDiary}>
+        <span class="btn-txt">Hello</span>
+      </button>
+    </div>
   );
 };
 
