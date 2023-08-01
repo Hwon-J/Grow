@@ -9,15 +9,11 @@ const PlantDiary = () => {
   return (
     <>
     <NavTop/>
-    <div className='diary'>
-    
     <Container className='centered-elements'>
         <h1>plantDiary</h1>
         <MyInfo/>
         <Calendar/>
     </Container>
-    
-    </div>
   </>
   )
 }

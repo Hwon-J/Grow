@@ -15,7 +15,7 @@ import { Icon } from '@iconify/react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
 import { isSameMonth, isSameDay, addDays, parse } from 'date-fns';
-import './Cal_style.scss';
+import './Calendar.scss';
 
 // 달력을 만들때 연월을 표기하고 월을 이동하는 RenderHeader
 // 각각의 요일을 표기하는 RenderDays
@@ -25,19 +25,15 @@ import './Cal_style.scss';
 // format을 사용해 원하는 형태로 출력한다.
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
     return (
-        <div className="header row">
-            <div className="col col-start">
-                <span className="text">
-                    <span className="text month">
+        <div className="header_cal">
+            <Icon icon="bi:chevron-left" onClick={prevMonth} />
+                    <span className="month">
                         {format(currentMonth, 'M')}월
                     </span>
-                    {format(currentMonth, 'yyyy')}
-                </span>
-            </div>
-            <div className="col col-end">
-                <Icon icon="bi:arrow-left-circle-fill" onClick={prevMonth} />
-                <Icon icon="bi:arrow-right-circle-fill" onClick={nextMonth} />
-            </div>
+                    <span className="year">
+                        {format(currentMonth, 'yyyy')}
+                    </span>   
+            <Icon icon="bi:chevron-right" onClick={nextMonth} />
         </div>
     );
 };
@@ -52,13 +48,13 @@ const RenderDays = () => {
     // for문을 사용하여 요일을 배열에 추가한다.
     for (let i = 0; i < 7; i++) {
         days.push(
-            <div className="col" key={i}>
+            <div className="col_day" key={i}>
                 {date[i]}
             </div>,
         );
     }
 
-    return <div className="days row">{days}</div>;
+    return <div className="days_cal">{days}</div>;
 };
 
 // 각각의 날짜를 표기하는 RenderCells
@@ -86,7 +82,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClic, currentDate }) =>
             const isCurrentDate = isSameDay(day, currentDate);
             days.push(
                 <div
-                    className={`col cell ${
+                    className={`cell_col ${
                         !isSameMonth(day, monthStart)
                             ? 'disabled'
                             : isSameDay(day, selectedDate)
@@ -113,13 +109,13 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClic, currentDate }) =>
             day = addDays(day, 1);
         }
         rows.push(
-            <div className="row" key={day}>
+            <div className="row_cell" key={day}>
                 {days}
             </div>,
         );
         days = [];
     }
-    return <div className="body">{rows}</div>;
+    return <div className="body_cell">{rows}</div>;
 };
 
 // PlantDiary.js에서 사용할 Calender 컴포넌트
