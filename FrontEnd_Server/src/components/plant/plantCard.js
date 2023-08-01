@@ -15,12 +15,12 @@ const PlantCard = (props) => {
           {/* Added className="plantcard-details" */}
           <p className="text-title">{data.plant_name}</p>
           <p className="text-body">{data.child_name}의 식물친구</p>
-          <img src={`./plantimg/${data.id}.png`} />
+          <img src={`./plantimg/${data.imgname}.avif`} />
         </div>
       </div>
       <div className="blob"></div>
       <button className="button type1 plantcard-button" onClick={goDiary}>
-        <span class="btn-txt">Hello</span>
+        <span className="btn-txt">Hello</span>
       </button>
     </div>
   );
