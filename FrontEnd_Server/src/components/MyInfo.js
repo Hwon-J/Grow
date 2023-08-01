@@ -60,20 +60,19 @@ const MyInfo = () => {
   
   return (
     <>
-        <h1>MyInfo</h1>
-        <div className='info_box'>
-          <div className='info_box_left'>
-          <img src={myImage} alt="Image Description" />
-          <h5>{plantInfo.plant_name}</h5>
-          </div>
-          <div className='info_box_right'>
-            <h5>{plantInfo.child_name}(이)가 키우는 {plantInfo.plant_nickname}</h5>
-            {/* <h5>키운지 { today }일째</h5> */}
-            <h5>키운 지 {daysDifference}일째</h5>
-            <button onClick={handleQuestPageButtonClick}>질문 등록</button>
-          </div>
-          </div>
-        
+      <h1>MyInfo</h1>
+      <div className='info_box'>
+        <div className='info_box_left'>
+        <img src={myImage} alt="Image Description" />
+        <h5>{plantInfo.plant_name}</h5>
+        </div>
+        <div className='info_box_right'>
+          <h5>{plantInfo.child_name}(이)가 키우는 {plantInfo.plant_nickname}</h5>
+          {/* <h5>키운지 { today }일째</h5> */}
+          <h5>키운 지 {daysDifference}일째</h5>
+          <button onClick={handleQuestPageButtonClick}>질문 등록</button>
+        </div>
+      </div>       
     </>
   )
 }

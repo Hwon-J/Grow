@@ -1,11 +1,24 @@
-.diary {
+.centered-elements {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 수직 중앙 정렬 */
-    align-items: center; /* 수평 중앙 정렬 */
-    
-
+    justify-content: center; /* Vertically center the content */
+    align-items: center; /* Horizontally center the content */
+    margin: auto;
+  
     h1 {
-        text-align: center;
+      text-align: center;
     }
-}
+  
+    /* Apply 70% width to the Container */
+    > .MuiContainer-root {
+      width: 70%;
+    }
+  
+    /* Center the elements inside the Container horizontally */
+    > .MuiContainer-root .centered-elements {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
