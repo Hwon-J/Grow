@@ -1,5 +1,6 @@
 const Sensor = require("../models/sensor-model.js");
 const connection = require("../util/connection.js");
+const winston = require("../util/winston.js");
 
 exports.insertSensorData = async (req, res, next) => {
   winston.info(
