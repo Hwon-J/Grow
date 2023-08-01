@@ -1,0 +1,23 @@
+.cardContainer {
+  display: flex;
+  gap: 10px;
+  height: 250px;
+  border-radius: 20px;
+}
+.profile-container {
+  display: flex;
+  align-items: flex-start;
+  position: relative; /* Add relative positioning */
+  z-index: 1; /* Set z-index value higher than footer */
+  padding-bottom: 300px;
+}
+
+.profile-left {
+  flex: 3; /* Occupy 3/10 (30%) of the container width */
+  /* Add any other styling you want for the left section */
+}
+
+.profile-right {
+  flex: 7; /* Occupy 7/10 (70%) of the container width */
+  /* Add any other styling you want for the right section */
+}
