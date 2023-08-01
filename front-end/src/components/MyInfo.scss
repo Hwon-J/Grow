@@ -1,0 +1,15 @@
+.info_box {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    height: 300px;
+  }
+  
+  .info_box_left {
+    flex: 1; /* 왼쪽 요소가 남는 공간을 모두 차지하도록 설정하여 왼쪽 정렬합니다. */
+  }
+  
+  .info_box_right {
+    flex: 3; /* 오른쪽 요소가 남는 공간을 모두 차지하도록 설정하여 오른쪽 정렬합니다. */
+    
+  }
