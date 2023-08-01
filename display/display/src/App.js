@@ -2,24 +2,36 @@
 
 // import logo from './logo.svg';
 import './App.css';
-import backgroundImage from './assets/background.PNG';
+// 캐릭터와 배경이미지 import
+import background from './assets/BackgroundPicture.gif';
 import flowercharacter from './assets/flowercharacter.png';
-// import potcharacter from './assets/potcharacter.png';
+import lettucecharacter from './assets/lettucecharacter.png';
+import tomatocharacter from './assets/tomatocharacter.png';
+import potcharacter from './assets/potcharacter.png';
+import beancharacter from './assets/beancharacter.png';
 import logo from './assets/logo.png';
+// Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+// axios import
 import axios from 'axios';
+// store 관련 기능 import
 import { createStore } from 'redux';
 import { Provider, useSelector, useDispatch} from 'react-redux';
-import WebSocketComponent from './Websocket';
+import WebSocketComponent from './components/Websocket';
+// useEffect
 import { useEffect } from 'react';
+// 시리얼 번호 등록하는 컴포넌트 import 가져오기
+import SerialRegister from './components/SerialRegister';
 
+// 현재 store에 시리얼번호가 등록됐는지에 관한 변수를 바꿔주기 위해 리듀서 설정
 function serial_reducer(current_serial, action) {
+  // 현재 시리얼번호 등록을 모른다면 false값으로 변수 설정
   if (current_serial === undefined) {
     return {
       serial_number : false
     }
   }
-  
+  // action type으로 Success가 들어왔을 때 current_serial의 serial_number을 true로 변경
   if (action.type === 'SUCCESS') {
 
     const new_serial = {...current_serial}
@@ -28,15 +40,17 @@ function serial_reducer(current_serial, action) {
     return new_serial
   }
   
-  // console.log('serial', current_serial)
+  console.log('serial', current_serial)
 }
+// 만들어준 리듀서를 기반으로 store 생성
 const store = createStore(serial_reducer)
 
-
+// 캐릭터와 대화하는 화면 컴포넌트 생성
 function Conversation() {
   const state_serial_number = useSelector((state) => 
      state.serial_number
   )
+  // serial번호가 등록이 되었는지 확인 차원에서 렌더링 될 때 한번 출력
   useEffect(() => {
     console.log(state_serial_number); // 처음 렌더링 시에만 출력
   }, [])
@@ -46,90 +60,27 @@ function Conversation() {
 
   }
 
-
+  // 대화 컴포넌트 구조
   return (
     <div>
       <img src={flowercharacter} alt="cancel" style={character_style} />
+      <img src={lettucecharacter} alt="cancel" style={character_style} />
+      <img src={tomatocharacter} alt="cancel" style={character_style} />
+      <img src={potcharacter} alt="cancel" style={character_style} />
+      <img src={beancharacter} alt="cancel" style={character_style} />
       <h1>{state_serial_number}</h1>
+      {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
       <WebSocketComponent />
     </div>
   )
 }
 
-function SerialRegister() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch()
-  
-  const state_serial_number = useSelector((state) => {
-    return state.serial_number
-  })
-  return (
-    <div>
-      
-      <h3>해당 기기의 시리얼 넘버를 입력해주세요.</h3>
-      <form onSubmit={(event)=>{
-        event.preventDefault()
-        console.log(event.target.number.value)
-        const serial_number = event.target.number.value
-        // navigate('/conversation')
-        // try {
-        //   const response = axios.get(`http://localhost:3000/api/pot/${serial_number}`,{ withCredentials: false  });
-    
-        //   // 서버에서 오는 응답에 따라 추가적인 처리를 할 수 있습니다.
-        //   // 예: 회원가입 성공 메시지 띄우기 등
-        //   console.log(response)
-        //   console.log('응답 데이터:', response);
-        // } catch (error) {
-        //   // 요청 실패 또는 서버에서 에러 응답이 온 경우 처리
-        //   console.error('에러 발생:', error);
-        // }
-        axios.get(`http://i9c103.p.ssafy.io:30001/api/pot/${serial_number}`, { withCredentials: false })
-        // 현재는 한 컴퓨너 안에서 작업에서 로컬로 돼있지만 나중에는 위 url을 외부 url로 바꿔줘야 함.
-        .then(response => {
-          console.log(response)
-          const status = response.status
-          console.log(status)
-          if ( status === 200) {
-            alert('등록 성공! 대화 페이지로 이동합니다.')
-          navigate('/conversation')
-          dispatch({type : 'SUCCESS'})
-          console.log(state_serial_number)
-          // console.log(state)
-          localStorage.setItem('registration', true)
-          
-          }
-          else if (status === 202) {
-            alert('시리얼 번호를 다시 확인해주세요.')
-          }
-          
-        })
-        .catch(err => {
-          console.log(err)
-          // console.log(err.response.status)
-          const status = err.response.status
-          if (status === 401) {
-            alert('시리얼 번호를 다시 확인해주세요.')
-          }
-          else if (status === 404) {
-            alert('부모님께서 PC로 아이와 식물을 등록해주세요.')
-          }
-        })
-        
-      }}>
 
-        <input placeholder="SerialNumber" name="number" />
-        <input type="submit" value="확인"></input>
-      </form>
-      <img src={logo} alt="cancel" />
-
-    </div>
-  )
-
-}
 
 function App() {
+  // 배경화면 설정
   const backgroundStyles = {
-    backgroundImage: `url(${backgroundImage})`,
+    backgroundImage: `url(${background})`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -137,6 +88,7 @@ function App() {
   }
 
   return (
+    // App주변으로 store설정
     <Provider store={store}>
       <div className="App" style={backgroundStyles}>
         <Routes>
