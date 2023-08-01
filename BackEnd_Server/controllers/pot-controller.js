@@ -1,6 +1,7 @@
 const Pot = require("../models/pot-model.js");
 const connection = require("../util/connection.js");
 const winston = require("../util/winston");
+const util = require("util");
 
 exports.checkSerial = async (req, res, next) => {
   winston.info(`potController checkSerial called. serial: ${req.params}`);
