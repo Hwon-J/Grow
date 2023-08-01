@@ -12,17 +12,17 @@ const PORT = process.env.PORT;
 app.use(cors());
 
 // Swagger 사용
-const {swaggerUI, specs} = require("./app/util/swagger");
+const {swaggerUI, specs} = require("./util/swagger");
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
-const userRoutes = require("./app/routes/user-router");
+const userRoutes = require("./routes/user-router");
 app.use("/api/user", userRoutes);
 
-const potRoutes = require("./app/routes/pot-router");
+const potRoutes = require("./routes/pot-router");
 app.use("/api/pot", potRoutes);
 
-const sensorRoutes = require("./app/routes/sensor-router");
+const sensorRoutes = require("./routes/sensor-router");
 app.use("/api/sensor", sensorRoutes);
 
 app.listen(PORT, () => {
