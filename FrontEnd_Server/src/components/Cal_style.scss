@@ -7,7 +7,7 @@
     align-items: center; /* Center items horizontally */
     justify-content: center; /* Center items vertically */
     
-    @include common.size(60%, 90%);
+    @include common.size(100%, 90%);
     .header {
         @include common.size(100%, 7%);
         @include common.flex-row(space-between, baseline);
