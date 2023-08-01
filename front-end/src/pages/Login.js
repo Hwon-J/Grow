@@ -4,11 +4,15 @@ import { TextField, Grid, Container } from '@mui/material';
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
 import NavTop from '../components/NavTop';
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.scss';
 const Login = () => {
   const dispatch = useDispatch(); // dispatch 사용할 예정
-
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.currentUser);
+  const authToken = currentUser.token;
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,7 +37,19 @@ const Login = () => {
       return alert("비밀번호는 8자 이상이면서 숫자와 영어를 모두 포함해야 합니다.");
     }
 
-    dispatch(loginUserAction(body)) //loginUserAction액션에 body전달  'useSlice확인'
+    dispatch(loginUserAction(body))
+    .then((action) => {
+      const authToken = action.payload.token; // Assuming the token is stored in the payload
+
+      // Check if authToken exists and navigate to '/login'
+      if (authToken) {
+        navigate('/profile');
+      }
+    })
+    .catch((error) => {
+      // Handle any errors that occurred during the registration process
+      console.log('Registration failed:', error);
+    });
   };
 
   return (

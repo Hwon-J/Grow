@@ -10,6 +10,7 @@ import "../components/plant/Profile.css";
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
+  console.log(currentUser, authToken);
   const navigate = useNavigate();
 
   const [plant, setPlant] = useState([]);
@@ -21,6 +22,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 1,
+      id:1
     },
     {
       plant_info: "상추",
@@ -28,6 +30,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 1,
+      id:2
     },
   ]);
   const [plantComplete, setPlantComplete] = useState([
@@ -37,6 +40,7 @@ const Profile = () => {
       child_name: "김민국",
       difficulty: 5,
       imgname: 1,
+      id:3
     },
   ]);
 
