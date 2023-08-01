@@ -1,15 +1,17 @@
 //김태형
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { TextField, Button, Grid,Container } from "@mui/material";
 import { registerUserAction } from "../reducers/userSlice";
 import NavTop from '../components/NavTop';
 import "./Login.scss"
-
+import { useSelector } from "react-redux";
 const SignUp = () => {
   // usdDispatch: dispatch를 사용하겠다 선언
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.currentUser);
   const [userid, setUserid] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -61,7 +63,10 @@ const SignUp = () => {
       email:usernamePart,
       emailDomain: domainPart
     };
-    dispatch(registerUserAction(body)) // registerUserAction에 body폼으로 전달  'useSlice확인'
+    dispatch(registerUserAction(body))
+    .then((action)=>{
+      console.log(currentUser)
+    })
   };
   // registerUserAction을 부르고 body변수를 props로 전달
 
