@@ -8,7 +8,7 @@ exports.insertSensorData = async (req, res, next) => {
     `sensorController insertSensorData called. serial: ${req.body.serial_number}`
   );
   try {
-    const { serial_number: serial, temperture, moisture, light } = req.body;
+    const { serial_number: serial, temperature, moisture, light } = req.body;
     const queryPromise = util.promisify(connection.query).bind(connection);
 
     // 데이터베이스에서 시리얼에 해당하는 식물 번호 조회
@@ -33,20 +33,23 @@ exports.insertSensorData = async (req, res, next) => {
         message: "사용중이지 않거나 유효하지 않은 시리얼 넘버",
       });
     }
+
     // 해당하는 식물 번호가 존재하면, 그 식물 번호에 해당하는 센서값 등록
     query =
-      "insert into `plant_condition`(plant_index, temperture, moisture, light) values (?, ?, ?, ?)";
+      "insert into `plant_condition`(plant_index, temperature, moisture, light) values (?, ?, ?, ?)";
     try {
-      result = await queryPromise(query, [
+      await queryPromise(query, [
         result[0].index,
-        temperture,
+        temperature,
         moisture,
         light,
       ]);
     } catch (error) {
       winston.error("센서값 등록중 데이터베이스 에러 발생");
+      winston.error(error);
       return res.status(202).json({ code: 202, message: "등록 실패" });
     }
+    winston.info("sensorController insertSensorData return: '등록 성공'");
     return res.status(201).json({ code: 201, message: "등록 성공" });
   } catch (error) {
     console.error(error);

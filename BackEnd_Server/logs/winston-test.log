@@ -15,3 +15,33 @@
 2023-08-01T05:52:59.987Z [winston-test] info: userController login return '존재하지 않는 아이디' to qwer11t
 2023-08-01T05:53:07.449Z [winston-test] info: userController login called. id: qwert, pw: qwert
 2023-08-01T05:53:07.454Z [winston-test] info: userController login return '로그인 성공' to qwert
+2023-08-01T07:54:07.346Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:54:07.365Z [winston-test] info: sensorController insertSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버
+2023-08-01T07:54:37.426Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:54:37.432Z [winston-test] info: sensorController insertSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버
+2023-08-01T07:55:07.496Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:55:07.501Z [winston-test] info: sensorController insertSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버
+2023-08-01T07:55:37.557Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:55:37.561Z [winston-test] info: sensorController insertSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버
+2023-08-01T07:55:54.578Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:55:54.582Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:56:24.652Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:56:24.655Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:56:54.703Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:56:54.710Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:56:54.710Z [winston-test] error: undefined
+2023-08-01T07:57:01.024Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:57:01.027Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:57:01.027Z [winston-test] error: undefined
+2023-08-01T07:57:31.088Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:57:31.093Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:57:31.094Z [winston-test] error: undefined
+2023-08-01T07:57:54.044Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:57:54.051Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:57:54.051Z [winston-test] error: undefined
+2023-08-01T07:58:52.104Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T07:58:52.110Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T07:58:52.110Z [winston-test] error: undefined
+2023-08-01T08:03:11.879Z [winston-test] info: sensorController insertSensorData called. serial: testtesttest
+2023-08-01T08:03:11.884Z [winston-test] error: 센서값 등록중 데이터베이스 에러 발생
+2023-08-01T08:03:11.885Z [winston-test] error: undefined
