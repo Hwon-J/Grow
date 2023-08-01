@@ -1,0 +1,13 @@
+2023-08-01T05:47:35.277Z [winston-test] info: userController idCheck called. id: 1234567
+2023-08-01T05:47:35.292Z [winston-test] info: potController checkSerial return "사용할 수 있는 아이디입니다"
+2023-08-01T05:47:40.336Z [winston-test] info: userController idCheck called. id: 123456
+2023-08-01T05:47:40.338Z [winston-test] info: potController checkSerial return "이미 존재하는 아이디입니다"
+2023-08-01T05:48:31.551Z [winston-test] info: userController idCheck called. id: 1234567
+2023-08-01T05:48:31.554Z [winston-test] info: userController idCheck return "사용할 수 있는 아이디입니다"
+2023-08-01T05:48:37.399Z [winston-test] info: userController idCheck called. id: 123456
+2023-08-01T05:48:37.401Z [winston-test] info: userController idCheck return "이미 존재하는 아이디입니다"
+2023-08-01T05:50:52.503Z [winston-test] info: userController singup called. id: qwert, name: name
+2023-08-01T05:50:52.510Z [winston-test] info: userController singup return '회원 가입 성공!'
+2023-08-01T05:51:20.768Z [winston-test] info: userController login called. id: qwert, pw: qwert
+2023-08-01T05:51:20.773Z [winston-test] info: userController login return '로그인 성공' to qwert
+2023-08-01T05:51:26.962Z [winston-test] info: userController login called. id: qwer11t, pw: qwert
