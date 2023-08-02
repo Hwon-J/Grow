@@ -15,6 +15,7 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
+import profileback from "../assets/profileback.jpg";
 
 
 const Profile = () => {
