@@ -1,7 +1,8 @@
 const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
-// const dbConnection = require("./util/db.js");
+const dbConnection = require("./util/db.js");
 const deleteEmoji = require("./util/delete-emoji");
+const winston = require("../util/winston.js");
 require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: process.env.PORT });
@@ -54,7 +55,7 @@ wss.on("connection", (ws, req) => {
 
     let msgJson = JSON.parse(msg);
     console.log(
-      `message from client[${ip}]:${msgJson.role}, ${msgJson.message}, ${msgJson.number}`
+      `message from client[${ip}]:${msgJson.role}, ${msgJson.message}, ${msgJson.serial}`
       );
       
       if (msgJson.role == "gpt") {
@@ -96,13 +97,29 @@ wss.on("connection", (ws, req) => {
         //   });
         // }
         clients.forEach((client) => {
-          if (client.number === ws.number && client.readyState === WebSocket.OPEN) {
+          if (client.serial === ws.serial && client.readyState === WebSocket.OPEN) {
             client.send(`gpt answer: ${result}`);
           }
         });
       })();
     } else if (msgJson.role == "handshake") {
-      ws.number = msgJson.number;
+      // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
+      // DB 연결
+      let query = "select * from `pot` where `serial_number`=?";
+      dbConnection.query(query, [msgJson.serial], (error, result) => {
+        if (error){
+          winston.error("핸드셰이크 과정중 에러 발생 :" + ip);
+          winston.error(error);
+        } else if (result.length == undefined || result.length === 0){
+          ws.send("존재하지 않는 시리얼입니다.");
+          ws.close();
+        } else if (result[0].member_index == null){
+          ws.send("등록되지 않은 시리얼입니다")
+          ws.close();
+        }
+      })
+
+      ws.serial = msgJson.serial;
       clients.push(ws);
     } else {
       ws.send("error: role needed");
@@ -124,4 +141,4 @@ wss.on("connection", (ws, req) => {
   // ws.send("Hello! I am a WebSocket server.");
 });
 
-console.log("WebSocket server started on port 30002.");
+winston.info(`WebSocket server started on port ${process.env.PORT}.`);
