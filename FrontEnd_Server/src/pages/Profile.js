@@ -16,6 +16,7 @@ import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
 
+
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
@@ -155,17 +156,24 @@ const Profile = () => {
     );
   };
 
+  const createCard = () => {
+    navigate('/register');
+  }
+
   return (
     <React.Fragment>
       <NavTop />
+      <div className="profilepage">
       <div className="container profile-container">
-        <div className="profile-left"></div>
+        <div className="profile-left">
+          <h1>PROFILE</h1>
+        </div>
         <div className="profile-right">
           <div>
-            <h2>키우는 식물</h2>
+            <h2>키우는 식물</h2><br/>
             <Swiper
               slidesPerView={6}
-              spaceBetween={30}
+              spaceBetween={20}
               freeMode={true}
               pagination={{
                 clickable: true,
@@ -180,7 +188,7 @@ const Profile = () => {
                     <div className="plantcard-details"></div>
                   </div>
                   <div className="blob"></div>
-                  <button className="button type1 plantcard-button">
+                  <button className="button type1 plantcard-button" onClick={createCard}>
                     <span className="btn-txt">+</span>
                   </button>
                 </div>
@@ -188,10 +196,10 @@ const Profile = () => {
             </Swiper>
           </div>
           <div style={{ marginTop: "1rem" }}>
-            <h2>키운식물</h2>
+            <h2>완료된 식물</h2><br/>
             <Swiper
               slidesPerView={6}
-              spaceBetween={30}
+              spaceBetween={20}
               freeMode={true}
               pagination={{
                 clickable: true,
@@ -200,9 +208,11 @@ const Profile = () => {
               className="mySwiper"
             >
               {completeCardSet()}
+
             </Swiper>
           </div>
         </div>
+      </div>
       </div>
     </React.Fragment>
   );

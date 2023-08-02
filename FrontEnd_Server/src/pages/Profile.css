@@ -13,16 +13,37 @@
   z-index: 1; 
   padding-bottom: 150px;
   overflow-x: hidden; /* 가로 스크롤 숨김 */
+
 }
+.profilepage {
+  background-image: url(../assets/profile7.jpg);
+  background-size: contain; /* 이미지를 요소에 맞게 비율을 유지하며 설정 */
+  background-repeat: no-repeat;
+  width: 100%;
+  background-position: center center;
+}
+
 .mySwiper {
   width: 100%; /* 슬라이드의 부모인 mySwiper 클래스의 너비를 100%로 설정 */
 }
 .profile-left {
-  flex: 1; 
+  position: relative;
+  height: 100%;
+  margin-right: 50px;
+  box-sizing: border-box; /* border와 padding을 포함한 크기로 계산 */
+}
+
+.profile-left > * {
+  width: calc(100% - 200px);
+}
+
+/* 자식 요소들에게 .profile-left의 크기를 상속하도록 설정 */
+.profile-left > * {
+  height: 100%;
+  width: 100%;
 }
 
 .profile-right {
-  flex: 9; 
   margin-top: 40px ;
   position: relative;
   height: 100%;
@@ -37,6 +58,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
 }
 
 .swiper-pagination {
@@ -48,3 +70,9 @@
   z-index: 10;
 }
 
+.plusbutton {
+  border: 1px solid black;
+  border-radius: 20px;
+  visibility: inherit !important;
+  cursor: pointer;
+}
