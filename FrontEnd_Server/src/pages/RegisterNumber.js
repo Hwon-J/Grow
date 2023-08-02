@@ -8,6 +8,7 @@ import './register.css';
 import { TbLeaf } from "react-icons/tb";
 import { CiLock } from "react-icons/ci";
 import { MdSend } from "react-icons/md";
+import homevideo2 from '../assets/homevideo2.mp4';
 
 
 const RegisterNumber = () => {
@@ -37,7 +38,9 @@ const RegisterNumber = () => {
       <NavTop />
       <div className='container d-flex justify-content-center align-items-center'>
         <div className='leftimg'>
-          <img src="./img/tmpimg.png" style={{ height: '400px' }} alt="Temporary Image" />
+          <video autoPlay loop muted width="360" height="640">
+            <source src={homevideo2} type="video/mp4" />
+          </video>
         </div>
         <div className="rightinput">
           <form onSubmit={handleSerial}>
