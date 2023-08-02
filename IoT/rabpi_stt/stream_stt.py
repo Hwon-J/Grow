@@ -43,7 +43,7 @@ def stream_generator(stream):
 
 
 async def send(websocket, send_msg):
-    data = {"role": "gpt", "message": send_msg, "number": 1111}
+    data = {"role": "gpt", "message": send_msg, "serial": 1111}
     await websocket.send(json.dumps(data))
     response = await websocket.recv()
     print(f"Received: {response}")
@@ -201,7 +201,7 @@ async def main():
     # uri = "ws://192.168.100.37:30002/"
     uri = "ws://i9c103.p.ssafy.io:30002/"
     async with websockets.connect(uri) as websocket:
-        await websocket.send(json.dumps({"role": "handshake", "number": 1111}))
+        await websocket.send(json.dumps({"role": "handshake", "serial": 1111}))
         print("server connect")
 
         thread_stt = threading.Thread(target=stt)
