@@ -105,7 +105,6 @@ def listen_print_loop(responses):
             if exit_flag.is_set():
                 send_msg=stack.peek()
                 print(send_msg)
-                
         else:
             print("send message is ",send_msg,end=" ")
             print()
@@ -206,9 +205,9 @@ def main():
                     thread_msg=threading.Thread(target=send_and_receive_message,args=(send_msg,))
                     thread_msg.start()
                     send_msg=""
-                    thread_msg.join()
+                    thread_msg.join()'''
                 time.sleep(1)
-                '''
+                
         except KeyboardInterrupt:
             GPIO.cleanup()
             thread_sense.join()
