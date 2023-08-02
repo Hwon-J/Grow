@@ -98,8 +98,8 @@
     font-size: 20px;
     font-weight: 600;
     cursor: pointer;
-    background-color: #7fcd7d;
-    height: 55px;
+    background-color: #60b9df;
+    height: 40px;
     text-align: center;
     border: none;
     background-size: 300% 100%;
@@ -108,4 +108,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .checkIdp {
+    margin-left: 50px;
+    color: red;
   }
