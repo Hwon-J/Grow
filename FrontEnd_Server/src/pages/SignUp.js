@@ -18,7 +18,8 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [checkId, setCheckId] = useState("");
   // username, email, password, confirmPassword 를 비동기로 저장하기 위해 설정
   const onChangeUserid = (e) => {
     setUserid(e.target.value);
@@ -31,9 +32,19 @@ const SignUp = () => {
   };
   const onChangePassword = (e) => {
     setPassword(e.target.value);
+    if (password === confirmPassword) {
+      setConfirmMessage("비밀번호가 일치합니다")
+    } else {
+      setConfirmMessage("비밀번호가 일치하지 않습니다")
+    }
   };
   const onChangeConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
+    if (password === confirmPassword) {
+      setConfirmMessage("비밀번호가 일치합니다")
+    } else {
+      setConfirmMessage("비밀번호가 일치하지 않습니다")
+    }
   };
 
   //회원가입시
@@ -75,16 +86,20 @@ const SignUp = () => {
   };
 
   // registerUserAction을 부르고 body변수를 props로 전달
+
   const idChecking = async () => {
     try {
       const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/id-check/${userid}`
+        `http://i9c103.p.ssafy.io:30001/api/user/id-check/${userid}`
       );
-      console.log(response);
+      console.log(response.data.message);
+      setCheckId(response.data.message)
+      return 
     } catch (error) {
       console.log(error);
     }
   };
+
 
   return (
     <>
@@ -103,7 +118,7 @@ const SignUp = () => {
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs={7}>
                     <TextField
-                      label="아이디"
+                      label={checkId ? checkId : "아이디"}
                       fullWidth
                       variant="outlined"
                       margin="normal"
@@ -122,7 +137,6 @@ const SignUp = () => {
                     </p>
                   </Grid>
                 </Grid>
-
                 <Grid>
                   <TextField
                     label="이름"
@@ -156,7 +170,7 @@ const SignUp = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    label="비밀번호 확인"
+                    label={confirmMessage ? confirmMessage : "비밀번호 확인"}
                     fullWidth
                     type="password"
                     variant="outlined"
