@@ -61,7 +61,7 @@ function NavTop() {
                 <Link to="/profile">Profile</Link>
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <Link to="/plantinfo">plantinfo</Link>
               </li>
               <li onClick={handleNavItemClick}>
                 <Link to="#">Services</Link>

@@ -1,100 +1,181 @@
-//김태형
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import { useNavigate } from "react-router-dom";
-
+import { TextField, Grid, Container, Paper, Box } from "@mui/material";
 import NavTop from "../components/NavTop";
-import './plantinfo.css';
+import { styled } from "@mui/material/styles";
+import "./plantinfo.css";
+import { TbLeaf } from "react-icons/tb";
+import { CiLock } from "react-icons/ci";
+import { MdSend } from "react-icons/md";
+import homevideo2 from "../assets/homevideo2.mp4";
+
 const PlantInfo = () => {
-  const location = useLocation(); // props랑은 다르게 라우팅 관련해서 데이터 전달하는 법
-  const data = location.state; // 전달된 데이터 객체
-
-  // dataReceived 객체에서 nickname과 serialNum 사용
-  const nickname = data.nickname;
-  const serialNum = data.serialNum;
-  // 식물종 정보, 식물종 정보중 index확인용 변수
-  const [plantInfo, setPlantInfo] = useState([ ]);
+  const [nickname, setNickname] = useState("");
+  const [serialNum, setSerialNum] = useState("");
+  const [checkNum, setCheckNum] = useState("");
+  const [checkedResult, setCheckedResult] = useState(false);
+  const [plantInfo, setPlantInfo] = useState([]);
   const [checkIdx, setCheckIdx] = useState(-1);
-
   const navigate = useNavigate();
-  // 해당 페이지가 실행되면 getPlantInfo : 식물 종 데이터 받아오는 메서드  가 자동으로 실행되게 만들기
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
+
   useEffect(() => {
     getPlantInfo();
   }, []);
 
-  // plantInfo가 변경될 때마다 imgPlantInfo() 함수 호출
   useEffect(() => {
     imgPlantInfo();
   }, [plantInfo]);
 
-  // plantInfo정보에서 각각의 img정보를 받아와서 이미지 처리 : 각 이미지를 클릭시 onClickInfo(index)가 넘어가서
-  // component의 정보 변경 처리
-  const imgPlantInfo = () => {
-    return plantInfo.map((info, index) => (
-      <div>
-      <img
-        className="plantinfoimg"
-        src={`./plantinfoimg/${info.species}.jpg`}
-        key={index}
-        onClick={() => onClickInfo(info.index)}
-        style={{ border: checkIdx === info.index ? "2px solid red" : "none" }} // 클릭된 이미지에 빨간색 테두리
-      />
-      </div>
-    ));
+  const onChangeNickname = (e) => {
+    // 입력한 값 계속 바뀌는 것 확인
+    setNickname(e.target.value);
   };
 
-  // 식물 종 데이터 변경할 메서드
+  const onChangeSerialNum = (e) => {
+    setSerialNum(e.target.value);
+  };
+
+  const createPlant = async (e) => {
+    e.preventDefault();
+    if (checkedResult === false) {
+      alert("시리얼 넘버를 확인해주세요");
+    } else {
+      // 데이터를 함께 보낼 객체를 생성 nickname, serialNum
+      const data = {
+        nickname: nickname,
+        plant_info_index: checkIdx,
+      };
+      try {
+        const response = await axios.post(
+          `http://i9c103.p.ssafy.io:30001/api/plant/create`,
+          data
+        );
+        navigate(`/diary/${response.data.index}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const imgPlantInfo = () => {
+    return (
+      <div className="image-container">
+        {plantInfo.map((info, index) => (
+          <div key={index} className="image-wrapper">
+            <img
+              className="plantinfoimg"
+              src={`./plantinfoimg/${info.species}.jpg`}
+              onClick={() => onClickInfo(info.index)}
+              style={{
+                border: checkIdx === info.index ? "2px solid black" : "none",
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(
         `http://i9c103.p.ssafy.io:30001/api/plant/info`
       );
-      console.log(response);
-      setPlantInfo(response.data.info)
-      return;
+      setPlantInfo(response.data.info);
     } catch (error) {
       console.log(error);
     }
   };
-  // 클릭시 checkIdx의 숫자가 변경
-  const onClickInfo = (idx) => {
-    console.log(idx);
 
+  const onClickInfo = (idx) => {
     setCheckIdx(idx);
   };
-  const pageChange = () => {
-    const data = {
-      nickname: nickname,
-      serialNum: serialNum,
-      checkIdx: checkIdx,
-    };
-    console.log(data);
-    navigate("/diary/${}", { state: data });
+
+  const checkSerial = async () => {
+    try {
+      const response = await axios.get(
+        `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
+      );
+      if (response.data.code === 202) {
+        alert(response.data.message);
+        setCheckedResult(false);
+      }
+      if (response.data.code === 200) {
+        setCheckNum(response.data.message);
+        setCheckedResult(true);
+      }
+    } catch (error) {
+      alert.log("서버에러");
+      setCheckedResult(false);
+    }
   };
+
   return (
     <>
       <NavTop />
-
-      <div className="container plantinfopage">
-        <div>
-        {/* img출력 함수 */}
-        {imgPlantInfo()}
-        </div>
-        <div>
-        {/* checkIdx가 null인 경우 빈 정보를 보내도록 처리 */}
-        {checkIdx !== null && (
-          <PlantInfoComponent
-            props={checkIdx !== -1 ? plantInfo[checkIdx-1] : {}}
-          />
-        )}
-        </div>
-
-        <button onClick={pageChange}>제출</button>
-      </div>
+      <Container className="plantinfopage">
+        <Grid container spacing={2}>
+          <Grid item xs={4} md={2}>
+            <Item>{imgPlantInfo()}</Item>
+          </Grid>
+          <Grid item xs={8} md={6}>
+            <div className="itemclone">
+              {checkIdx !== null && (
+                <PlantInfoComponent
+                  props={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
+                />
+              )}
+            </div>
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <div className="itemclone">
+              <form onSubmit={createPlant}>
+                <p>식물의 애칭</p>
+                <TbLeaf />
+                <input
+                  className="nickname-input"
+                  label="닉네임"
+                  value={nickname}
+                  onChange={onChangeNickname}
+                />
+                <hr />
+                <p>시리얼 넘버 등록</p>
+                <CiLock />
+                <input 
+                className="serial-input"
+                value={serialNum} onChange={onChangeSerialNum} />
+                
+                <div className="check-serial-btn" onClick={checkSerial}>
+                  중복체크<MdSend />
+                </div>
+                <div>
+                  <p>{checkNum}</p>
+                </div>
+                <button className="w-btn-outline w-btn-indigo-outline" type="submit" variant="contained">
+                  만들기
+                </button>
+              </form>
+            </div>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };
 
 export default PlantInfo;
+
+{
+  /* <video autoPlay loop muted width="360" height="640">
+<source src={homevideo2} type="video/mp4" />
+</video> */
+}
