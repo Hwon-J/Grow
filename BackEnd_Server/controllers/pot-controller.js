@@ -4,9 +4,9 @@ const winston = require("../util/winston");
 const util = require("util");
 
 exports.checkSerial = async (req, res, next) => {
-  winston.info(`potController checkSerial called. serial: ${req.params}`);
+  winston.info(`potController checkSerial called. serial: ${req.params.number}`);
   try {
-    let serial = req.params;
+    let serial = req.params.number;
 
     // 데이터베이스에서 멤버 조회
     let query = "select * from `pot` where `serial_number`=?";
