@@ -33,34 +33,7 @@ exit_flag = threading.Event()
 send_msg = ""
 serial_num = 1111
 
-
-class Stack:
-    def __init__(self):
-        self.items = []
-
-    def is_empty(self):
-        return len(self.items) == 0
-
-    def push(self, item):
-        self.items.append(item)
-
-    def pop(self):
-        if not self.is_empty():
-            return self.items.pop()
-        else:
-            print("Stack is empty. Cannot pop.")
-
-    def peek(self):
-        if not self.is_empty():
-            return self.items[-1]
-        else:
-            print("Stack is empty. Nothing to peek.")
-
-    def size(self):
-        return len(self.items)
-
-    def clear(self):
-        self.items = []
+stack = []
 
 
 def stream_generator(stream):
@@ -77,10 +50,10 @@ async def send(websocket, send_msg):
 
 
 def listen_print_loop(responses):
-    global send_msg
-    stack = Stack()
-    stack.push("test string")
+    global send_msg, stack
+    stack.append("test string")
     num_chars_printed = 0
+    tmp = ""
     for response in responses:
 
         if not response.results:
@@ -95,7 +68,7 @@ def listen_print_loop(responses):
         overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
         if not result.is_final:
-            stack.push(transcript + overwrite_chars)
+            stack.append(transcript + overwrite_chars)
             # stt와 sense모두 돌아가야함
             # sense가 가까워 지는경우 전역에 저장해 준뒤 보내줌
             # sense와의 연동
@@ -103,16 +76,17 @@ def listen_print_loop(responses):
             # string으로 보내주기
             # stack clear
             if start_flag.is_set():
-                send_msg = stack.peek()
-                # print("데이터 생성중",send_msg)
+                tmp = stack[-1]
+                print("데이터 생성중", tmp)
+                send_msg = tmp
             else:
                 time.sleep(1)
-                stack.clear()
+                # stack.clear()
         else:
-            send_msg = stack.peek()
-            send_msg = ""
-            stack.clear()
-            # print("생성된 데이터",send_msg)
+            # send_msg = stack.peek()
+            # send_msg += tmp
+            # stack.clear()
+            pass
 
 
 def stt():
@@ -191,7 +165,7 @@ def sense_filter():
             continue
         s_avg = alpha*s_avg+(1-alpha)*s_meas
 
-        if s_avg < 60:
+        if s_avg < 30:
             print("close ")
             # 여기서 sleep을 할 경우 스레드가 멈춰있어서 계속 측정하는것이 아님
             # stt에 sleep을 넣어주어서 확인해야함
@@ -206,9 +180,23 @@ def sense_filter():
             k = 1
 
 
+def get_msg():
+    global stack
+    length = stack.size()-1
+    print(type(stack))
+    print(type(stack[0]))
+    msg = ""
+    for i in length(length, 1, -1):
+        if (len(stack[i]) < len(stack[i-1])):
+            msg += stack[i-1]
+        elif (len(stack[i]) > len(stack[i-1])):
+            pass
+    return msg
+
+
 async def main():
 
-    global send_msg
+    global send_msg, stack
 
     # uri = "ws://192.168.100.37:30002/"
     uri = "ws://i9c103.p.ssafy.io:30002/"
@@ -226,8 +214,10 @@ async def main():
             send_flag = False
             while True:
                 if exit_flag.is_set() and not send_flag:
+                    # send_msg = get_msg()
                     print("웹소켓 전송", send_msg)
                     await send(websocket, send_msg)
+                    stack.clear()
                     send_flag = True
                 elif not exit_flag.is_set():
                     send_flag = False
@@ -236,6 +226,8 @@ async def main():
             GPIO.cleanup()
             thread_sense.join()
             thread_stt.join()
+            sys.exit()
+
 
 if __name__ == '__main__':
     # main()
