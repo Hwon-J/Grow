@@ -1,0 +1,23 @@
+.video-background {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 화면 전체 높이에 맞게 설정합니다. */
+    overflow: hidden;
+  }
+  
+  .video-background video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 비디오 비율 유지 및 전체 화면 채우기 */
+    z-index: -1; /* 다른 콘텐츠보다 뒤로 보내기 */
+  }
+  
+  .content {
+    position: relative;
+    z-index: 1; /* 비디오보다 앞으로 보내기 */
+    /* 필요한 스타일링 추가 */
+  }
+  
