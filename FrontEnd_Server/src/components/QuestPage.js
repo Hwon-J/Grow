@@ -1,11 +1,10 @@
 // 김태형
 import React, { useEffect, useState } from 'react';
-import NavTop from '../../components/NavTop';
-import Footer from '../../components/Footer';
+
 import { useSelector } from 'react-redux';
 import { BsPlusCircle } from 'react-icons/bs';
 import axios from 'axios';
-import './questpage.css';
+import './questpage.scss';
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser);  // 로그인되어있는지 확인
@@ -87,7 +86,6 @@ const QuestPage = () => {
   return (
     <>
       <div onClick={handleOutsideClick}> {/*  해당내부 선택시 아이콘 다시 나타나게 */}
-        <NavTop />
       </div>
       <div className='quest-container'>
         <div className='quest-section container'>
@@ -108,12 +106,8 @@ const QuestPage = () => {
             <button className="create-quest" onClick={createQuest}><span>Hover me!</span></button>
           </div>
         </div>
-        <div className='quest-section container'>
-          음성
-        </div>
       </div>
       <div>
-        <Footer />
       </div>
     </>
   );

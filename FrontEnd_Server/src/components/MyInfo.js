@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import myImage from '../assets/1.jpg';
 import './MyInfo.scss';
 
@@ -29,7 +29,7 @@ const calDay = (firstDate, secondDate) => {
 };
 
 const MyInfo = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [plantInfo, setPlantInfo] = useState(data);
   const today = new Date(); // Date 객체로 초기화
   const formattedToday = formatDate(today.toISOString());
@@ -53,9 +53,9 @@ const MyInfo = () => {
     }, 1000); // 1초의 지연을 시뮬레이션하기 위해 1000ms를 사용합니다
   }, []);
 
-  const handleQuestPageButtonClick = () => {
-    navigate('/questpage'); // Use navigate to navigate to /questpage
-  };
+  // const handleQuestPageButtonClick = () => {
+  //   navigate('/questpage'); // Use navigate to navigate to /questpage
+  // };
 
   
   return (
@@ -68,7 +68,7 @@ const MyInfo = () => {
           <h5>{plantInfo.child_name}(이)가 키우는 {plantInfo.plant_nickname}</h5>
           {/* <h5>키운지 { today }일째</h5> */}
           <h5>키운 지 {daysDifference}일째</h5>
-          <button onClick={handleQuestPageButtonClick}>질문 등록</button>
+          {/* <button onClick={handleQuestPageButtonClick}>질문 등록</button> */}
         </div>
       </div>       
     </>
