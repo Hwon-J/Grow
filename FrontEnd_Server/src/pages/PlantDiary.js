@@ -1,35 +1,27 @@
 import React from 'react';
 import Calendar from '../components/Calendar';
 import MyInfo from '../components/MyInfo';
-import { Container as MuiContainer } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import NavTop from '../components/NavTop';
-import { styled } from '@mui/system';
+import QuestPage from '../components/QuestPage';
 import './PlantDiary.scss';
-
-const ResponsiveContainer = styled(MuiContainer)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
-
-  [theme.breakpoints.down('sm')]: {
-    width: '95%',
-  },
-  [theme.breakpoints.up('md')]: {
-    width: '80%',
-  },
-  [theme.breakpoints.up('lg')]: {
-    width: '70%',
-  },
-}));
 
 const PlantDiary = () => {
   return (
     <div className='diary_total'>
       <NavTop />
-      <ResponsiveContainer className="centered-elements">
+      <Container className="centered-elements">
         <h1>plantDiary</h1>
-        <MyInfo />
-        <Calendar />
-      </ResponsiveContainer>
+        <Grid container spacing={2}>
+          <Grid item sm={12} md={4}>
+            <MyInfo />
+            <Calendar />
+          </Grid>
+          <Grid item sm={12} md={8}>
+            <QuestPage />
+          </Grid>
+        </Grid>
+      </Container>
     </div>
   );
 };
