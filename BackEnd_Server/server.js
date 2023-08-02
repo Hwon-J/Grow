@@ -25,6 +25,9 @@ app.use("/api/pot", potRoutes);
 const sensorRoutes = require("./routes/sensor-router");
 app.use("/api/sensor", sensorRoutes);
 
+const plantRoutes = require("./routes/plant-router");
+app.use("/api/plant", plantRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
