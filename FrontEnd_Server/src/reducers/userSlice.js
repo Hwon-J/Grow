@@ -78,7 +78,8 @@ const userSlice = createSlice({
     builder.addCase(registerUserAction.fulfilled, (state, action) => {
       state.status = "success";
       state.isAuth = true;
-      console.log(action)
+      
+      console.log(action.payload)
     });
     //registerUserAction이 실패했을때 상태값 바꿔주기
     // 에러메세지 변경
