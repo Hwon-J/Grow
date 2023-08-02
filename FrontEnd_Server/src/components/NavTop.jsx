@@ -3,6 +3,8 @@ import { Link, useNavigate  } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../reducers/userSlice';
 import './navbar.scss';
+import logo from '../assets/logo.png';
+
 function NavTop() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const dispatch = useDispatch();
@@ -44,7 +46,7 @@ function NavTop() {
         <div className="nav-container">
           <div className="brand">
             <Link to="/home">
-              <img src="./img/logo.png" alt="Home" />
+              <img src={logo} alt="Home" />
             </Link>
           </div>
           <nav>
