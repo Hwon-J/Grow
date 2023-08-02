@@ -32,4 +32,6 @@ const potController = require("../controllers/pot-controller");
  */
 router.get("/:number", potController.checkSerial);
 
+router.post("/", potController.allocateOwner);
+
 module.exports = router;
