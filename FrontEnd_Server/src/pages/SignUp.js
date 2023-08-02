@@ -39,8 +39,11 @@ const SignUp = () => {
     }
   };
   const onChangeConfirmPassword = (e) => {
+    
     setConfirmPassword(e.target.value);
-    if (password === confirmPassword) {
+    // console.log(password, confirmPassword)
+    // console.log(e.target.value)
+    if (password === e.target.value) {
       setConfirmMessage("비밀번호가 일치합니다")
     } else {
       setConfirmMessage("비밀번호가 일치하지 않습니다")
@@ -82,6 +85,16 @@ const SignUp = () => {
     };
     dispatch(registerUserAction(body)).then((action) => {
       console.log(currentUser);
+      console.log(action.payload.code)
+      const signup_status = action.payload.code
+      if (signup_status === 201) {
+        alert('회원가입 성공! 로그인 페이지로 이동합니다.')
+        navigate('/login')
+      }
+      else {
+        alert('이미 중복된 아이디이므로 다른 아이디로 가입해주세요.')
+        setUserid("")
+      }
     });
   };
 

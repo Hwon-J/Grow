@@ -16,12 +16,7 @@
 
 }
 .profilepage {
-  /* background-image: url(../assets/profileback4.jpg); */
-  background-size: contain; /* 이미지를 요소에 맞게 비율을 유지하며 설정 */
-  background-repeat: no-repeat;
-  width: 100%;
-  background-position: center center;
-  
+  width : 100%;
   
 
 }
@@ -29,33 +24,20 @@
 .mySwiper {
   width: 100%; /* 슬라이드의 부모인 mySwiper 클래스의 너비를 100%로 설정 */
 }
-.profile-left {
-  position: relative;
-  height: 100%;
-  margin-right: 50px;
-  box-sizing: border-box; /* border와 padding을 포함한 크기로 계산 */
-  color : black;
-}
 
-.profile-left > * {
-  width: calc(100% - 200px);
-}
 
 /* 자식 요소들에게 .profile-left의 크기를 상속하도록 설정 */
-.profile-left > * {
-  height: 100%;
-  width: 100%;
-}
 
-.profile-right {
-  margin-top: 40px ;
+
+/* .profile-right {
+  
   position: relative;
   height: 100%;
   color : black;
   border : 2px solid black;
   border-radius: 2ch;
   padding : 30px;
-}
+} */
 
 .swiper-slide {
   text-align: center;
@@ -83,4 +65,14 @@
   border-radius: 20px;
   visibility: inherit !important;
   cursor: pointer;
+}
+
+.profile-total{
+  background-image: linear-gradient(to right, #cfead0, #77a98d);
+}
+
+.plant{
+  border : 1px solid black;
+  border-radius: 2ch;
+  background-color: white;
 }
