@@ -46,8 +46,12 @@ const PlantInfo = () => {
   // 식물 종 데이터 변경할 메서드
   const getPlantInfo = async () => {
     try {
-      const response = await axios.get("식물 데이터 주소");
-      setPlantInfo(response.data);
+      const response = await axios.get(
+        `http://i9c103.p.ssafy.io:30001/api/plant/info`
+      );
+      console.log(response);
+
+      return 
     } catch (error) {
       console.log(error);
     }
