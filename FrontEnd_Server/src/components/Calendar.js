@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 // date-fns 라이브러리를 사용해서 날짜를 계산에 필요한 부분을 불러온다
 // format: 날짜를 원하는 형식으로 변환
@@ -21,18 +21,39 @@ import './Calendar.scss';
 // 각각의 요일을 표기하는 RenderDays
 // 날짜를 표기하고 날짜를 클릭하면 선택되는 RenderCells
 
+const water = {
+    "plant_idx": 1,
+    "water_log":["2023-07-09T12:00:00","2023-07-11T12:00:00","2023-07-15T12:00:00","2023-07-19T12:00:00","2023-07-22T12:00:00",]
+}
+
+const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+  };
+
+const formattedWaterLog = water.water_log.map(formatDate);
+
+console.log(formattedWaterLog);
+
+
+
 // Calender 컴포넌트에서 currentMonth, prevMonth, nextMonth를 가져와 사용한다.
 // format을 사용해 원하는 형태로 출력한다.
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
     return (
         <div className="header_cal">
             <Icon icon="bi:chevron-left" onClick={prevMonth} />
+                <span className="mon_yr">
                     <span className="month">
-                        {format(currentMonth, 'M')}월
+                        {format(currentMonth, 'LLLL')}
                     </span>
                     <span className="year">
                         {format(currentMonth, 'yyyy')}
-                    </span>   
+                    </span>  
+                </span> 
             <Icon icon="bi:chevron-right" onClick={nextMonth} />
         </div>
     );
@@ -58,14 +79,15 @@ const RenderDays = () => {
 };
 
 // 각각의 날짜를 표기하는 RenderCells
-const RenderCells = ({ currentMonth, selectedDate, onDateClic, currentDate }) => {
+const RenderCells = ({ currentMonth, selectedDate, currentDate, formattedWaterLog }) => {
     // 현재의 월의 첫날과 마지막날, 첫주의 첫날(이전달)과 마지막주의 마지막날(다음달)을 구한다.
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
+    console.log(currentDate);
     
-    // 주(rows)와 날짜(days)를 담을 배열을 만든다.
+    // 주(rows)와 날짜(days)를 담을 배열을 만든다.0
     const rows = [];
     let days = [];
     // day 변수에 startDate를 할당, day는 반복문에서 사용될 변수이다.
@@ -75,11 +97,11 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClic, currentDate }) =>
 
     // 각 주마다 반복문을 실행하여 날짜들을 처리
     while (day <= endDate) {
+        // 날짜의 형식을 지정한 문자열을 formattedDate에 할당
         for (let i = 0; i < 7; i++) {
-            // 날짜의 형식을 지정한 문자열을 formattedDate에 할당
             formattedDate = format(day, 'd');
-            // const cloneDay = day;
-            const isCurrentDate = isSameDay(day, currentDate);
+            const isWatered = formattedWaterLog.includes(formatDate(day));
+
             days.push(
                 <div
                     className={`cell_col ${
@@ -90,17 +112,18 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClic, currentDate }) =>
                             : format(currentMonth, 'M') !== format(day, 'M')
                             ? 'not-valid'
                             : 'valid'
-                    }`}
+                    } ${isWatered ? 'watered' : ''}`}
                     key={day}
-                    // onClick={() => onDateClick(parse(cloneDay))}
                 >
+                     
                     <span
                         className={
                             format(currentMonth, 'M') !== format(day, 'M')
                                 ? 'text not-valid'
-                                : ''
+                                : isSameDay(day, currentDate)
+                            ? 'text current-day' // 오늘 날짜의 스타일을 'current-day' 클래스로 지정
+                            : ''
                         }
-                        style={isCurrentDate ? { color: 'blue' } : {}}
                     >
                         {formattedDate}
                     </span>
@@ -123,14 +146,8 @@ const Calender = () => {
     // useState(new Date())를 통해 현재 날짜와 시간을 초기값으로 저장합니다.
     // currentMonth, selectedDate, currentDate만든다.
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentDate, setCurrentDate] = useState(new Date());
 
-    // useEffect를 사용하여 컴포넌트가 마운트될 때 한번만 실행되도록 설정합니다.
-    useEffect(() => {
-        // 현재 날짜와 시간을 하드코딩하여 상태에 저장합니다.
-        setCurrentDate(new Date('2023-07-13T17:55:00'));
-    }, []);
 
     // prevMonth, nextMonth를 만들어 버튼 클릭시 원하는 달로 이동하도록 설정한다.
     const prevMonth = () => {
@@ -139,11 +156,7 @@ const Calender = () => {
     const nextMonth = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
-
-
-    // const onDateClick = (day) => {
-    //     setSelectedDate(day);
-    // };
+    const formattedWaterLog = useMemo(() => water.water_log.map(formatDate), []);
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
@@ -156,9 +169,8 @@ const Calender = () => {
             <RenderDays />
             <RenderCells
                 currentMonth={currentMonth}
-                selectedDate={selectedDate}
-                // onDateClick={onDateClick}
                 currentDate={currentDate}
+                formattedWaterLog={formattedWaterLog}
             />
         </div>
     );
