@@ -20,7 +20,7 @@ const PlantCard = (props) => {
       </div>
       <div className="blob"></div>
       <button className="button type1 plantcard-button" onClick={goDiary}>
-        <span className="btn-txt">Hello</span>
+        <span className="btn-txt">상세보기</span>
       </button>
     </div>
   );
