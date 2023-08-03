@@ -53,7 +53,7 @@ function Conversation() {
       {/* <img className="character" src={tomatocharacter} alt="cancel" style={character_style} /> */}
       {/* <img src={potcharacter} alt="cancel" style={character_style} /> */}
       <div className='col-12'>
-        <img src={beancharacter} alt="cancel" style={character_style} />
+        <img className="main-img" src={beancharacter} alt="cancel" style={character_style} />
 
       </div>
       
