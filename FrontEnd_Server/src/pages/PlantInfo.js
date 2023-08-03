@@ -62,26 +62,36 @@ const PlantInfo = () => {
 
   const createPlant = async (e) => {
     e.preventDefault();
+    console.log("여기");
     if (checkedResult === false) {
       alert("시리얼 넘버를 확인해주세요");
     } else {
-      // 데이터를 함께 보낼 객체를 생성 nickname, serialNum
       const body = {
         plant_name: nickname,
         plant_info_index: checkIdx,
-        serialNum: serialNum,
-        token: authToken,
+        serial_number: serialNum,
         child_name: childname,
         child_age: childage,
       };
+      console.log(authToken)
+      const config = {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      };
+  
+      console.log(config);
+  
       try {
         const response = await axios.post(
-          `http://i9c103.p.ssafy.io:30001/api/plant/create`,
-          body
+          // `http://i9c103.p.ssafy.io:30001/api/plant/create`,
+          `http://192.168.100.37:30001/api/plant/create`,
+          body, // body는 요청 바디에 해당하는 부분이므로 여기에 body를 넣어줍니다.
+          config // config는 옵션 객체이며, 여기에 headers를 포함하여 설정을 넣어줍니다.
         );
         navigate(`/diary/${response.data.index}`);
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
     }
   };
@@ -130,9 +140,12 @@ const PlantInfo = () => {
         console.log(response.data.message);
         setCheckedResult(false);
         setErormessage(response.data.message);
+        setCheckNum("")
       }
       if (response.data.code === 200) {
         setCheckNum(response.data.message);
+        setErormessage("")
+        console.log(response.data.message);
         setCheckedResult(true);
       }
     } catch (error) {
@@ -188,11 +201,12 @@ const PlantInfo = () => {
                   </Grid>
                   <br />
                   <p className="checkP" style={{ color: "red" }}>
-                    {errormessage}
+                    {checkNum ? checkNum : errormessage}
                   </p>
 
                   <Grid item xs={12}>
-                    <button
+                    <button 
+                    type="button"
                       className="w-btn-indigo-outline"
                       onClick={checkSerial}
                     >
@@ -203,7 +217,7 @@ const PlantInfo = () => {
                 <hr />
                 <Grid item xs={12}>
                   <TextField
-                    label="아이이름"
+                    label="아이의 이름"
                     fullWidth
                     variant="outlined"
                     margin="normal"
