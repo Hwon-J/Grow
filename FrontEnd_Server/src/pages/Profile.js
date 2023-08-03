@@ -28,7 +28,7 @@ const Profile = () => {
   const [growinPlant, setGrowinPlant] = useState([
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "뷔",
       child_name: "김태형",
       difficulty: 5,
       imgname: 1,
@@ -36,7 +36,7 @@ const Profile = () => {
     },
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "뷔vs",
       child_name: "김태형",
       difficulty: 5,
       imgname: 2,
@@ -44,73 +44,18 @@ const Profile = () => {
     },
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "귀요미",
       child_name: "김태형",
       difficulty: 5,
       imgname: 3,
       id: 62,
     },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 4,
-      id: 42,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
+    
   ]);
   const [plantComplete, setPlantComplete] = useState([
     {
       plant_info: "깻잎",
-      plant_name: "깻잌",
+      plant_name: "깬닙이",
       child_name: "김민국",
       difficulty: 5,
       imgname: 6,
@@ -167,8 +112,8 @@ const Profile = () => {
       <NavTop />
       <div className="profilepage container">
         <div className="row">
-          <div className=" col-12 col-lg-2  videobox">
-            <video autoPlay loop muted width="300" height="500">
+          <div className=" col-12 col-lg-3  videobox">
+            <video autoPlay loop muted height="400">
                 <source src={homevideo2} type="video/mp4" />
             </video>
           </div>
@@ -181,7 +126,7 @@ const Profile = () => {
                 <div>
                   <h2>진행중인 식물</h2>
                   <Swiper
-                    slidesPerView={6}
+                    slidesPerView={3}
                     spaceBetween={20}
                     freeMode={true}
                     pagination={{
@@ -194,7 +139,9 @@ const Profile = () => {
                     <SwiperSlide>
                       <div className="plantcard">
                         <div className="bg">
-                          <div className="plantcard-details"></div>
+                          <div className="plantcard-details">
+                            <h5>새 식물친구<br/>등록해주기</h5>
+                          </div>
                         </div>
                         <div className="blob"></div>
                         <button className="button type1 plantcard-button" onClick={createCard}>
@@ -208,7 +155,7 @@ const Profile = () => {
               <div className="plant-complete">
                 <h2>완료된 식물</h2><br/>
                 <Swiper
-                  slidesPerView={6}
+                  slidesPerView={3}
                   spaceBetween={20}
                   freeMode={true}
                   pagination={{
