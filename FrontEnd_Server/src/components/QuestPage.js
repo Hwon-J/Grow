@@ -71,7 +71,7 @@ const QuestPage = () => {
 
   const inputQuest = () => {  // questList의 각각의 index의 값들을 빼내서 input으로 만들기
     // value는 해당 객체의 quest값
-    return questList.map((questItem, index) => (
+    return questList.slice().reverse().map((questItem, index) => (
       <div key={index}>
         <input
           type="text"
@@ -89,8 +89,8 @@ const QuestPage = () => {
       </div>
       <div className='quest-container'>
         <div className='quest-section container'>
-          질문지 등록
-          {inputQuest()}
+        What are you curious about?
+          
           <div className="input-container">
             {showIcon && !isInputFocused(questList.length) && <BsPlusCircle className="plus-icon" onClick={handleIconClick} />}
             <input
@@ -102,6 +102,7 @@ const QuestPage = () => {
               onBlur={handleInputBlur}
             />
           </div>
+          {inputQuest()}
           <div className="button_container">
             <button className="create-quest" onClick={createQuest}><span>Hover me!</span></button>
           </div>
