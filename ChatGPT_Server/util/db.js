@@ -1,5 +1,6 @@
 const maria = require("mysql");
 const winston = require("./winston.js");
+const util = require("util");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -14,21 +15,39 @@ connection.connect((error) => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
 });
+const query = util.promisify(connection.query).bind(connection);
 
 // 시리얼 넘버 확인하기
-const checkSerial = (serial) => {
-  let query = "select * from `pot` where `serial_number`=?";
-  connection.query(query, [serial], (error, result) => {
-    if (error) {
-      winston.error(error);
-      return "error";
-    } else if (result.length == undefined || result.length === 0) {
+const checkSerial = async (serial) => {
+  let sql = "select * from `pot` where `serial_number`=?";
+
+  try {
+    let result = await query(sql, [serial]);
+    
+    if (result.length == undefined || result.length === 0) {
       return "not exist";
     } else if (result[0].member_index == null) {
       return "unregistered";
-    }
+    } 
     return "ok";
-  });
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+
+  // connection.query(query, [serial], (error, result) => {
+  //   console.log(result);
+  //   console.log(error);
+  //   if (result.length == undefined || result.length === 0) {
+  //     return "not exist";
+  //   } else if (result[0].member_index == null) {
+  //     return "unregistered";
+  //   } else if (error) {
+  //     winston.error(error);
+  //     return "error";
+  //   }
+  //   return "ok";
+  // });
 };
 
 // 사용자의 입력과 gpt의 대답을 기록하기
