@@ -112,13 +112,13 @@ const Profile = () => {
       <NavTop />
       <div className="profilepage container">
         <div className="row">
-          <div className=" col-12 col-lg-3  videobox">
-            <video autoPlay loop muted height="400">
+          <div className="col-lg-3  videobox">
+            <video autoPlay loop muted height="450px">
                 <source src={homevideo2} type="video/mp4" />
             </video>
           </div>
-          <div className="container col-md-8">
-            <div>
+          <div className="container profile col-lg-8 row">
+            <div className="col-12">
               <h1>PROFILE</h1>
             </div>
             <div className="container plant">
@@ -139,7 +139,7 @@ const Profile = () => {
                     <SwiperSlide>
                       <div className="plantcard">
                         <div className="bg">
-                          <div className="plantcard-details">
+                          <div className="plantcard-details" >
                             <h5>새 식물친구<br/>등록해주기</h5>
                           </div>
                         </div>
@@ -153,7 +153,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="plant-complete">
-                <h2>완료된 식물</h2><br/>
+                <h2>완료된 식물</h2>
                 <Swiper
                   slidesPerView={3}
                   spaceBetween={20}
