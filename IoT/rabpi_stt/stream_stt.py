@@ -12,6 +12,7 @@ import json
 import serial
 import requests
 from multiprocessing import Process
+import logging
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jamfarm/Downloads/strong-aegis-385000-84625bb4880b.json"
 
 # 초음파 센서 세팅
@@ -31,7 +32,7 @@ start_flag = threading.Event()
 exit_flag = threading.Event()
 
 send_msg = ""
-serial_num = 1111
+serial_num = 'asdf'
 
 stack = []
 
@@ -43,10 +44,22 @@ def stream_generator(stream):
 
 
 async def send(websocket, send_msg):
-    data = {"role": "gpt", "message": send_msg, "serial": 1111}
+    global serial_num
+    data = {"role": "gpt", "message": send_msg, "serial": serial_num}
     await websocket.send(json.dumps(data))
     response = await websocket.recv()
     print(f"Received: {response}")
+
+
+async def handshacking(websocket):
+    global serial_num
+    await websocket.send(json.dumps({"role": "handshake", "serial": serial_num}))
+    recv = json.loads(await websocket.recv())
+    if (recv["status"] == "fail"):
+        print("connect fail: ", recv["message"])
+        return
+    print("server connect")
+    return
 
 
 def listen_print_loop(responses):
@@ -134,6 +147,7 @@ def stt():
 
 
 def sense():
+
     GPIO.output(17, False)
     time.sleep(0.5)
 
@@ -198,12 +212,10 @@ async def main():
 
     global send_msg, stack
 
-    # uri = "ws://192.168.100.37:30002/"
-    uri = "ws://i9c103.p.ssafy.io:30002/"
+    uri = "ws://192.168.100.37:30002/"
+    # uri = "ws://i9c103.p.ssafy.io:30002/"
     async with websockets.connect(uri) as websocket:
-        await websocket.send(json.dumps({"role": "handshake", "serial": 1111}))
-        print("server connect")
-
+        await handshacking(websocket)
         thread_stt = threading.Thread(target=stt)
         thread_sense = threading.Thread(target=sense_filter)
 
@@ -213,7 +225,7 @@ async def main():
         try:
             send_flag = False
             while True:
-                if exit_flag.is_set() and not send_flag:
+                if exit_flag.is_set() and not send_flag and send_msg == "":
                     # send_msg = get_msg()
                     print("웹소켓 전송", send_msg)
                     await send(websocket, send_msg)
@@ -221,6 +233,8 @@ async def main():
                     send_flag = True
                 elif not exit_flag.is_set():
                     send_flag = False
+                else:
+                    continue
                 time.sleep(2)
         except KeyboardInterrupt:
             GPIO.cleanup()
