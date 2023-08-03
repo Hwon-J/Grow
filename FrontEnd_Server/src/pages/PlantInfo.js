@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import NavTop from "../components/NavTop";
 import PlantInfoComponent from "../components/plant/PlantInfoComponent";
-import "./plantinfo.css";
+import "./plantinfo.scss";
 
 import { styled } from "@mui/material/styles";
 import { TextField, Grid, Container, Paper, Box } from "@mui/material";
@@ -106,7 +106,7 @@ const PlantInfo = () => {
               src={`./plantinfoimg/${info.species}.jpg`}
               onClick={() => onClickInfo(info.index)}
               style={{
-                border: checkIdx === info.index ? "2px solid black" : "none",
+                border: checkIdx === info.index ? "0.1rem solid rgb(56, 181, 203)" : "none",
               }}
             />
           </div>
@@ -131,26 +131,30 @@ const PlantInfo = () => {
   };
 
   const checkSerial = async () => {
-    try {
-      const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
-      );
-      if (response.data.code === 202) {
-        // alert(response.data.message);
-        console.log(response.data.message);
+    if (serialNum) {
+      try {
+        const response = await axios.get(
+          `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
+        );
+        if (response.data.code === 202) {
+          // alert(response.data.message);
+          console.log(response.data.message);
+          setCheckedResult(false);
+          setErormessage(response.data.message);
+          setCheckNum("")
+        }
+        if (response.data.code === 200) {
+          setCheckNum(response.data.message);
+          setErormessage("")
+          console.log(response.data.message);
+          setCheckedResult(true);
+        }
+      } catch (error) {
+        alert.log("서버에러");
         setCheckedResult(false);
-        setErormessage(response.data.message);
-        setCheckNum("")
       }
-      if (response.data.code === 200) {
-        setCheckNum(response.data.message);
-        setErormessage("")
-        console.log(response.data.message);
-        setCheckedResult(true);
-      }
-    } catch (error) {
-      alert.log("서버에러");
-      setCheckedResult(false);
+    } else {
+      alert("시리얼 넘버를 입력해 주세요!")
     }
   };
 
@@ -159,10 +163,10 @@ const PlantInfo = () => {
       <NavTop />
       <Container className="plantinfopage">
         <Grid container spacing={2}>
-          <Grid item xs={4} md={2}>
+          <Grid className="each-components" item xs={12} md={2}>
             <Item>{imgPlantInfo()}</Item>
           </Grid>
-          <Grid item xs={8} md={6}>
+          <Grid className="each-components" item xs={12} md={5}>
             <div className="itemclone">
               {checkIdx !== null && (
                 <PlantInfoComponent
@@ -172,7 +176,7 @@ const PlantInfo = () => {
               )}
             </div>
           </Grid>
-          <Grid item md={4} xs={12}>
+          <Grid className="each-components" item xs={12} md={4}>
             <div className="itemclone">
               <form onSubmit={createPlant}>
                 <Grid justifyContent="center" alignItems="center">

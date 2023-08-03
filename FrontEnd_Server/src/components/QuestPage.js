@@ -1,6 +1,6 @@
 // 김태형
 import React, { useEffect, useState } from 'react';
-
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { BsPlusCircle } from 'react-icons/bs';
 import axios from 'axios';
@@ -13,7 +13,7 @@ const QuestPage = () => {
   const [focusedInputIndex, setFocusedInputIndex] = useState(null); // 어떤 input이 포커스 받는지 확인 변수
   const [questList, setQuestList] = useState([{ quest: "안녕?" }, { quest: "날씨어때?" }, { quest: "되나??" }]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
-
+  const { id } = useParams();
   useEffect(() => {
     getQuest();
   }, []); // axios를 통해서 질문지 리스트 받을 useEffect
@@ -55,14 +55,15 @@ const QuestPage = () => {
   };
 
   const getQuest = async () => {  // 처음시작했을떄 질문지리스트 받을예정
-    if (currentUser) { // 로그인 되어있을때 
+    console.log("id : " + id)
+    if (authToken) { // 로그인 되어있을때 
       try {  
-        const response = await axios.get('질문지 axios주소', {
+        const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/quest/${id}`, {
           headers: {
-            Authorization: `Bearer ${authToken}`
+            Authorization: `${authToken}`
           }
         });
-        setQuestList(response.data);  // questList에 data넣기
+        setQuestList(response.data.quest);  // questList에 data넣기
       } catch (err) {
         console.log('에러가 발생', err);
       }
@@ -88,8 +89,8 @@ const QuestPage = () => {
       <div onClick={handleOutsideClick}> {/*  해당내부 선택시 아이콘 다시 나타나게 */}
       </div>
       <div className='quest-container'>
-        <div className='quest-section container'>
-        What are you curious about?
+        <div className='quest-section '>
+        <span>아이에게 질문해 주세요!</span>
           
           <div className="input-container">
             {showIcon && !isInputFocused(questList.length) && <BsPlusCircle className="plus-icon" onClick={handleIconClick} />}
@@ -104,7 +105,7 @@ const QuestPage = () => {
           </div>
           {inputQuest()}
           <div className="button_container">
-            <button className="create-quest" onClick={createQuest}><span>Hover me!</span></button>
+            <button className="create-quest-btn" onClick={createQuest}><span>질문 등록</span></button>
           </div>
         </div>
       </div>
