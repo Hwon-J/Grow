@@ -80,7 +80,7 @@ const RenderDays = () => {
 };
 
 // 각각의 날짜를 표기하는 RenderCells
-const RenderCells = ({ currentMonth, selectedDate, currentDate, formattedWaterLog }) => {
+const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
     // 현재의 월의 첫날과 마지막날, 첫주의 첫날(이전달)과 마지막주의 마지막날(다음달)을 구한다.
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
@@ -108,11 +108,12 @@ const RenderCells = ({ currentMonth, selectedDate, currentDate, formattedWaterLo
                     className={`cell_col ${
                         !isSameMonth(day, monthStart)
                             ? 'disabled'
-                            : isSameDay(day, selectedDate)
-                            ? 'selected'
+                            : isSameDay(day, currentDate)
+                            ? 'text current-day'
                             : format(currentMonth, 'M') !== format(day, 'M')
                             ? 'not-valid'
                             : 'valid'
+                            
                     } ${isWatered ? 'watered' : ''}`}
                     key={day}
                 >
@@ -121,8 +122,6 @@ const RenderCells = ({ currentMonth, selectedDate, currentDate, formattedWaterLo
                         className={
                             format(currentMonth, 'M') !== format(day, 'M')
                                 ? 'text not-valid'
-                                : isSameDay(day, currentDate)
-                            ? 'text current-day' // 오늘 날짜의 스타일을 'current-day' 클래스로 지정
                             : ''
                         }
                     >
