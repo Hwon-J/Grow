@@ -76,6 +76,7 @@ const PlantInfo = () => {
       console.log(authToken)
       const config = {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `${authToken}`,
         },
       };
@@ -84,8 +85,8 @@ const PlantInfo = () => {
   
       try {
         const response = await axios.post(
-          // `http://i9c103.p.ssafy.io:30001/api/plant/create`,
-          `http://192.168.100.37:30001/api/plant/create`,
+          `http://i9c103.p.ssafy.io:30001/api/plant/create`,
+          // `http://192.168.100.37:30001/api/plant/create`,
           body, // body는 요청 바디에 해당하는 부분이므로 여기에 body를 넣어줍니다.
           config // config는 옵션 객체이며, 여기에 headers를 포함하여 설정을 넣어줍니다.
         );
