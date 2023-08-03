@@ -43,6 +43,7 @@ console.log(formattedWaterLog);
 // Calender 컴포넌트에서 currentMonth, prevMonth, nextMonth를 가져와 사용한다.
 // format을 사용해 원하는 형태로 출력한다.
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
+    
     return (
         <div className="header_cal">
             <Icon icon="bi:chevron-left" onClick={prevMonth} />

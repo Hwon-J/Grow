@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const plantController = require('../controllers/plant-controller');
+const plantController = require("../controllers/plant-controller");
+var verify = require("../util/tokenVerifier");
 
-router.get('/info', plantController.getPlantInfos);
+router.get("/info", plantController.getPlantInfos);
 
-router.post('/create', plantController.createPlant);
+router.post("/create", verify, plantController.registPlant);
 
 module.exports = router;

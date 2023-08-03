@@ -7,7 +7,7 @@ export const auth = (req, res, next) => {
   const key = process.env.JWT_SECRET_KEY;
   try {
     // 인증 성공
-    req.decoded = jwt.verify(req.headers.auth, key);
+    req.decoded = jwt.verify(req.headers.Authorization, key);
     return next();
   } catch (error) {
     // 인증 실패
