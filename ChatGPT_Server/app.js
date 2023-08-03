@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
-const dbConnection = require("./util/db.js");
+const db = require("./util/db.js");
 const deleteEmoji = require("./util/delete-emoji");
 const winston = require("../util/winston.js");
 require("dotenv").config();
@@ -27,46 +27,76 @@ wss.on("connection", (ws, req) => {
     role: "system",
     content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
   });
-  
+
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
   // // 만약 이미 해당 IP의 클라이언트가 있다면
   // if (clients.has(ip)) {
-    //   // 해당 IP의 웹소켓 배열에 새로운 웹소켓을 추가
-    //   clients.get(ip).push(ws);
-    // } else {
-      //   // 처음 보는 IP라면 새 배열을 만들고 그 배열에 웹소켓을 추가
-      //   clients.set(ip, [ws]);
-      // }
-      console.log(`new client[${ip}] connected`);
-      
-      // 2. 클라이언트에게 메세지 전송(현재는 생략됨)
-      if (ws.readyState === ws.OPEN) {
+  //   // 해당 IP의 웹소켓 배열에 새로운 웹소켓을 추가
+  //   clients.get(ip).push(ws);
+  // } else {
+  //   // 처음 보는 IP라면 새 배열을 만들고 그 배열에 웹소켓을 추가
+  //   clients.set(ip, [ws]);
+  // }
+  console.log(`new client[${ip}] connected`);
+
+  // 2. 클라이언트에게 메세지 전송(현재는 생략됨)
+  if (ws.readyState === ws.OPEN) {
     // ws.send(`Server: Welcome Client[${ip}]`);
   }
-  
+
   // 3. 클라이언트로부터 메세지 수신 이벤트 처리
   ws.on("message", (msg) => {
     // 히스토리 없는 형태로 진행중
-    history = [{
-      role: "system",
-      content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
-    }];
+    history = [
+      {
+        role: "system",
+        content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
+      },
+    ];
 
     let msgJson = JSON.parse(msg);
     console.log(
       `message from client[${ip}]:${msgJson.role}, ${msgJson.message}, ${msgJson.serial}`
-      );
-      
-      if (msgJson.role == "gpt") {
-        // 히스토리에 유저의 답변 저장
-        history.push({
-          role: "user",
-          content: msgJson.message,
+    );
+
+    // 연결 후 클라이언트는 첫 메세지로 핸드셰이크를 보낸다
+    if (msgJson.role == "handshake") {
+      result = db.checkSerial(msgJson.serial);
+      if (result === "ok") {
+        ws.send({
+          status: "success",
+          message: "Successful connection to the server. Welcome.",
         });
-        // 1. gpt에게 답변을 받는다.
-        // 2. count를 1증가 시킨다.
-        // 3. gpt의 답변 맨 마지막에 ?가 들어 있으면 count를 다시 1 감소 시킨다.
+      } else {
+        // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
+        if (result === "unsigned") {
+          ws.send({
+            status: "fail",
+            message: "Unregistered serial number. Please check again",
+          });
+        } else if (result === "not exist") {
+          ws.send({
+            status: "fail",
+            message: "a non-existent serial number. Please check again",
+          });
+        } else {
+          ws.send({ status: "fail", message: "Error occured in handshake." });
+        }
+        ws.close();
+      }
+
+      ws.serial = msgJson.serial;
+      clients.push(ws);
+    } else if (msgJson.role == "gpt") {
+      // 히스토리에 유저의 답변 저장
+      history.push({
+        role: "user",
+        content: msgJson.message,
+      });
+      // 1. gpt에게 답변을 받는다.
+      // 2. count를 1증가 시킨다.
+      // 3. gpt의 답변 맨 마지막에 ?가 들어 있으면 count를 다시 1 감소 시킨다.
       // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위
       (async () => {
         let result = await gpt(history);
@@ -97,30 +127,14 @@ wss.on("connection", (ws, req) => {
         //   });
         // }
         clients.forEach((client) => {
-          if (client.serial === ws.serial && client.readyState === WebSocket.OPEN) {
+          if (
+            client.serial === ws.serial &&
+            client.readyState === WebSocket.OPEN
+          ) {
             client.send(`gpt answer: ${result}`);
           }
         });
       })();
-    } else if (msgJson.role == "handshake") {
-      // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
-      // DB 연결
-      let query = "select * from `pot` where `serial_number`=?";
-      dbConnection.query(query, [msgJson.serial], (error, result) => {
-        if (error){
-          winston.error("핸드셰이크 과정중 에러 발생 :" + ip);
-          winston.error(error);
-        } else if (result.length == undefined || result.length === 0){
-          ws.send("존재하지 않는 시리얼입니다.");
-          ws.close();
-        } else if (result[0].member_index == null){
-          ws.send("등록되지 않은 시리얼입니다")
-          ws.close();
-        }
-      })
-
-      ws.serial = msgJson.serial;
-      clients.push(ws);
     } else {
       ws.send("error: role needed");
     }
@@ -137,8 +151,6 @@ wss.on("connection", (ws, req) => {
     clients = clients.filter((client) => client !== ws);
     console.log(`client[${ip}] connection closed`);
   });
-
-  // ws.send("Hello! I am a WebSocket server.");
 });
 
 winston.info(`WebSocket server started on port ${process.env.PORT}.`);

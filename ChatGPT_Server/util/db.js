@@ -1,4 +1,5 @@
 const maria = require("mysql");
+const winston = require("./winston.js");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -19,11 +20,12 @@ const checkSerial = (serial) => {
   let query = "select * from `pot` where `serial_number`=?";
   connection.query(query, [serial], (error, result) => {
     if (error) {
+      winston.error(error);
       return "error";
     } else if (result.length == undefined || result.length === 0) {
       return "not exist";
     } else if (result[0].member_index == null) {
-      return "unsigned";
+      return "unregistered";
     }
     return "ok";
   });
@@ -34,6 +36,7 @@ const saveChatLog = (log) => {
   let query = "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)"
   connection.query(query, [log.plantIndex, log.role, log.content], (error, result) => {
     if (error) {
+      winston.error(error);
       return "error";
     }
     return "ok";
@@ -45,6 +48,7 @@ const getCondition = (plantIndex) => {
   let query = "select * from `plant_condition` where `plant_index` = ? order by `measurement_date` desc limit 1"
   connection.query(query, [plantIndex], (error, result) => {
     if (error) {
+      winston.error(error);
       return "error";
     }
     return result;
@@ -56,6 +60,7 @@ const getWaterLog = (plantIndex) => {
   let query = "select * from `water_log` where plant_index = ?"
   connection.query(query, [plantIndex], (error, result) => {
     if (error) {
+      winston.error(error);
       return "error";
     }
     return result;
@@ -63,8 +68,15 @@ const getWaterLog = (plantIndex) => {
 }
 
 // 식물 종의 정보 받아오기
-const getPlantInfoByIndex = () => {
-
+const getPlantInfoByIndex = (index) => {
+  let query = "select * from `plant_info` where index = ?"
+  connection.query(query, [index], (error, result) => {
+    if (error) {
+      winston.error(error);
+      return "error";
+    }
+    return result;
+  });
 };
  
 
