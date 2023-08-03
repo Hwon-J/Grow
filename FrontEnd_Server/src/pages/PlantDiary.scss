@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400&family=Montserrat+Alternates&family=Outfit&display=swap');
+
 .diary_total{
   background-image: linear-gradient(to right, #cfead0, #77a98d);
   min-height: 100vh;
@@ -15,3 +17,13 @@
     display: flex;
     height: 100%;
   }
+  .diary_title {
+    font-family: 'Hind Madurai', sans-serif;
+    text-transform: uppercase;
+    font-size: 92px;
+    color: #bcd2a3;
+    text-shadow: 0 8px 9px #3c5542, 0 -2px 1px #dcdada;
+    font-weight: bold;
+    text-align: center;
+  }
+  

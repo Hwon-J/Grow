@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 import myImage from '../assets/1.jpg';
+import { useParams } from 'react-router-dom';
 import './MyInfo.scss';
-
+import { useSelector } from "react-redux";
 
 const data = {
   "plant_idx": 1,
@@ -34,25 +36,39 @@ const MyInfo = () => {
   const today = new Date(); // Date 객체로 초기화
   const formattedToday = formatDate(today.toISOString());
   const formattedStartDay = formatDate(plantInfo.start_day);
-
+  const { id } = useParams();
+  console.log(id);
   console.log(formattedToday);
   console.log(formattedStartDay);
+  
+  const currentUser = useSelector((state) => state.currentUser);
+  const authToken = currentUser.token;
 
   const daysDifference = calDay(formattedStartDay, formattedToday)+1;
-
   console.log(daysDifference);
 
-  useEffect(() => {
-    // 백엔드 API로부터 데이터를 가져옵니다
-    // 예를 들어, fetch나 Axios를 사용하여 데이터를 가져올 수 있습니다
-    // 여기서는 setTimeout을 사용하여 가짜 API 호출을 시뮬레이션합니다
-    setTimeout(() => {
-      // 백엔드에서 가져온 데이터를 'data' 변수에 가정합니다
-      setPlantInfo(data);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${authToken}`, 
+    },
+  };
 
-    }, 1000); // 1초의 지연을 시뮬레이션하기 위해 1000ms를 사용합니다
+  const getPlantInfo = async () => {
+    try {
+      const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/data/${id}`, config);
+      setPlantInfo(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getPlantInfo();
   }, []);
 
+  if (!plantInfo) {
+    return <div>Loading...</div>;
+  }
   // const handleQuestPageButtonClick = () => {
   //   navigate('/questpage'); // Use navigate to navigate to /questpage
   // };
