@@ -17,8 +17,11 @@
 }
 .profilepage {
   width : 100%;
-  
+}
 
+.videobox {
+  border-radius: 2ch;
+  overflow: hidden;
 }
 
 .mySwiper {
