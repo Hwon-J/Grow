@@ -105,6 +105,32 @@
         ]
     }
     ```
+## 식물 및 식물을 관리할 화분 등록하기
+- 방식: POST
+- 주소: 기본URI/create
+- 요청 Body:
+  ```json
+  {
+    "token": token,
+    "serial_number": "test",
+    "plant_name": "싱싱이",
+    "plant_info_index": number,
+    "child_name": "길동이",
+    "child_age": number
+  }
+  ```
+- 응답
+  - 성공
+    - 등록 성공: { code: 200, message: "등록성공" }
+  - 실패
+    - 화분의 시리얼 넘버가 존재하지 않음: { code: 400, message: "화분의 시리얼 넘버가 존재하지 않음" }
+    - 화분의 시리얼 넘버가 이미 사용중임: { code: 400, message: "화분의 시리얼 넘버가 이미 사용중임" }
+    - 유효하지 않은 입력값: { code: 400, message: "입력값중에 유효하지 않은 입력값 존재"}
+      - 이 오류는 plant_name, plant_info_index, child_name, child_age의 값이 null이거나 정해진 타입의 값이 아니라면 반환됩니다.
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰"}
+      - 이 오류는 토큰이 변조되었거나 만료되었다면 반환됩니다.
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 
 ## 센서 관련
 
