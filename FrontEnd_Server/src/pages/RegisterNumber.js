@@ -38,9 +38,7 @@ const RegisterNumber = () => {
       <NavTop />
       <div className='container d-flex justify-content-center align-items-center'>
         <div className='leftimg'>
-          <video autoPlay loop muted width="360" height="640">
-            <source src={homevideo2} type="video/mp4" />
-          </video>
+
         </div>
         <div className="rightinput">
           <form onSubmit={handleSerial}>
@@ -48,9 +46,9 @@ const RegisterNumber = () => {
             <TbLeaf/>  <input onChange={onChangeNickname}/><hr/>
             <p>시리얼 넘버 등록</p>
             <CiLock /> <input onChange={onChangeSerialNum} />
-            <button className="registerbtn" type="submit" >
+            <a className="registerbtn" >
               <MdSend onClick={handleSerial} />
-            </button>
+            </a>
           </form>
           
         </div>

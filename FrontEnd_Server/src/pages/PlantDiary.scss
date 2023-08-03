@@ -1,24 +1,17 @@
+.diary_total{
+  background-image: linear-gradient(to right, #cfead0, #77a98d);
+  min-height: 100vh;
+
+}
 .centered-elements {
     display: flex;
     flex-direction: column;
     justify-content: center; /* Vertically center the content */
     align-items: center; /* Horizontally center the content */
     margin: auto;
-  
-    h1 {
-      text-align: center;
-    }
-  
-    /* Apply 70% width to the Container */
-    > .MuiContainer-root {
-      width: 70%;
-    }
-  
-    /* Center the elements inside the Container horizontally */
-    > .MuiContainer-root .centered-elements {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  }
+
+  .diary-container {
+    display: flex;
+    height: 100%;
   }

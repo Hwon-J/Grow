@@ -15,7 +15,8 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
-import profileback from "../assets/profileback.jpg";
+
+import homevideo2 from '../assets/homevideo2.mp4';
 
 
 const Profile = () => {
@@ -27,7 +28,7 @@ const Profile = () => {
   const [growinPlant, setGrowinPlant] = useState([
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "뷔",
       child_name: "김태형",
       difficulty: 5,
       imgname: 1,
@@ -35,7 +36,7 @@ const Profile = () => {
     },
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "뷔vs",
       child_name: "김태형",
       difficulty: 5,
       imgname: 2,
@@ -43,73 +44,18 @@ const Profile = () => {
     },
     {
       plant_info: "상추",
-      plant_name: "상츠",
+      plant_name: "귀요미",
       child_name: "김태형",
       difficulty: 5,
       imgname: 3,
       id: 62,
     },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 4,
-      id: 42,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "상츠",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 32,
-    },
+    
   ]);
   const [plantComplete, setPlantComplete] = useState([
     {
       plant_info: "깻잎",
-      plant_name: "깻잌",
+      plant_name: "깬닙이",
       child_name: "김민국",
       difficulty: 5,
       imgname: 6,
@@ -162,60 +108,72 @@ const Profile = () => {
   }
 
   return (
-    <React.Fragment>
+    <div className="profile-total">
       <NavTop />
-      <div className="profilepage">
-      <div className="container profile-container">
-        <div className="profile-left">
-          <h1>PROFILE</h1>
-        </div>
-        <div className="profile-right">
-          <div>
-            <h2>키우는 식물</h2><br/>
-            <Swiper
-              slidesPerView={6}
-              spaceBetween={20}
-              freeMode={true}
-              pagination={{
-                clickable: true,
-              }}
-              modules={[FreeMode, Pagination]}
-              className="mySwiper"
-            >
-              {NotcompleteCardSet()}
-              <SwiperSlide>
-                <div className="plantcard">
-                  <div className="bg">
-                    <div className="plantcard-details"></div>
-                  </div>
-                  <div className="blob"></div>
-                  <button className="button type1 plantcard-button" onClick={createCard}>
-                    <span className="btn-txt">+</span>
-                  </button>
+      <div className="profilepage container">
+        <div className="row">
+          <div className=" col-12 col-lg-3  videobox">
+            <video autoPlay loop muted height="400">
+                <source src={homevideo2} type="video/mp4" />
+            </video>
+          </div>
+          <div className="container col-md-8">
+            <div>
+              <h1>PROFILE</h1>
+            </div>
+            <div className="container plant">
+              <div className="plant-ing">
+                <div>
+                  <h2>진행중인 식물</h2>
+                  <Swiper
+                    slidesPerView={3}
+                    spaceBetween={20}
+                    freeMode={true}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    modules={[FreeMode, Pagination]}
+                    className="mySwiper"
+                  >
+                    {NotcompleteCardSet()}
+                    <SwiperSlide>
+                      <div className="plantcard">
+                        <div className="bg">
+                          <div className="plantcard-details">
+                            <h5>새 식물친구<br/>등록해주기</h5>
+                          </div>
+                        </div>
+                        <div className="blob"></div>
+                        <button className="button type1 plantcard-button" onClick={createCard}>
+                          <span className="btn-txt">+</span>
+                        </button>
+                      </div>
+                    </SwiperSlide>
+                  </Swiper>
                 </div>
-              </SwiperSlide>
-            </Swiper>
-          </div>
-          <div style={{ marginTop: "1rem" }}>
-            <h2>완료된 식물</h2><br/>
-            <Swiper
-              slidesPerView={6}
-              spaceBetween={20}
-              freeMode={true}
-              pagination={{
-                clickable: true,
-              }}
-              modules={[FreeMode, Pagination]}
-              className="mySwiper"
-            >
-              {completeCardSet()}
+              </div>
+              <div className="plant-complete">
+                <h2>완료된 식물</h2><br/>
+                <Swiper
+                  slidesPerView={3}
+                  spaceBetween={20}
+                  freeMode={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  modules={[FreeMode, Pagination]}
+                  className="mySwiper"
+                >
+                  {completeCardSet()}
 
-            </Swiper>
+                </Swiper>
+              </div>
+              </div>
+            </div>
           </div>
-        </div>
       </div>
       </div>
-    </React.Fragment>
+    
   );
 };
 

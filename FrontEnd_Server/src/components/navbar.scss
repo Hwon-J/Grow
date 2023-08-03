@@ -13,7 +13,7 @@ body{
 
 .navigation {
   height: $nav-height;
-  background: $nav-background;
+  // background: $nav-background;
   margin-bottom: 13px;
 }
 
@@ -31,7 +31,7 @@ body{
   font-size: 1.4em;
   
   img {
-    height: 60px;
+    height: 90px;
   }
 
   &:hover{
@@ -61,7 +61,7 @@ nav {
         display: block;
         padding: 10px 20px 0 20px;
         line-height: 50px;
-        background: $nav-background;
+        // background: $nav-background;
         color: $nav-font-color;
         text-decoration: none;
         
@@ -189,4 +189,8 @@ nav {
   .nav-list {
     display: block !important;
   }
+}
+
+.active {
+  color : green;
 }

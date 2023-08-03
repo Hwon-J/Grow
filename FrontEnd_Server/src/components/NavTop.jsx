@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate, NavLink  } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../reducers/userSlice';
 import './navbar.scss';
+import logo from '../assets/logo.png';
+
 function NavTop() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ function NavTop() {
 
   const handleLogout = () => {   // 로그아웃 처리 
     dispatch(logoutUser());   // 로그아웃 dispatch불러오기
-    navigate('/home'); // 로그아웃 완료되었을시 home으로 이동
+    // navigate('/login'); // 로그아웃 완료되었을시 login으로 이동
     console.log(currentUser)  
   };
 
@@ -44,7 +46,7 @@ function NavTop() {
         <div className="nav-container">
           <div className="brand">
             <Link to="/home">
-              <img src="./img/logo.png" alt="Home" />
+              <img src={logo} alt="Home" />
             </Link>
           </div>
           <nav>
@@ -55,15 +57,15 @@ function NavTop() {
             </div>
             <ul className={`nav-list ${isNavOpen ? 'open' : ''}`}>
               <li>
-                <Link to="/">Home</Link>
+                <NavLink to="/">Home</NavLink>
               </li>
               <li>
-                <Link to="/profile">Profile</Link>
+                <NavLink to="/profile">Profile</NavLink>
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <NavLink to="/plantinfo">plantinfo</NavLink>
               </li>
-              <li onClick={handleNavItemClick}>
+              {/* <li onClick={handleNavItemClick}>
                 <Link to="#">Services</Link>
                 <ul className="nav-dropdown">
                   <li onClick={(e) => e.stopPropagation()}>
@@ -76,15 +78,22 @@ function NavTop() {
                     <Link to="/services/graphic-design">Graphic Design</Link>
                   </li>
                 </ul>
-              </li>
+              </li> */}
+              
               <li onClick={handleNavItemClick}>
-                <Link to="/login">Login</Link>
+                {!currentUser.token ? (<NavLink to="/login">Login</NavLink>):
+                (<NavLink onClick={handleLogout} to="/login">Logout</NavLink>)
+                
+              }
+                
+                
               </li>
+              
               <li>
-                <p onClick={handleLogout}>Logout</p>
               </li>
+              
               <li onClick={handleNavItemClick}>
-                <Link to="/signup">SignUp</Link>
+                <NavLink to="/signup">SignUp</NavLink>
               </li>
             </ul>
           </nav>
