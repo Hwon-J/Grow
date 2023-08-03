@@ -1,6 +1,6 @@
 .diary_total{
   background-image: linear-gradient(to right, #cfead0, #77a98d);
-  height: 100vh;
+  min-height: 100vh;
 
 }
 .centered-elements {
@@ -9,6 +9,9 @@
     justify-content: center; /* Vertically center the content */
     align-items: center; /* Horizontally center the content */
     margin: auto;
-    
-    
+  }
+
+  .diary-container {
+    display: flex;
+    height: 100%;
   }

@@ -12,7 +12,7 @@ const PlantDiary = () => {
       <NavTop />
       <Container className="centered-elements">
         <h1>plantDiary</h1>
-        <Grid container spacing={2}>
+        <Grid container className="diary-container" spacing={2}>
           <Grid item sm={12} md={4}>
             <MyInfo />
             <Calendar />
