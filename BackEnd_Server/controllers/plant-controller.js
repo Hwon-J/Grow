@@ -69,6 +69,7 @@ exports.registPlant = async (req, res) => {
     try {
       // 없는 시리얼이면 반환
       let result = await queryPromise(query, [serial]);
+      console.log("아무거나");
 
       if (result.length === undefined || result.length == 0) {
         winston.info(`serial number ${serial} is not exist`);
@@ -86,14 +87,13 @@ exports.registPlant = async (req, res) => {
 
       potIndex = result[0].pot_index;
     } catch (error) {
-      winston.error("Error occured in database");
-      winston.error(error);
+      winston.error("Error occured in database(part 3)");
       throw error;
     }
 
     // 4. 나머지 값(plant_name, plant_info_index, child_name, child_age)의 유효성 검사를 한다.
     // 4.1 식물 정보 인덱스가 DB에 있는지 확인
-    query = "select * from `plant_info` where index=?";
+    query = "select * from `plant_info` where `index`=?";
     let isInfoIndexExist = true;
 
     try {
@@ -103,8 +103,7 @@ exports.registPlant = async (req, res) => {
         isInfoIndexExist = false;
       }
     } catch (error) {
-      winston.error("Error occured in database");
-      winston.error(error);
+      winston.error("Error occured in database(part 4)");
       throw error;
     }
 
