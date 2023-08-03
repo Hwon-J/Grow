@@ -3,6 +3,7 @@ const { error } = require("console");
 const connection = require("../util/connection.js");
 const winston = require("../util/winston");
 const util = require("util");
+const queryPromise = util.promisify(connection.query).bind(connection);
 
 exports.getPlantInfos = async (req, res, next) => {
   winston.info(`plantController getPlantInfos called.`);
@@ -11,7 +12,6 @@ exports.getPlantInfos = async (req, res, next) => {
 
     // 데이터베이스에서 정보 받기
     let query = "select * from `plant_info`";
-    const queryPromise = util.promisify(connection.query).bind(connection);
 
     let result = await queryPromise(query, [serial]);
     winston.info(
@@ -50,28 +50,25 @@ exports.registPlant = async (req, res) => {
     // 2. 토큰속의 아이디 유효성 검사
     let memberIndex = null;
     let query = "select * from `member` where `id`=?";
-    await connection.query(query, [id], (error, result) => {
-      if (error) {
-        winston.error(
-          "Error occured during ID verification of plantController registerPlant"
-        );
-        winston.error(error);
-        return res
-          .status(401)
-          .json({ code: 401, message: "유효하지 않은 토큰" });
-      }
+
+    try {
+      let result = await queryPromise(query, [serial]);
       memberIndex = result[0].index;
-    });
+    } catch (error) {
+      winston.error(
+        "Error occured during ID verification of plantController registerPlant"
+      );
+      winston.error(error);
+      return res
+        .status(401)
+        .json({ code: 401, message: "유효하지 않은 토큰" });
+    }
 
     // 3. 시리얼 조회
     let potIndex = null;
     query = "select * from `pot` where serial_number=?";
-    await connection.query(query, [serial], (error, result) => {
-      if (error) {
-        winston.error("Error occured in database");
-        winston.error(error);
-        throw error;
-      }
+
+    try {
       // 없는 시리얼이면 반환
       if (result.length === undefined || result.length == 0) {
         winston.info(`serial number ${serial} is not exist`);
@@ -88,7 +85,11 @@ exports.registPlant = async (req, res) => {
       }
 
       potIndex = result[0].pot_index;
-    });
+    } catch (error) {
+      winston.error("Error occured in database");
+      winston.error(error);
+      throw error;
+    }
 
     // 4. 나머지 값(plant_name, plant_info_index, child_name, child_age)의 유효성 검사를 한다.
     // 4.1 식물 정보 인덱스가 DB에 있는지 확인
