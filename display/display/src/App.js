@@ -22,6 +22,7 @@ import WebSocketComponent from './components/Websocket';
 import { useEffect } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import SerialRegister from './components/SerialRegister';
+import Button from 'react-bootstrap/Button';
 
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
@@ -38,23 +39,31 @@ function Conversation() {
     // console.log(store)
   }, [])
 
-  const character_style = {
-    height : '300px'
 
-  }
 
   // 대화 컴포넌트 구조
   return (
     
     <div className='character-container'>
-      {/* <h1>{state_name}</h1> */}
-      {/* <img src={flowercharacter} alt="cancel" style={character_style} />
-      <img src={lettucecharacter} alt="cancel" style={character_style} /> */}
-      {/* <img className="character" src={tomatocharacter} alt="cancel" style={character_style} /> */}
-      {/* <img src={potcharacter} alt="cancel" style={character_style} /> */}
-      <div className='col-12'>
-        <img className="main-img" src={beancharacter} alt="cancel" style={character_style} />
+      <div className='information'>
+        <h1>온도 : </h1>
+        <h1>습도 : </h1>
+        <h1>수분 : </h1>
+      </div>
+      
+      <div className='col-12 row character-row'>
+        <div className='col-3'></div>
+        <div className='col-3'>
 
+        <img className="character" src={beancharacter} alt="cancel"  />
+        </div>
+        <div className='col-3'>
+        <div className='bubble '>
+          <h1>안녕 나는 김태형이야 몇 자까지 쳐지려나?</h1>
+          <h1>안녕 나는 김태형이야 몇 자까지 쳐지려나?</h1>
+          
+        </div>
+        </div>
       </div>
       
       {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
