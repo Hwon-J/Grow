@@ -62,7 +62,7 @@ async def handshacking(websocket):
     return
 
 
-def listen_print_loop(responses):
+def make_sentence(responses):
     global send_msg, stack
     stack.append("test string")
     num_chars_printed = 0
@@ -82,27 +82,19 @@ def listen_print_loop(responses):
 
         if not result.is_final:
             stack.append(transcript + overwrite_chars)
-            # stt와 sense모두 돌아가야함
-            # sense가 가까워 지는경우 전역에 저장해 준뒤 보내줌
-            # sense와의 연동
-            # exit_flag true인 경우
-            # string으로 보내주기
-            # stack clear
             if start_flag.is_set():
                 tmp = stack[-1]
-                print("데이터 생성중", tmp)
-                send_msg = tmp
+                print("데이터 생성중", tmp, end=" ")
+                print(len(stack))
             else:
                 time.sleep(1)
-                # stack.clear()
+
         else:
-            # send_msg = stack.peek()
-            # send_msg += tmp
-            # stack.clear()
-            pass
+            print("스트림을 종료")
+            send_msg += tmp
 
 
-def stt():
+def stt_setting():
     client = google.cloud.speech.SpeechClient()
 
     config = google.cloud.speech.RecognitionConfig(
@@ -142,8 +134,7 @@ def stt():
     )
 
     responses = client.streaming_recognize(streaming_config, requests)
-
-    listen_print_loop(responses)
+    make_sentence(responses)
 
 
 def sense():
@@ -164,18 +155,51 @@ def sense():
     time_interval = stop - start
     uw = time_interval * 17000
     uw = round(uw, 2)
+    if uw > 500:
+        return -1
     print(uw, end=" ")
     return uw
 
 
 def sense_filter():
+    k = 0
+    s_meas = sense()
+    s_avg = s_meas
+    while send_msg == -1:
+        continue
+
+    while True:
+        s_avg = sense()
+        if s_avg == -1:
+            continue
+
+        if s_avg < 30:
+            print("close ")
+            start_flag.set()
+            exit_flag.clear()
+            k = 1
+        else:
+            print("remote ")
+            k += 1
+            if (k == 3):
+                start_flag.clear()
+                exit_flag.set()
+                s_avg = s_meas
+
+
+'''
+평균필터 적용
+def sense_filter():
     k = 1
     s_meas = sense()
     s_avg = s_meas
+    while send_msg == -1:
+        continue
+
     while True:
         alpha = (k-1)/k
         s_meas = sense()
-        if s_meas > 500:
+        if s_meas == -1:
             continue
         s_avg = alpha*s_avg+(1-alpha)*s_meas
 
@@ -192,6 +216,7 @@ def sense_filter():
             exit_flag.set()
             s_avg = s_meas
             k = 1
+'''
 
 
 def get_msg():
@@ -216,7 +241,8 @@ async def main():
     # uri = "ws://i9c103.p.ssafy.io:30002/"
     async with websockets.connect(uri) as websocket:
         await handshacking(websocket)
-        thread_stt = threading.Thread(target=stt)
+
+        thread_stt = threading.Thread(target=stt_setting)
         thread_sense = threading.Thread(target=sense_filter)
 
         thread_stt.start()
@@ -225,17 +251,16 @@ async def main():
         try:
             send_flag = False
             while True:
-                if exit_flag.is_set() and not send_flag and send_msg == "":
+                if exit_flag.is_set() and not send_flag and send_msg != "":
                     # send_msg = get_msg()
                     print("웹소켓 전송", send_msg)
                     await send(websocket, send_msg)
                     stack.clear()
                     send_flag = True
+                    send_msg = ""
                 elif not exit_flag.is_set():
                     send_flag = False
-                else:
-                    continue
-                time.sleep(2)
+                time.sleep(1)
         except KeyboardInterrupt:
             GPIO.cleanup()
             thread_sense.join()
