@@ -6,7 +6,10 @@ import NavTop from '../components/NavTop';
 import QuestPage from '../components/QuestPage';
 import './PlantDiary.scss';
 
+
 const PlantDiary = () => {
+ 
+
   return (
     <div className='diary_total'>
       <NavTop />
