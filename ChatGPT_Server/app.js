@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
 const db = require("./util/db.js");
 const deleteEmoji = require("./util/delete-emoji");
-const winston = require("../util/winston.js");
+const winston = require("./util/winston.js");
 require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: process.env.PORT });
@@ -46,7 +46,7 @@ wss.on("connection", (ws, req) => {
   }
 
   // 3. 클라이언트로부터 메세지 수신 이벤트 처리
-  ws.on("message", (msg) => {
+  ws.on("message", async (msg) => {
     // 히스토리 없는 형태로 진행중
     history = [
       {
@@ -62,27 +62,33 @@ wss.on("connection", (ws, req) => {
 
     // 연결 후 클라이언트는 첫 메세지로 핸드셰이크를 보낸다
     if (msgJson.role == "handshake") {
-      result = db.checkSerial(msgJson.serial);
+      let result = await db.checkSerial(msgJson.serial);
+      
       if (result === "ok") {
-        ws.send({
+        winston.info("success: Successful connection to the server. (IP: " + ip + ")");
+        ws.send(JSON.stringify({
           status: "success",
           message: "Successful connection to the server. Welcome.",
-        });
+        }));
       } else {
         // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
-        if (result === "unsigned") {
-          ws.send({
+        if (result === "unregistered") {
+          winston.info("fail: Unregistered serial number. Please check again. (IP: " + ip + ")");
+          ws.send(JSON.stringify({
             status: "fail",
             message: "Unregistered serial number. Please check again",
-          });
+          }));
         } else if (result === "not exist") {
-          ws.send({
+          winston.info("fail: a non-existent serial number. Please check again. (IP: " + ip + ")");
+          ws.send(JSON.stringify({
             status: "fail",
             message: "a non-existent serial number. Please check again",
-          });
+          }));
         } else {
-          ws.send({ status: "fail", message: "Error occured in handshake." });
+          winston.info("fail: Error occured in handshake. (IP: " + ip + ")");
+          ws.send(JSON.stringify({ status: "fail", message: "Error occured in handshake." }));
         }
+
         ws.close();
       }
 
