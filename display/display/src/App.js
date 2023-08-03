@@ -45,17 +45,25 @@ function Conversation() {
 
   // 대화 컴포넌트 구조
   return (
-    <div>
-      <h1>{state_name}</h1>
-      <img src={flowercharacter} alt="cancel" style={character_style} />
-      <img src={lettucecharacter} alt="cancel" style={character_style} />
-      <img src={tomatocharacter} alt="cancel" style={character_style} />
-      <img src={potcharacter} alt="cancel" style={character_style} />
-      <img src={beancharacter} alt="cancel" style={character_style} />
-      <h1>{state_serial_number}</h1>
+    
+    <div className='character-container'>
+      {/* <h1>{state_name}</h1> */}
+      {/* <img src={flowercharacter} alt="cancel" style={character_style} />
+      <img src={lettucecharacter} alt="cancel" style={character_style} /> */}
+      {/* <img className="character" src={tomatocharacter} alt="cancel" style={character_style} /> */}
+      {/* <img src={potcharacter} alt="cancel" style={character_style} /> */}
+      <div className='col-12'>
+        <img src={beancharacter} alt="cancel" style={character_style} />
+
+      </div>
+      
       {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
+      <div>
       <WebSocketComponent />
+
+      </div>
     </div>
+    
   )
 }
 

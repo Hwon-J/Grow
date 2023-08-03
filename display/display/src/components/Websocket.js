@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
+
 function WebSocketComponent() {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [receivedMessage, setReceivedMessage] = useState('');
-
+  const startmessage = {
+    "role":"handshake",
+    "serial":""
+    }
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
-    const newSocket = new WebSocket('ws://localhost:5000');
+    const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
       console.log('WebSocket connection established.');
       setSocket(newSocket);
+      // socket.send(startmessage)
+      console.log('처음 메세지 보냈을까?')
     };
     
     // 웹소켓으로부터 메시지를 받았을 때의 이벤트 핸들러
@@ -36,8 +42,10 @@ function WebSocketComponent() {
   const handleSendMessage = () => {
     console.log(socket)
     if (socket && message) {
+        const sendmessage = startmessage
+        sendmessage.serial = message
         console.log('send')
-      socket.send(message);
+      socket.send(JSON.stringify(sendmessage));
       setMessage('');
     }
 

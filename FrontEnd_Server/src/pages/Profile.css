@@ -19,9 +19,42 @@
   width : 100%;
 }
 
+/* 기본 스타일 */
 .videobox {
-  border-radius: 2ch;
+  display: flex; /* Flex 컨테이너로 설정 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  padding-left: 0px;
+  
   overflow: hidden;
+  visibility: visible;
+}
+
+/* LG 화면 크기 이하일 때 숨김 */
+@media (max-width: 992px) { /* 예시로 992px로 설정, 실제로는 LG 화면 크기에 맞게 조정 */
+  .videobox {
+    visibility: hidden;
+    display: none;
+  }
+}
+
+.videobox video {
+  max-width: 100%; /* 최대 너비 100%로 설정 */
+  max-height: 100%; /* 최대 높이 100%로 설정 */
+  width: auto; /* 너비 자동 조정 */
+  height: auto; /* 높이 자동 조정 */
+  border-radius: 2ch;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.profile {
+  display: flex; /* Flex 컨테이너로 설정 */
+  
+  justify-content: center; /* 가로 중앙 정렬 */
+  padding-left: 0px;
+  
+  
+   
 }
 
 .mySwiper {
@@ -78,4 +111,5 @@
   border : 1px solid black;
   border-radius: 2ch;
   background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
