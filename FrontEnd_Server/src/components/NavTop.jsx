@@ -45,7 +45,7 @@ function NavTop() {
       <section className="navigation">
         <div className="nav-container">
           <div className="brand">
-            <Link to="/home">
+            <Link to="/home" style={{ textDecoration: 'none' }}>
               <img src={logo} alt="Home" />
             </Link>
           </div>
@@ -57,13 +57,13 @@ function NavTop() {
             </div>
             <ul className={`nav-list ${isNavOpen ? 'open' : ''}`}>
               <li>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/" style={{ textDecoration: 'none' }}>Home</NavLink>
               </li>
               <li>
-                <NavLink to="/profile">Profile</NavLink>
+                <NavLink to="/profile" style={{ textDecoration: 'none' }}>Profile</NavLink>
               </li>
               <li>
-                <NavLink to="/plantinfo">plantinfo</NavLink>
+                <NavLink to="/plantinfo" style={{ textDecoration: 'none' }}>plantinfo</NavLink>
               </li>
               {/* <li onClick={handleNavItemClick}>
                 <Link to="#">Services</Link>
@@ -81,8 +81,8 @@ function NavTop() {
               </li> */}
               
               <li onClick={handleNavItemClick}>
-                {!currentUser.token ? (<NavLink to="/login">Login</NavLink>):
-                (<NavLink onClick={handleLogout} to="/login">Logout</NavLink>)
+                {!currentUser.token ? (<NavLink to="/login" style={{ textDecoration: 'none' }}>Login</NavLink>):
+                (<NavLink onClick={handleLogout} to="/login" style={{ textDecoration: 'none' }}>Logout</NavLink>)
                 
               }
                 
@@ -93,7 +93,7 @@ function NavTop() {
               </li>
               
               <li onClick={handleNavItemClick}>
-                <NavLink to="/signup">SignUp</NavLink>
+                <NavLink to="/signup" style={{ textDecoration: 'none' }}>SignUp</NavLink>
               </li>
             </ul>
           </nav>
