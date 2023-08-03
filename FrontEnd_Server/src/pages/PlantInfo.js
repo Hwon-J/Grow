@@ -1,23 +1,33 @@
+//김태형
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import { useNavigate } from "react-router-dom";
-import { TextField, Grid, Container, Paper, Box } from "@mui/material";
+import { useSelector } from "react-redux";
+
 import NavTop from "../components/NavTop";
-import { styled } from "@mui/material/styles";
+import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import "./plantinfo.css";
-import { TbLeaf } from "react-icons/tb";
-import { CiLock } from "react-icons/ci";
-import { MdSend } from "react-icons/md";
-import homevideo2 from "../assets/homevideo2.mp4";
+
+import { styled } from "@mui/material/styles";
+import { TextField, Grid, Container, Paper, Box } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 
 const PlantInfo = () => {
   const [nickname, setNickname] = useState("");
+  const [childname, setChildname] = useState("");
+  const [childage, setChildage] = useState("");
   const [serialNum, setSerialNum] = useState("");
   const [checkNum, setCheckNum] = useState("");
   const [checkedResult, setCheckedResult] = useState(false);
   const [plantInfo, setPlantInfo] = useState([]);
   const [checkIdx, setCheckIdx] = useState(-1);
+  const [errormessage, setErormessage] = useState("");
+  const currentUser = useSelector((state) => state.currentUser);
+  const authToken = currentUser.token;
   const navigate = useNavigate();
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -43,6 +53,12 @@ const PlantInfo = () => {
   const onChangeSerialNum = (e) => {
     setSerialNum(e.target.value);
   };
+  const onChangeChildname = (e) => {
+    setChildname(e.target.value);
+  };
+  const onChangeChildage = (e) => {
+    setChildage(e.target.value);
+  };
 
   const createPlant = async (e) => {
     e.preventDefault();
@@ -50,14 +66,18 @@ const PlantInfo = () => {
       alert("시리얼 넘버를 확인해주세요");
     } else {
       // 데이터를 함께 보낼 객체를 생성 nickname, serialNum
-      const data = {
-        nickname: nickname,
+      const body = {
+        plant_name: nickname,
         plant_info_index: checkIdx,
+        serialNum: serialNum,
+        token: authToken,
+        child_name: childname,
+        child_age: childage,
       };
       try {
         const response = await axios.post(
           `http://i9c103.p.ssafy.io:30001/api/plant/create`,
-          data
+          body
         );
         navigate(`/diary/${response.data.index}`);
       } catch (error) {
@@ -106,8 +126,10 @@ const PlantInfo = () => {
         `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
       );
       if (response.data.code === 202) {
-        alert(response.data.message);
+        // alert(response.data.message);
+        console.log(response.data.message);
         setCheckedResult(false);
+        setErormessage(response.data.message);
       }
       if (response.data.code === 200) {
         setCheckNum(response.data.message);
@@ -120,7 +142,7 @@ const PlantInfo = () => {
   };
 
   return (
-    <>
+    <div className="plantinfo-total">
       <NavTop />
       <Container className="plantinfopage">
         <Grid container spacing={2}>
@@ -132,6 +154,7 @@ const PlantInfo = () => {
               {checkIdx !== null && (
                 <PlantInfoComponent
                   props={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
+                  key={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
                 />
               )}
             </div>
@@ -139,28 +162,85 @@ const PlantInfo = () => {
           <Grid item md={4} xs={12}>
             <div className="itemclone">
               <form onSubmit={createPlant}>
-                <p>식물의 애칭</p>
-                <TbLeaf />
-                <input
-                  className="nickname-input"
-                  label="닉네임"
-                  value={nickname}
-                  onChange={onChangeNickname}
-                />
+                <Grid justifyContent="center" alignItems="center">
+                  <Grid item xs={12}>
+                    <TextField
+                      label="식물의 애칭"
+                      fullWidth
+                      variant="outlined"
+                      margin="normal"
+                      value={nickname}
+                      onChange={onChangeNickname}
+                    />
+                  </Grid>
+
+                  <hr />
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="시리얼넘버"
+                      fullWidth
+                      variant="outlined"
+                      margin="normal"
+                      value={serialNum}
+                      onChange={onChangeSerialNum}
+                    />
+                  </Grid>
+                  <br />
+                  <p className="checkP" style={{ color: "red" }}>
+                    {errormessage}
+                  </p>
+
+                  <Grid item xs={12}>
+                    <button
+                      className="w-btn-indigo-outline"
+                      onClick={checkSerial}
+                    >
+                      중복체크
+                    </button>
+                  </Grid>
+                </Grid>
                 <hr />
-                <p>시리얼 넘버 등록</p>
-                <CiLock />
-                <input 
-                className="serial-input"
-                value={serialNum} onChange={onChangeSerialNum} />
-                
-                <div className="check-serial-btn" onClick={checkSerial}>
-                  중복체크<MdSend />
-                </div>
-                <div>
-                  <p>{checkNum}</p>
-                </div>
-                <button className="w-btn-outline w-btn-indigo-outline" type="submit" variant="contained">
+                <Grid item xs={12}>
+                  <TextField
+                    label="아이이름"
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    value={childname}
+                    onChange={onChangeChildname}
+                  />
+                </Grid>
+
+                <Box className="childageBox">
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">나이</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={childage}
+                      label="Age"
+                      onChange={onChangeChildage}
+                    >
+                      <MenuItem value={5}>5</MenuItem>
+                      <MenuItem value={6}>6</MenuItem>
+                      <MenuItem value={7}>7</MenuItem>
+                      <MenuItem value={8}>8</MenuItem>
+                      <MenuItem value={9}>9</MenuItem>
+                      <MenuItem value={10}>10</MenuItem>
+                      <MenuItem value={11}>11</MenuItem>
+                      <MenuItem value={12}>12</MenuItem>
+                      <MenuItem value={13}>13</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <hr />
+
+                <button
+                  className="w-btn-outline w-btn-indigo-outline"
+                  type="submit"
+                  variant="contained"
+                >
                   만들기
                 </button>
               </form>
@@ -168,7 +248,7 @@ const PlantInfo = () => {
           </Grid>
         </Grid>
       </Container>
-    </>
+    </div>
   );
 };
 
