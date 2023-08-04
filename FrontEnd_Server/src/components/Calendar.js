@@ -19,6 +19,8 @@ import './Calendar.scss';
 import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import axios from 'axios';
+import { BASE_URL } from '../utils/Urls';
+
 
 // 달력을 만들때 연월을 표기하고 월을 이동하는 RenderHeader
 // 각각의 요일을 표기하는 RenderDays
@@ -172,7 +174,7 @@ const Calender = () => {
     
     const getWaterLog = async () => {
         try {
-        const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/water/${id}`, config);
+        const response = await axios.get(`${BASE_URL}/api/plant/water/${id}`, config);
             // console.log(response.data);
             setWaterLog(response.data);
             // console.log(waterLog.data);

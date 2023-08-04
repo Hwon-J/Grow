@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { BsPlusCircle } from 'react-icons/bs';
 import axios from 'axios';
 import './questpage.scss';
+import { BASE_URL } from '../utils/Urls';
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser);  // 로그인되어있는지 확인
@@ -58,7 +59,7 @@ const QuestPage = () => {
     console.log("id : " + id)
     if (authToken) { // 로그인 되어있을때 
       try {  
-        const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/quest/${id}`, {
+        const response = await axios.get(`${BASE_URL}/api/plant/quest/${id}`, {
           headers: {
             Authorization: `${authToken}`
           }

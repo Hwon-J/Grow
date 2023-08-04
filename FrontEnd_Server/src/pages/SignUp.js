@@ -7,6 +7,7 @@ import NavTop from "../components/NavTop";
 import "./Login.scss";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { BASE_URL } from "../utils/Urls";
 
 const SignUp = () => {
   // usdDispatch: dispatch를 사용하겠다 선언
@@ -103,7 +104,7 @@ const SignUp = () => {
   const idChecking = async () => {
     try {
       const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/api/user/id-check/${userid}`
+        `${BASE_URL}/api/user/id-check/${userid}`
       );
       console.log(response.data.message);
       setCheckId(response.data.message)

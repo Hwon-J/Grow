@@ -17,7 +17,7 @@ import "swiper/css/pagination";
 import { FreeMode, Pagination } from "swiper/modules";
 
 import homevideo2 from '../assets/homevideo2.mp4';
-
+import { BASE_URL } from "../utils/Urls";
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -72,7 +72,7 @@ const Profile = () => {
       },
     };
     try {
-      const response = await axios.get(`http://192.168.100.37:30001/api/plant/myplant/`,config);
+      const response = await axios.get(`${BASE_URL}/api/plant/myplant/`,config);
       console.log(response.data.data)
       const plantsList = response.data.data;
       const growing = plantsList.filter((plant) => plant.complete === 0);
