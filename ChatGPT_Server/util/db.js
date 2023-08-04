@@ -1,7 +1,6 @@
 const maria = require("mysql");
 const winston = require("./winston.js");
 const util = require("util");
-const query = util.promisify(connection.query).bind(connection);
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -16,6 +15,8 @@ connection.connect((error) => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
 });
+
+const query = util.promisify(connection.query).bind(connection);
 
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
