@@ -85,7 +85,7 @@ exports.registPlant = async (req, res) => {
           .json({ code: 400, message: "화분의 시리얼 넘버가 이미 사용중임" });
       }
 
-      potIndex = result[0].pot_index;
+      potIndex = result[0].index;
     } catch (error) {
       winston.error("Error occured in database(part 3)");
       throw error;
