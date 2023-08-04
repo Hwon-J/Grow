@@ -5,6 +5,7 @@ import myImage from '../assets/1.jpg';
 import { useParams } from 'react-router-dom';
 import './MyInfo.scss';
 import { useSelector } from "react-redux";
+import { BASE_URL } from '../utils/Urls';
 
 
 const formatDate = (isoDateString) => {
@@ -52,7 +53,7 @@ const MyInfo = () => {
       // console.log(id);
 
     try {
-      const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/myplant/${id}`, config);
+      const response = await axios.get(`${BASE_URL}/api/plant/myplant/${id}`, config);
       // console.log(response.data);
       // console.log(response.data.data[0], 'ty');
       setMyplant(response.data.data[0]);
