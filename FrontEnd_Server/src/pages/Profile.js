@@ -20,9 +20,8 @@ import homevideo2 from '../assets/homevideo2.mp4';
 
 
 const Profile = () => {
-  const persistedCurrentUser = localStorage.getItem('persist:currentUser');
-  const parsedCurrentUser = JSON.parse(persistedCurrentUser);
-  const token = JSON.parse(parsedCurrentUser.token);
+  const currentUser = useSelector((state) => state.currentUser);
+  const token = currentUser.token;
   console.log(token);
   const navigate = useNavigate();
 
@@ -64,21 +63,24 @@ const Profile = () => {
     },
   ]);
 
-  const config = {
-    headers: {
-      Authorization: token, 
-    },
-  };
   // 식물 종 데이터 변경할 메서드
   const getPlants = async () => {
+    console.log("보내기 "+token)
+    const config = {
+      headers: {
+        Authorization: token, 
+      },
+    };
     try {
-      const response = await axios.post(`http://192.168.100.37:30001/api/plant/myplant/`, config);
-      const plantsList = response.data;
+      const response = await axios.post(`http://192.168.100.37:30001/api/plant/myplant/`,"" ,config);
+      console.log(response.data.data)
+      const plantsList = response.data.data;
       const growing = plantsList.filter((plant) => plant.complete === 0);
       const complete = plantsList.filter((plant) => plant.complete === 1);
       setGrowinPlant(growing);
       setPlantComplete(complete);
-      console.log(response.data);
+      console.log(growinPlant)
+      console.log(plantComplete)
     } catch (error) {
       console.log(error);
     }
