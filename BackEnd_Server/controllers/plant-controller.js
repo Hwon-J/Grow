@@ -231,12 +231,12 @@ exports.getWaterLogByIndex = async (req, res) => {
   winston.info(
     `plantController getWaterLogByIndex called. id:${id}, index:${index}`
   );
-  let result = await queryPromise(query, [id, index]);
   try {
     // 데이터베이스에서 정보 받기
     let query = `select watered_date as watered from water_log join plant on water_log.plant_index = plant.index 
       join member on plant.member_index = member.index
     where member.id = ? and plant.index = ?`;
+    let result = await queryPromise(query, [id, index]);
 
     let array = [];
     result.forEach((value) => {
@@ -273,8 +273,9 @@ exports.setComplete = async (req, res) => {
     // 데이터베이스에서 정보 받기
     let query = `select pot.index as \`index\` from pot join plant on pot.index = plant.pot_index where plant.index = ?`;
     let result = await queryPromise(query, [index]);
+    console.log(result);
     // 결과가 없으면 오류
-    if (!result) {
+    if (!result || result.length === 0) {
       winston.info("등록된 화분이 없는 식물, plant index: " + index);
       return res
         .status(202)
