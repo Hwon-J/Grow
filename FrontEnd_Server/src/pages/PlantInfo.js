@@ -105,7 +105,7 @@ const PlantInfo = () => {
           <div key={index} className="image-wrapper">
             <img
               className="plantinfoimg"
-              src={`./plantinfoimg/${info.index}.jpg`}
+              src={`./plantInfoimg/${info.index}.jpg`}
               onClick={() => onClickInfo(info.index)}
               style={{
                 border: checkIdx === info.index ? "0.1rem solid rgb(56, 181, 203)" : "none",

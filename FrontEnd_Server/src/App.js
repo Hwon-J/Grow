@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useEffect }from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
@@ -9,9 +9,15 @@ import ImgUpload from './pages/ImgUpload';
 import RegisterNumber from './pages/RegisterNumber';
 import PlantDiary from './pages/PlantDiary';
 import PlantInfo from './pages/PlantInfo';
+
+import {checkToken} from './utils/Users'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {
+  useEffect(() => {
+    // 페이지가 열릴 때 checkToken 함수 실행
+    checkToken();
+  }, []);
   return (
     <React.Fragment>
         <div>
