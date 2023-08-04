@@ -7,4 +7,10 @@ router.get("/info", plantController.getPlantInfos);
 
 router.post("/create", verify, plantController.registPlant);
 
+router.get("/myplant", verify, plantController.getAllPlant);
+
+router.get("/myplant/:index", verify, plantController.getPlantByIndex);
+
+router.get("/water/:index", verify, plantController.getWaterLogByIndex);
+
 module.exports = router;

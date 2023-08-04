@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user-controller');
-const jwt = require("jsonwebtoken");
+var verify = require("../util/tokenVerifier");
 
 /**
  * @swagger
@@ -67,5 +67,7 @@ router.post('/signup', userController.signup);
 router.get('/id-check/:id', userController.idCheck);
 
 router.post('/login', userController.login);
+
+router.get('/valid', verify, userController.isValidToken);
 
 module.exports = router;

@@ -157,3 +157,82 @@ exports.registPlant = async (req, res) => {
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
+
+exports.getAllPlant = async (req, res) => {
+  const id = req.decoded.id;
+  winston.info(`plantController getAllPlant called. id:${id}`);
+  try {
+    // 데이터베이스에서 정보 받기
+    let query = `select plant.index as \`index\`, plant.pot_index as pot_index, 
+        plant.plant_info_index as plant_info_index, plant.start_date as start_date, 
+        plant.end_date as end_date, plant.plant_name as plant_name, 
+        plant.child_name as child_name, plant.child_age as child_age, plant.complete as complete
+      from \`plant\` join \`member\` on plant.member_index = member.index 
+      where member.id = ?`;
+
+    let result = await queryPromise(query, [id]);
+    winston.info(
+      `plantController getAllPlant successfully responds to requests`
+    );
+    return res
+      .status(200)
+      .json({ code: 200, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+exports.getPlantByIndex = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(`plantController getPlantByIndex called. id:${id}, index:${index}`);
+  try {
+    // 데이터베이스에서 정보 받기
+    let query = `select plant.index as \`index\`, plant.pot_index as pot_index, 
+        plant.plant_info_index as plant_info_index, plant.start_date as start_date, 
+        plant.end_date as end_date, plant.plant_name as plant_name, 
+        plant.child_name as child_name, plant.child_age as child_age, plant.complete as complete
+      from \`plant\` join \`member\` on plant.member_index = member.index 
+      where member.id = ? and plant.index = ?`;
+
+    let result = await queryPromise(query, [id, index]);
+    winston.info(
+      `plantController getPlantByIndex successfully responds to requests`
+    );
+    return res
+      .status(200)
+      .json({ code: 200, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+exports.getWaterLogByIndex = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(`plantController getWaterLogByIndex called. id:${id}, index:${index}`);
+  try {
+    // 데이터베이스에서 정보 받기
+    let query = `select watered_date as watered from water_log join plant on water_log.plant_index = plant.index 
+      join member on plant.member_index = member.index
+    where member.id = ? and plant.index = ?`;
+
+    let result = await queryPromise(query, [id, index]);
+    let array = [];
+    result.forEach((value) => {
+      array.push(value.watered);
+    });
+    
+    winston.info(
+      `plantController getWaterLogByIndex successfully responds to requests`
+    );
+    return res
+      .status(200)
+      .json({ code: 200, message: "요청 처리 성공", data: array });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};

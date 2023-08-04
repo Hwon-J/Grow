@@ -156,3 +156,9 @@ exports.login = async (req, res) => {
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
+
+exports.isValidToken = (req, res) => {
+  return res
+      .status(200)
+      .json({ code: 200, message: "유효한 토큰" });
+}
