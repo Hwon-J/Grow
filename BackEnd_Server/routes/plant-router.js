@@ -13,6 +13,6 @@ router.get("/myplant/:index", verify, plantController.getPlantByIndex);
 
 router.get("/water/:index", verify, plantController.getWaterLogByIndex);
 
-router.post("/complete/:index", verify, plantController.setComplete);
+router.put("/complete/:index", verify, plantController.setComplete);
 
 module.exports = router;
