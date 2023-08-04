@@ -1,9 +1,10 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../reducers/userSlice';
-import './navbar.scss';
-import logo from '../assets/logo.png';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../reducers/userSlice";
+import "./navbar.scss";
+import logo from "../assets/logo.png";
+import { current } from "@reduxjs/toolkit";
 
 function NavTop() {
   const dispatch = useDispatch();
@@ -19,30 +20,52 @@ function NavTop() {
       <section className="navigation">
         <div className="nav-container">
           <div className="brand">
-            <NavLink to="/home" style={{ textDecoration: 'none' }}>
+            <NavLink to="/home" style={{ textDecoration: "none" }}>
               <img src={logo} alt="Home" />
             </NavLink>
           </div>
           <nav>
             <ul className="nav-list">
               <li>
-                <NavLink to="/" style={{ textDecoration: 'none' }}>Home</NavLink>
+                <NavLink to="/" style={{ textDecoration: "none" }}>
+                  Home
+                </NavLink>
               </li>
-              <li>
-                <NavLink to="/profile" style={{ textDecoration: 'none' }}>Profile</NavLink>
-              </li>
-              <li>
-                <NavLink to="/plantinfo" style={{ textDecoration: 'none' }}>plantinfo</NavLink>
-              </li>
+              {currentUser.token ? (
+                <>
+                  <li>
+                    <NavLink to="/profile" style={{ textDecoration: "none" }}>
+                      Profile
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/plantinfo" style={{ textDecoration: "none" }}>
+                      plantinfo
+                    </NavLink>
+                  </li>
+                </>
+              ) : null}
               <li>
                 {!currentUser.token ? (
-                  <NavLink to="/login" style={{ textDecoration: 'none' }}>Login</NavLink>
+                  <NavLink to="/login" style={{ textDecoration: "none" }}>
+                    Login
+                  </NavLink>
                 ) : (
-                  <NavLink onClick={handleLogout} to="/login" style={{ textDecoration: 'none' }}>Logout</NavLink>
+                  <NavLink
+                    onClick={handleLogout}
+                    to="/login"
+                    style={{ textDecoration: "none" }}
+                  >
+                    Logout
+                  </NavLink>
                 )}
               </li>
               <li>
-                <NavLink to="/signup" style={{ textDecoration: 'none' }}>SignUp</NavLink>
+                {!currentUser.token ? (
+                  <NavLink to="/signup" style={{ textDecoration: "none" }}>
+                    SignUp
+                  </NavLink>
+                ) : null}
               </li>
             </ul>
           </nav>
