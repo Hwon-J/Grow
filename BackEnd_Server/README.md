@@ -245,6 +245,39 @@
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
     - 서버 오류: { code: 500, message: "서버 오류" }
 
+### 특정 식물에 등록한 질문 리스트 가져오기
+- 방식: GET
+- 서버IP: 기본URI/quest/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 200, message: "요청 처리 성공" }
+    - 유효하지 않은 id 또는 index: { code: 202, message: "유효하지 않은 id 또는 index"}
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
+### 특정 식물에 질문 등록하기
+- 방식: POST
+- 서버IP: 기본URI/quest/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 요청 Body:
+  ```json
+  {
+    "quest":"보내고 싶은 내용"
+  }
+  ```
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 201, message: "요청 처리 성공" }
+    - 유효하지 않은 id 또는 index: { code: 202, message: "유효하지 않은 id 또는 index"}
+    - 이미 완료처리된 식물: { code: 202, message: "이미 완료처리된 식물" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 ## 센서 관련
 
 - 기본 URI: BaseURI:PORT번호/api/sensor

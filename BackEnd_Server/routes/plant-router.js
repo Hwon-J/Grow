@@ -15,4 +15,8 @@ router.get("/water/:index", verify, plantController.getWaterLogByIndex);
 
 router.put("/complete/:index", verify, plantController.setComplete);
 
+router.get("/quest/:index", verify, plantController.getQuestionList);
+
+router.post("/quest/:index", verify, plantController.registQuestion);
+
 module.exports = router;
