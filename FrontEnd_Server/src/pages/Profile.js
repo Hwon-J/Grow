@@ -129,12 +129,12 @@ const Profile = () => {
           </div>
           <div className="container profile col-lg-8 row">
             <div className="col-12">
-              <h1>PROFILE</h1>
+              <h1 className="profile_title">PROFILE</h1>
             </div>
             <div className="container plant">
               <div className="plant-ing">
                 <div>
-                  <h2>진행중인 식물</h2>
+                  <h2 >진행중인 식물</h2>
                   <Swiper
                     slidesPerView={3}
                     spaceBetween={20}

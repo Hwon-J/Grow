@@ -64,16 +64,16 @@
 
 /* 자식 요소들에게 .profile-left의 크기를 상속하도록 설정 */
 
+.profile_title {
+  font-family: 'Hind Madurai', sans-serif;
+  text-transform: uppercase;
+  font-size: 92px;
+  color: #bcd2a3;
+  text-shadow: 0 8px 9px #3c5542, 0 -2px 1px #dcdada;
+  font-weight: bold;
+  text-align: center;
+}
 
-/* .profile-right {
-  
-  position: relative;
-  height: 100%;
-  color : black;
-  border : 2px solid black;
-  border-radius: 2ch;
-  padding : 30px;
-} */
 
 .swiper-slide {
   text-align: center;

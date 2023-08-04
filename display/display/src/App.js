@@ -4,10 +4,6 @@
 import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
-import flowercharacter from './assets/flowercharacter.png';
-import lettucecharacter from './assets/lettucecharacter.png';
-import tomatocharacter from './assets/tomatocharacter.png';
-import potcharacter from './assets/potcharacter.png';
 import beancharacter from './assets/beancharacter.png';
 import logo from './assets/logo.png';
 // Router import
@@ -23,21 +19,21 @@ import { useEffect } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import SerialRegister from './components/SerialRegister';
 import Button from 'react-bootstrap/Button';
+import { useParams } from 'react-router-dom';
 
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
 function Conversation() {
-  const state_serial_number = useSelector((state) => 
-     state.serial_number
-  )
-  const state_name = useSelector((state) =>
-    state.name
-  )
-  // serial번호가 등록이 되었는지 확인 차원에서 렌더링 될 때 한번 출력
-  useEffect(() => {
-    console.log(state_serial_number); // 처음 렌더링 시에만 출력
-    // console.log(store)
-  }, [])
+  // const state_serial_number = useSelector((state) => 
+  //    state.serial_number
+  // )
+  // const state_name = useSelector((state) =>
+  //   state.name
+  // )
+  const params = useParams()
+  console.log(params.serial_number)
+  const serial_number = params.serial_number
+  
 
 
 
@@ -59,8 +55,7 @@ function Conversation() {
         </div>
         <div className='col-3'>
         <div className='bubble '>
-          <h1>안녕 나는 김태형이야 몇 자까지 쳐지려나?</h1>
-          <h1>안녕 나는 김태형이야 몇 자까지 쳐지려나?</h1>
+          
           
         </div>
         </div>
@@ -68,7 +63,7 @@ function Conversation() {
       
       {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
       <div>
-      <WebSocketComponent />
+      <WebSocketComponent serial_number={serial_number}/>
 
       </div>
     </div>
@@ -79,7 +74,10 @@ function Conversation() {
 
 
 function App() {
+  const base_serial_number = 'qwer'
   // 배경화면 설정
+  
+  const navigate = useNavigate()
   const backgroundStyles = {
     backgroundImage: `url(${background})`,
     backgroundSize: 'cover',
@@ -87,6 +85,9 @@ function App() {
     backgroundPosition: 'center',
     minHeight: '100vh', // 전체 화면 높이까지 배경이미지가 채워지도록 설정
   }
+  useEffect(() => {
+    navigate(`/conversation/${base_serial_number}`)
+  }, [])
 
   return (
     // App주변으로 store설정
@@ -94,7 +95,7 @@ function App() {
       <div className="App" style={backgroundStyles}>
         <Routes>
           <Route path="/" element={<SerialRegister />} />
-          <Route path="/conversation" element={<Conversation />} />
+          <Route path="/conversation/:serial_number" element={<Conversation />} />
         </Routes>
       </div>
     //  </Provider> 
