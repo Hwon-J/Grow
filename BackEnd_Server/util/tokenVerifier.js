@@ -6,14 +6,14 @@ dotenv.config();
 
 const verify = (req, res, next) => {
   winston.info("token verify called. auth:" + req.headers.authorization);
-  console.log(req.headers);
-  console.log(req.body);
+  // console.log(req.headers);
+  // console.log(req.body);
   const key = process.env.JWT_SECRET_KEY;
   // 인증 완료
   try {
     // 요청 헤더에 저장된 토큰(req.headers.authorization)과 비밀키를 사용하여 토큰을 req.decoded에 반환
     req.decoded = jwt.verify(req.headers.authorization, key);
-    console.log(req.decoded.id);
+    // console.log(req.decoded.id);
     return next();
   } catch (error) {
     // 인증 실패

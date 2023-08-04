@@ -236,3 +236,31 @@ exports.getWaterLogByIndex = async (req, res) => {
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
+
+exports.setComplete = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(`plantController setComplete called. id:${id}, index:${index}`);
+  try {
+    // 데이터베이스에서 정보 받기
+    let query = `select watered_date as watered from water_log join plant on water_log.plant_index = plant.index 
+      join member on plant.member_index = member.index
+    where member.id = ? and plant.index = ?`;
+
+    let result = await queryPromise(query, [id, index]);
+    let array = [];
+    result.forEach((value) => {
+      array.push(value.watered);
+    });
+    
+    winston.info(
+      `plantController setComplete successfully responds to requests`
+    );
+    return res
+      .status(200)
+      .json({ code: 200, message: "요청 처리 성공", data: array });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
