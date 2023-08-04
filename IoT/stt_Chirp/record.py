@@ -12,7 +12,7 @@ from statistics import mean, stdev
 
 import json
 
-last_N_readings = []  # 마지막 N개의 측정값을 저장
+last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 # 웹소켓 서버 설정
 ws = None
 
@@ -31,7 +31,7 @@ def on_close(ws):
 
 def on_open(ws):
     
-    handshake_message = json.dumps({"role": "handshake", "serial": "qwer"})
+    handshake_message = json.dumps({"role": "handshake", "serial": "asdf"})
     ws.send(handshake_message)
     print("WebSocket opened")
 
@@ -172,10 +172,13 @@ if __name__ == "__main__":
 
         # 녹음 스레드 시작
         record_thread = threading.Thread(target=record_audio)
+        record_thread.daemon = True
         record_thread.start()
 
         websocket_thread = threading.Thread(target=run_websocket_server)
+        websocket_thread.daemon = True
         websocket_thread.start()
+
         while True:
             distance = measure_distance()
             print(f"Distance: {distance} cm")
