@@ -5,7 +5,7 @@ const PlantCard = (props) => {
   const data = props.props;
   const navigate = useNavigate();
   const goDiary = () => {
-    navigate(`/diary/${data.id}`)
+    navigate(`/diary/${data.index}`)
   }
 
   return (
