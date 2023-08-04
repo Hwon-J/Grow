@@ -232,6 +232,19 @@
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
     - 서버 오류: { code: 500, message: "서버 오류" }
 
+### 특정 식물을 완료 상태로 전환하기
+- 방식: PUT
+- 서버IP: 기본URI/complete/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 200, message: "요청 처리 성공" }
+    - 등록된 화분 없음: { code: 202, message: "등록된 화분이 없는 식물" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 ## 센서 관련
 
 - 기본 URI: BaseURI:PORT번호/api/sensor

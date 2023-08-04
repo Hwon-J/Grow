@@ -129,23 +129,37 @@ exports.registPlant = async (req, res) => {
 
     try {
       // 5. 트랜잭션을 건다.
-      await queryPromise('START TRANSACTION');
-    
+      await queryPromise("START TRANSACTION");
+
       // 6. 화분의 상태를 업데이트 한다.
-      const updateQuery = 'UPDATE `pot` SET `member_index` = ? WHERE `serial_number` = ?';
+      const updateQuery =
+        "UPDATE `pot` SET `member_index` = ? WHERE `serial_number` = ?";
       await queryPromise(updateQuery, [memberIndex, serial]);
-      winston.info('table \'pot\' updated. member index: ' + memberIndex + ', serial: ' + serial);
-    
+      winston.info(
+        "table 'pot' updated. member index: " +
+          memberIndex +
+          ", serial: " +
+          serial
+      );
+
       // 7. 식물을 등록한다.
-      const insertQuery = 'INSERT INTO `plant` (pot_index, plant_info_index, plant_name, child_name, child_age, member_index) VALUES (?, ?, ?, ?, ?, ?)';
-      await queryPromise(insertQuery, [potIndex, infoIndex, plantName, childName, childAge, memberIndex]);
-    
+      const insertQuery =
+        "INSERT INTO `plant` (pot_index, plant_info_index, plant_name, child_name, child_age, member_index) VALUES (?, ?, ?, ?, ?, ?)";
+      await queryPromise(insertQuery, [
+        potIndex,
+        infoIndex,
+        plantName,
+        childName,
+        childAge,
+        memberIndex,
+      ]);
+
       // 8. 트랜잭션을 커밋한다.
-      await queryPromise('COMMIT');
+      await queryPromise("COMMIT");
     } catch (error) {
       // 오류 발생 시 롤백
-      await queryPromise('ROLLBACK');
-      winston.error('error occurred during transaction ' + error.message);
+      await queryPromise("ROLLBACK");
+      winston.error("error occurred during transaction " + error.message);
       throw error;
     }
     winston.info(
@@ -186,7 +200,9 @@ exports.getAllPlant = async (req, res) => {
 exports.getPlantByIndex = async (req, res) => {
   const id = req.decoded.id;
   const index = req.params.index;
-  winston.info(`plantController getPlantByIndex called. id:${id}, index:${index}`);
+  winston.info(
+    `plantController getPlantByIndex called. id:${id}, index:${index}`
+  );
   try {
     // 데이터베이스에서 정보 받기
     let query = `select plant.index as \`index\`, plant.pot_index as pot_index, 
@@ -212,22 +228,25 @@ exports.getPlantByIndex = async (req, res) => {
 exports.getWaterLogByIndex = async (req, res) => {
   const id = req.decoded.id;
   const index = req.params.index;
-  winston.info(`plantController getWaterLogByIndex called. id:${id}, index:${index}`);
+  winston.info(
+    `plantController getWaterLogByIndex called. id:${id}, index:${index}`
+  );
+  let result = await queryPromise(query, [id, index]);
   try {
     // 데이터베이스에서 정보 받기
     let query = `select watered_date as watered from water_log join plant on water_log.plant_index = plant.index 
       join member on plant.member_index = member.index
     where member.id = ? and plant.index = ?`;
 
-    let result = await queryPromise(query, [id, index]);
     let array = [];
     result.forEach((value) => {
       array.push(value.watered);
     });
-    
+
     winston.info(
       `plantController getWaterLogByIndex successfully responds to requests`
     );
+    await queryPromise("COMMIT");
     return res
       .status(200)
       .json({ code: 200, message: "요청 처리 성공", data: array });
@@ -237,30 +256,50 @@ exports.getWaterLogByIndex = async (req, res) => {
   }
 };
 
+// 1. 트랜잭션을 연다
+// 2. 식물의 pot_index를 받아온다
+// 3. index에 맞는 식물을 찾아 complete 상태로 만든다
+// 4. 원래의 pot에서 주인을 null로 만든다.
+// 5. 트랜잭션을 닫는다.
 exports.setComplete = async (req, res) => {
   const id = req.decoded.id;
   const index = req.params.index;
-  winston.info(`plantController setComplete called. id:${id}, index:${index}`);
+  winston.info(
+    `plantController setComplete called. id:${id}, plantIndex:${index}`
+  );
   try {
-    // 데이터베이스에서 정보 받기
-    let query = `select watered_date as watered from water_log join plant on water_log.plant_index = plant.index 
-      join member on plant.member_index = member.index
-    where member.id = ? and plant.index = ?`;
+    await queryPromise("START TRANSACTION");
 
-    let result = await queryPromise(query, [id, index]);
-    let array = [];
-    result.forEach((value) => {
-      array.push(value.watered);
-    });
-    
-    winston.info(
-      `plantController setComplete successfully responds to requests`
-    );
+    // 데이터베이스에서 정보 받기
+    let query = `select pot.index as \`index\` from pot join plant on pot.index = plant.pot_index where plant.index = ?`;
+    let result = await queryPromise(query, [index]);
+    // 결과가 없으면 오류
+    if (!result) {
+      winston.info("등록된 화분이 없는 식물, plant index: " + index);
+      return res
+        .status(202)
+        .json({ code: 202, message: "등록된 화분이 없는 식물" });
+    }
+
+    // 컴플리트 상태로 변경
+    query = `update plant set pot_index = null, complete = 1, end_date = now() where \`index\` = ?`;
+    await queryPromise(query, [index]);
+
+    // pot을 변경
+    query = `update pot set member_index = null where \`index\` = ?`;
+    await queryPromise(query, [result[0].index]);
+
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    winston.info(`plantController setComplete successfully completed`);
     return res
       .status(200)
-      .json({ code: 200, message: "요청 처리 성공", data: array });
+      .json({ code: 200, message: "요청 처리 성공"});
   } catch (error) {
-    winston.error(error);
+    // 오류 발생 시 롤백
+    await queryPromise("ROLLBACK");
+    winston.error("error occurred during transaction " + error.message);
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
