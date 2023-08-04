@@ -5,6 +5,7 @@ import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
 import beancharacter from './assets/beancharacter.png';
+import board from './assets/board.png';
 import logo from './assets/logo.png';
 // Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -24,12 +25,7 @@ import { useParams } from 'react-router-dom';
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
 function Conversation() {
-  // const state_serial_number = useSelector((state) => 
-  //    state.serial_number
-  // )
-  // const state_name = useSelector((state) =>
-  //   state.name
-  // )
+  
   const params = useParams()
   console.log(params.serial_number)
   const serial_number = params.serial_number
@@ -42,6 +38,7 @@ function Conversation() {
     
     <div className='character-container'>
       <div className='information'>
+        <img src={board} className='board' />
         <h1>온도 : </h1>
         <h1>습도 : </h1>
         <h1>수분 : </h1>
