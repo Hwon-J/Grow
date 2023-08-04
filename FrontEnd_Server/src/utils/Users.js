@@ -15,7 +15,7 @@ export const checkToken = async () => {
   };
   try {
     const response = await axios.post(
-      `http://192.168.100.37:30001/api/user/valid`,"", config
+      `http://i9c103.p.ssafy.io:30001/api/user/valid`,"", config
     );
     console.log(response)
     if (response.status !== 200) {
