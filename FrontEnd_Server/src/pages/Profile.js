@@ -72,7 +72,7 @@ const Profile = () => {
       },
     };
     try {
-      const response = await axios.post(`http://192.168.100.37:30001/api/plant/myplant/`,"" ,config);
+      const response = await axios.get(`http://192.168.100.37:30001/api/plant/myplant/`,config);
       console.log(response.data.data)
       const plantsList = response.data.data;
       const growing = plantsList.filter((plant) => plant.complete === 0);

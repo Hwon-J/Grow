@@ -6,14 +6,6 @@ import { useParams } from 'react-router-dom';
 import './MyInfo.scss';
 import { useSelector } from "react-redux";
 
-const data = {
-  "plant_idx": 1,
-  "plant_name": "상추",
-  "plant_nickname": "상츠",
-  "child_name": "김민국",
-  "start_day": "2023-07-09T12:00:00",
-  "img": "src/assets/1.jpg"
-};
 
 const formatDate = (isoDateString) => {
   const date = new Date(isoDateString);
@@ -31,36 +23,41 @@ const calDay = (firstDate, secondDate) => {
 };
 
 const MyInfo = () => {
-  // const navigate = useNavigate();
-  const [plantInfo, setPlantInfo] = useState(data);
-  const today = new Date(); // Date 객체로 초기화
-  const formattedToday = formatDate(today.toISOString());
-  const formattedStartDay = formatDate(plantInfo.start_day);
-  const { id } = useParams();
-  console.log(id, typeof(id));
-  console.log(formattedToday);
-  console.log(formattedStartDay);
-
   const [myplant, setMyplant] = useState([]);
+  const today = new Date(); 
+  const formattedToday = formatDate(today.toISOString());
+  const formattedStartDay = formatDate(myplant.start_date);
+  const { id } = useParams();
+  // console.log(id, typeof(id));
+  // console.log(formattedToday);
+  // console.log(formattedStartDay);
+
   
   const currentUser = useSelector((state) => state.currentUser);
-  const authToken = currentUser.token;
-
+  const token = currentUser.token;
+  // console.log(token);
   const daysDifference = calDay(formattedStartDay, formattedToday)+1;
-  console.log(daysDifference);
+  // console.log(daysDifference);
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${authToken}`, 
-    },
-  };
-//http://i9c103.p.ssafy.io:3001/api/plant/myplant/${id}
+  
+//http://i9c103.p.ssafy.io:30001/api/plant/myplant/${id}
+//http://192.168.100.37:30001/api/plant/myplant/${id}
+
   const getPlantInfo = async () => {
+    const config = {
+        headers: {
+          Authorization: token, 
+        },
+      };
+      // console.log(id);
+
     try {
-      const response = await axios.get(`http://192.168.100.37:30001/api/plant/myplant/`, config);
-      setMyplant(response.data);
-      console.log(response.data);
-      console.log(myplant);
+      const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/myplant/${id}`, config);
+      // console.log(response.data);
+      // console.log(response.data.data[0], 'ty');
+      setMyplant(response.data.data[0]);
+
+      // console.log(myplant, 'typ');
     } catch (error) {
       console.error(error);
     }
@@ -70,13 +67,9 @@ const MyInfo = () => {
     getPlantInfo();
   }, []);
 
-  if (!plantInfo) {
+  if (!myplant) {
     return <div>Loading...</div>;
   }
-  // const handleQuestPageButtonClick = () => {
-  //   navigate('/questpage'); // Use navigate to navigate to /questpage
-  // };
-
   
   return (
     <>
@@ -85,10 +78,8 @@ const MyInfo = () => {
         <img className="rounded-image" src={myImage} alt="Image Description" />
         </div>
         <div className='info_box_right'>
-          <h5>{plantInfo.child_name}(이)가 키우는 {plantInfo.plant_nickname}</h5>
-          {/* <h5>키운지 { today }일째</h5> */}
+          <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5>
           <h5>키운 지 {daysDifference}일째</h5>
-          {/* <button onClick={handleQuestPageButtonClick}>질문 등록</button> */}
         </div>
       </div>       
     </>
