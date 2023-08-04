@@ -92,9 +92,13 @@ wss.on("connection", (ws, req) => {
         ws.close();
       }
 
+      // clients에 시리얼 넘버를 엮어서 저장
       ws.serial = msgJson.serial;
       clients.push(ws);
     } else if (msgJson.role == "gpt") {
+      // DB에 유저의 입력 저장
+      
+
       // 히스토리에 유저의 답변 저장
       history.push({
         role: "user",
@@ -103,7 +107,7 @@ wss.on("connection", (ws, req) => {
       // 1. gpt에게 답변을 받는다.
       // 2. count를 1증가 시킨다.
       // 3. gpt의 답변 맨 마지막에 ?가 들어 있으면 count를 다시 1 감소 시킨다.
-      // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위
+      // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위 질문을 붙인다.
       (async () => {
         let result = await gpt(history);
         // 답변속 이모지 제거
