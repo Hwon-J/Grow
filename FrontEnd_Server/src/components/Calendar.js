@@ -24,10 +24,6 @@ import axios from 'axios';
 // 각각의 요일을 표기하는 RenderDays
 // 날짜를 표기하고 날짜를 클릭하면 선택되는 RenderCells
 
-const water = {
-    "plant_idx": 1,
-    "water_log":["2023-07-09T12:00:00","2023-07-11T12:00:00","2023-07-15T12:00:00","2023-07-19T12:00:00","2023-07-22T12:00:00",]
-}
 
 const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -36,11 +32,6 @@ const formatDate = (isoDateString) => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}${month}${day}`;
   };
-
-const formattedWaterLog = water.water_log.map(formatDate);
-
-console.log(formattedWaterLog);
-
 
 
 // Calender 컴포넌트에서 currentMonth, prevMonth, nextMonth를 가져와 사용한다.
@@ -83,14 +74,13 @@ const RenderDays = () => {
 };
 
 // 각각의 날짜를 표기하는 RenderCells
-// formattedWaterLog
-const RenderCells = ({ currentMonth, currentDate, waterLog }) => {
+const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
     // 현재의 월의 첫날과 마지막날, 첫주의 첫날(이전달)과 마지막주의 마지막날(다음달)을 구한다.
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
-    console.log(currentDate);
+    // console.log(currentDate);
     
     // 주(rows)와 날짜(days)를 담을 배열을 만든다.0
     const rows = [];
@@ -105,9 +95,9 @@ const RenderCells = ({ currentMonth, currentDate, waterLog }) => {
         // 날짜의 형식을 지정한 문자열을 formattedDate에 할당
         for (let i = 0; i < 7; i++) {
             formattedDate = format(day, 'd');
-            // const isWatered = formattedWaterLog.includes(formatDate(day));
-            const isWatered = waterLog.includes(formatDate(day));
-
+            // const isWatered = formattedWaterLog.
+            const isWatered = formattedWaterLog.includes(formatDate(day));
+            
             days.push(
                 <div
                     className={`cell_col ${
@@ -154,7 +144,7 @@ const Calender = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [waterLog, setWaterLog] = useState([]);
     const { id } = useParams();
-    console.log(id);
+    // console.log(id);
 
     // prevMonth, nextMonth를 만들어 버튼 클릭시 원하는 달로 이동하도록 설정한다.
     const prevMonth = () => {
@@ -163,30 +153,42 @@ const Calender = () => {
     const nextMonth = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
-    const formattedWaterLog = useMemo(() => water.water_log.map(formatDate), []);
+    
+    //const formattedWaterLog = useMemo(() => waterLog.water_log.data.map(formatDate), []);
 
     const currentUser = useSelector((state) => state.currentUser);
-    const authToken = currentUser.token;
+    const token = currentUser.token;
 
     const config = {
         headers: {
-          Authorization: `Bearer ${authToken}`, 
+          Authorization: token, 
         },
       };
     
-    // const getWaterLog = async () => {
-    //     try {
-    //     const response = await axios.get(`http://i9c103.p.ssafy.io:3001/api/plant/m/${id}`, config);
-    //         setWaterLog(response.data);
-    //     } catch (error) {
-    //     console.error(error);
-    //     }
-    // };
+      
+//http://i9c103.p.ssafy.io:30001/api/plant/water/${id}
+//http://192.168.100.37:30001/api/plant/water/${id}
 
-    // useEffect(() => {
-    //     getWaterLog();
-    // }, []);
+    
+    const getWaterLog = async () => {
+        try {
+        const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/water/${id}`, config);
+            // console.log(response.data);
+            setWaterLog(response.data);
+            // console.log(waterLog.data);
+        } catch (error) {
+        console.error(error);
+        }
+    };
 
+    useEffect(() => {
+        getWaterLog();
+    }, []);
+    const formattedWaterLog = useMemo(
+        () => (waterLog.data ? waterLog.data.map(formatDate) : []),
+        [waterLog]
+      );
+    // console.log(formattedWaterLog);      
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
@@ -201,7 +203,7 @@ const Calender = () => {
                 currentMonth={currentMonth}
                 currentDate={currentDate}
                 formattedWaterLog={formattedWaterLog}
-                waterLog={waterLog}
+                // waterLog={waterLog}
             />
         </div>
     );
