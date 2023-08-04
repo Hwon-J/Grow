@@ -37,9 +37,11 @@ const MyInfo = () => {
   const formattedToday = formatDate(today.toISOString());
   const formattedStartDay = formatDate(plantInfo.start_day);
   const { id } = useParams();
-  console.log(id);
+  console.log(id, typeof(id));
   console.log(formattedToday);
   console.log(formattedStartDay);
+
+  const [myplant, setMyplant] = useState([]);
   
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
@@ -52,11 +54,13 @@ const MyInfo = () => {
       Authorization: `Bearer ${authToken}`, 
     },
   };
-
+//http://i9c103.p.ssafy.io:3001/api/plant/myplant/${id}
   const getPlantInfo = async () => {
     try {
-      const response = await axios.get(`http://i9c103.p.ssafy.io:30001/api/plant/data/${id}`, config);
-      setPlantInfo(response.data);
+      const response = await axios.get(`http://192.168.100.37:30001/api/plant/myplant/`, config);
+      setMyplant(response.data);
+      console.log(response.data);
+      console.log(myplant);
     } catch (error) {
       console.error(error);
     }

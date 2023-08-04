@@ -16,6 +16,9 @@ import { format, addMonths, subMonths } from 'date-fns';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
 import { isSameMonth, isSameDay, addDays, parse } from 'date-fns';
 import './Calendar.scss';
+import { useParams } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import axios from 'axios';
 
 // 달력을 만들때 연월을 표기하고 월을 이동하는 RenderHeader
 // 각각의 요일을 표기하는 RenderDays
@@ -80,7 +83,8 @@ const RenderDays = () => {
 };
 
 // 각각의 날짜를 표기하는 RenderCells
-const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
+// formattedWaterLog
+const RenderCells = ({ currentMonth, currentDate, waterLog }) => {
     // 현재의 월의 첫날과 마지막날, 첫주의 첫날(이전달)과 마지막주의 마지막날(다음달)을 구한다.
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
@@ -101,7 +105,8 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
         // 날짜의 형식을 지정한 문자열을 formattedDate에 할당
         for (let i = 0; i < 7; i++) {
             formattedDate = format(day, 'd');
-            const isWatered = formattedWaterLog.includes(formatDate(day));
+            // const isWatered = formattedWaterLog.includes(formatDate(day));
+            const isWatered = waterLog.includes(formatDate(day));
 
             days.push(
                 <div
@@ -147,7 +152,9 @@ const Calender = () => {
     // currentMonth, selectedDate, currentDate만든다.
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [currentDate, setCurrentDate] = useState(new Date());
-
+    const [waterLog, setWaterLog] = useState([]);
+    const { id } = useParams();
+    console.log(id);
 
     // prevMonth, nextMonth를 만들어 버튼 클릭시 원하는 달로 이동하도록 설정한다.
     const prevMonth = () => {
@@ -157,6 +164,29 @@ const Calender = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
     const formattedWaterLog = useMemo(() => water.water_log.map(formatDate), []);
+
+    const currentUser = useSelector((state) => state.currentUser);
+    const authToken = currentUser.token;
+
+    const config = {
+        headers: {
+          Authorization: `Bearer ${authToken}`, 
+        },
+      };
+    
+    // const getWaterLog = async () => {
+    //     try {
+    //     const response = await axios.get(`http://i9c103.p.ssafy.io:3001/api/plant/m/${id}`, config);
+    //         setWaterLog(response.data);
+    //     } catch (error) {
+    //     console.error(error);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     getWaterLog();
+    // }, []);
+
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
@@ -171,6 +201,7 @@ const Calender = () => {
                 currentMonth={currentMonth}
                 currentDate={currentDate}
                 formattedWaterLog={formattedWaterLog}
+                waterLog={waterLog}
             />
         </div>
     );
