@@ -273,7 +273,7 @@ exports.setComplete = async (req, res) => {
     // 데이터베이스에서 정보 받기
     let query = `select pot.index as \`index\` from pot join plant on pot.index = plant.pot_index where plant.index = ?`;
     let result = await queryPromise(query, [index]);
-    console.log(result);
+    // console.log(result);
     // 결과가 없으면 오류
     if (!result || result.length === 0) {
       winston.info("등록된 화분이 없는 식물, plant index: " + index);
@@ -294,13 +294,87 @@ exports.setComplete = async (req, res) => {
     await queryPromise("COMMIT");
 
     winston.info(`plantController setComplete successfully completed`);
-    return res
-      .status(200)
-      .json({ code: 200, message: "요청 처리 성공"});
+    return res.status(200).json({ code: 200, message: "요청 처리 성공" });
   } catch (error) {
     // 오류 발생 시 롤백
     await queryPromise("ROLLBACK");
     winston.error("error occurred during transaction " + error.message);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+exports.getQuestionList = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController setComplete called. id:${id}, plantIndex:${index}`
+  );
+};
+exports.getQuestionList = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController getQuestionList called. id:${id}, plantIndex:${index}`
+  );
+  try {
+    // 요청자가 해당 식물의 소유자인지 확인
+    let query = `select id from member join plant on member.index = plant.member_index where id = ? and plant.index = ?`;
+    let result = await queryPromise(query, [id, index]);
+    // console.log(result);
+    if (!result || result.length === 0) {
+      winston.info("invalid id or index");
+      return res
+        .status(202)
+        .json({ code: 202, message: "유효하지 않은 id 또는 index" });
+    }
+
+    query = `select content, completed from question where plant_index = ?`;
+    result = await queryPromise(query, [index]);
+    // console.log(result);
+
+    winston.info(`plantController getQuestionList successfully completed`);
+    return res
+      .status(200)
+      .json({ code: 200, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+exports.registQuestion = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  const quest = req.body.quest;
+  winston.info(
+    `plantController registQuestion called. id:${id}, plantIndex:${index}, quest:${quest}`
+  );
+  try {
+    // 요청자가 해당 식물의 소유자인지 확인
+    let query = `select id, complete from member join plant on member.index = plant.member_index where id = ? and plant.index = ?`;
+    let result = await queryPromise(query, [id, index]);
+    console.log(result);
+    if (!result || result.length === 0) {
+      winston.info("invalid id or index");
+      return res
+        .status(202)
+        .json({ code: 202, message: "유효하지 않은 id 또는 index" });
+    }
+    if (result[0].complete == 1){
+      winston.info("already completed plant. index: " + index);
+      return res
+        .status(202)
+        .json({ code: 202, message: "이미 완료처리된 식물" });
+    }
+    query = `insert into question(plant_index, content, completed) values (?, ?, 0)`;
+    await queryPromise(query, [index, quest]);
+
+    winston.info(`plantController registQuestion successfully completed`);
+    return res
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
