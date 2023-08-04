@@ -21,8 +21,8 @@ import homevideo2 from '../assets/homevideo2.mp4';
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const authToken = currentUser.token;
-  console.log(currentUser, authToken);
+  const token = currentUser.token;
+  console.log(token);
   const navigate = useNavigate();
 
   const [growinPlant, setGrowinPlant] = useState([
@@ -62,22 +62,32 @@ const Profile = () => {
       id: 3,
     },
   ]);
-  // // 식물 종 데이터 변경할 메서드
-  // const getPlants = async () => {
-  //   try {
-  //     const response = await axios.get("식물 데이터 주소");
-  //     const plantsList = response.data;
-  //     const growing = plantsList.filter((plant) => plant.complete === 0);
-  //     const complete = plantsList.filter((plant) => plant.complete === 1);
-  //     setGrowinPlant(growing);
-  //     setPlantComplete(complete);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getPlants();
-  // }, []);
+
+  // 식물 종 데이터 변경할 메서드
+  const getPlants = async () => {
+    console.log("보내기 "+token)
+    const config = {
+      headers: {
+        Authorization: token, 
+      },
+    };
+    try {
+      const response = await axios.post(`http://192.168.100.37:30001/api/plant/myplant/`,"" ,config);
+      console.log(response.data.data)
+      const plantsList = response.data.data;
+      const growing = plantsList.filter((plant) => plant.complete === 0);
+      const complete = plantsList.filter((plant) => plant.complete === 1);
+      setGrowinPlant(growing);
+      setPlantComplete(complete);
+      console.log(growinPlant)
+      console.log(plantComplete)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getPlants();
+  }, []);
 
   const NotcompleteCardSet = () => {
     return (

@@ -98,13 +98,14 @@ const PlantInfo = () => {
   };
 
   const imgPlantInfo = () => {
+    console.log(plantInfo)
     return (
       <div className="image-container">
         {plantInfo.map((info, index) => (
           <div key={index} className="image-wrapper">
             <img
               className="plantinfoimg"
-              src={`./plantinfoimg/${info.species}.jpg`}
+              src={`./plantInfoimg/${info.index}.jpg`}
               onClick={() => onClickInfo(info.index)}
               style={{
                 border: checkIdx === info.index ? "0.1rem solid rgb(56, 181, 203)" : "none",
