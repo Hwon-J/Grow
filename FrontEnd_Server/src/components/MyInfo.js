@@ -119,8 +119,6 @@ const MyInfo = () => {
           <h5>시작일: 2023.08.01(3일차) </h5>
           {/* <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5> */}
           {/* <h5>키운 지 {daysDifference}일째</h5> */}
-          
-
         </Grid>
       </div>       
     </>
