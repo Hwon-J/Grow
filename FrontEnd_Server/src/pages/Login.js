@@ -55,52 +55,85 @@ const Login = () => {
   return (
     <>
     <NavTop/>
-    <Container className="bgimg">
-      <div className="container_box ">
-      <div className="flexbox-left">
-      </div>
-      <div className="flexbox-right">
-      <h2>LOG IN</h2>
-        <form onSubmit={handleSubmit}>
-          <Grid
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12}>
-              <TextField
-                label="ID"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                value={id}
-                onChange={onChangeId}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="비밀번호"
-                fullWidth
-                type="password"
-                variant="outlined"
-                margin="normal"
-                value={password}
-                onChange={onChangePassword}
-              />
-            </Grid>
-            
-            <Grid item xs={12}>
-              {/* <Button type="submit" variant="contained" color="secondary" fullWidth>
-                로그인
-              </Button> */}
-              <p>Forgot password?</p>
-              <button type="submit" variant="contained" className="btn-hover color-5">Login</button>
-            </Grid>
-          </Grid>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-        </form>
-      </div>
-      </div>
-    </Container>
+      {/* <Grid container>
+        <Grid item xs={5}>
+          <div className="login-left"></div>
+        </Grid>
+        <Grid item xs={7}>
+          <div className="login-form">
+            <form onSubmit={handleSubmit}>
+              <Grid item xs={12}>
+                <h1>LOG IN</h1>
+              </Grid>
+
+              <Grid item xs={12}>
+                <label for="user" className="label">ID</label>
+                <input id="user" type="text" className="input" value={id} onChange={onChangeId} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <label for="pass" className="label">PASSWORD</label>
+                <input
+                  id="pass"
+                  type="password"
+                  className="input"
+                  data-type="password"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <input type="submit" className="button" value="Log In" />
+              </Grid>
+            </form>
+          </div>
+        </Grid>
+        
+      </Grid> */}
+
+
+
+    <div className="bgimg">
+      <Grid container>
+        <Grid item xs={5}>
+          <div className="flexbox-left"></div>
+        </Grid>
+        <Grid item xs={7}>
+          <div className="flexbox-right">
+            <h2>Log In</h2>
+            <form onSubmit={handleSubmit}>
+              <Grid container justifyContent="center" alignItems="center">
+                <Grid className='input_box' item xs={12}>
+                  <TextField
+                    label="ID"
+                    fullWidth
+                    margin="normal"
+                    value={id}
+                    onChange={onChangeId}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="비밀번호"
+                    fullWidth
+                    type="password"
+                    margin="normal"
+                    value={password}
+                    onChange={onChangePassword}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <p>Forgot password?</p>
+                  <button type="submit" variant="contained" className="btn-hover color-5">Login</button>
+                </Grid>
+              </Grid>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+            </form>
+          </div>
+        </Grid>
+      </Grid>
+    </div>
     </>
   );
 };
