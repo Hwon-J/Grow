@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import './MyInfo.scss';
 import { useSelector } from "react-redux";
 import { BASE_URL } from '../utils/Urls';
-
+import { Grid } from '@mui/material';
 
 
 // 가져오는 날짜 형식을 YYYYMMDD로 변환
@@ -105,14 +105,23 @@ const MyInfo = () => {
   return (
     <>
       <div className='info_box'>
-        <div className='info_box_left'>
-        <img className="rounded-image" src={myImage} alt="Image Description" />
-        </div>
-        <div className='info_box_right'>
-          <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5>
-          <h5>키운 지 {daysDifference}일째</h5>
-        </div>
-        <button className='info_box_button' onClick={completePlant}>완료</button>
+      <Grid 
+          item xs={5}
+          className="rounded-image"
+          style={{ backgroundImage: `url(${myImage})` }}
+        >
+        </Grid>
+        <Grid item xs={7} className='info_box_right'>
+          <div className='info_box_button' onClick={completePlant}>Complete</div>
+          <h1>{myplant.plant_name}상치</h1>
+          <h5 >종: 상추</h5>
+          <h5>친구 : 잼민이</h5>
+          <h5>시작일: 2023.08.01(3일차) </h5>
+          {/* <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5> */}
+          {/* <h5>키운 지 {daysDifference}일째</h5> */}
+          
+
+        </Grid>
       </div>       
     </>
   )
