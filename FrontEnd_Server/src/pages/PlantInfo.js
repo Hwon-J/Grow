@@ -5,20 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/Urls";
 import {
-  Alert,
-  Button,
   Form,
   Row,
   Col,
   Stack,
   Container,
-  Image,
   Card,
   InputGroup,
   Offcanvas,
 } from "react-bootstrap";
 import NavTop from "../components/NavTop";
-import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import "./plantinfo.scss";
 
 const PlantInfo = () => {
@@ -112,99 +108,14 @@ const PlantInfo = () => {
   };
 
   const imgPlantInfo = () => {
-    const a = [
-      {
-        index: 1,
-        species: "청경채",
-        content:
-          "청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 2,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 3,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 4,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 5,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 6,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 7,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 8,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-      {
-        index: 9,
-        species: "상추",
-        temperature_upper: 35,
-        temperature_lower: 20,
-        moisture_upper: 50,
-        moisture_lower: 40,
-        max_water_period: 10,
-      },
-    ];
-
+    console.log(plantInfo);
     return (
       <Row className="scroll-container">
-        {a.map((info) => (
-          <Col key={info.index} xs={6} md={6}>
+        {plantInfo.map((info) => (
+          <Col key={info.index} xs={4} md={6}>
             <Card className="plant-img-card h-100">
               <Card.Img
-                thumbnail
+                thumbnail="true"
                 src={`./plantInfoimg/${info.index}.jpg`}
                 onClick={() => handleShow(info)}
                 style={{
@@ -225,27 +136,17 @@ const PlantInfo = () => {
 
   const getPlantInfo = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/plant/info`
-      );
+      const response = await axios.get(`${BASE_URL}/api/plant/info`);
       setPlantInfo(response.data.info);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onClickInfo = (info) => {
-    setCheckIdx(info.index);
-    setSelectedInfo(info);
-    console.log(info);
-  };
-
   const checkSerial = async () => {
     if (serialNum) {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/api/pot/${serialNum}`
-        );
+        const response = await axios.get(`${BASE_URL}/api/pot/${serialNum}`);
         if (response.data.code === 202) {
           // alert(response.data.message);
           console.log(response.data.message);
@@ -275,7 +176,7 @@ const PlantInfo = () => {
       <Container className="plant-info-container">
         <Row>
           {/* 좌측 카드 컬럼 */}
-          <Col sm={12} md={5} className="plant-info-col">
+          <Col sm={12} md={4} className="plant-info-col">
             {imgPlantInfo()}
           </Col>
 
@@ -293,7 +194,6 @@ const PlantInfo = () => {
                   <Stack gap={3} className="plantinfo-stack">
                     <h2>식물 등록</h2>
 
-                    {/* Offcanvas */}
                     <Offcanvas
                       show={show}
                       onHide={handleClose}
@@ -306,18 +206,29 @@ const PlantInfo = () => {
                         </Offcanvas.Title>
                       </Offcanvas.Header>
                       <Offcanvas.Body>
-                        <p>설명 : {selectedInfo?.content}</p>
-                        <p>
-                          Temperature Upper: {selectedInfo?.temperature_upper}
-                        </p>
-                        <p>
-                          Temperature Lower: {selectedInfo?.temperature_lower}
-                        </p>
-                        <p>Moisture Upper: {selectedInfo?.moisture_upper}</p>
-                        <p>Moisture Lower: {selectedInfo?.moisture_lower}</p>
-                        <p>
-                          Max Water Period: {selectedInfo?.max_water_period}
-                        </p>
+                        {selectedInfo?.info && <p>설명: {selectedInfo.info}</p>}
+                        {selectedInfo?.temperature_upper && (
+                          <p>
+                            최고: {selectedInfo.temperature_upper}도
+                          </p>
+                        )}
+                        
+                        {selectedInfo?.temperature_lower && (
+                          <p>
+                            최저온도: {selectedInfo.temperature_lower}도
+                          </p>
+                        )}
+                        {selectedInfo?.moisture_upper&& (
+                          <p>최고습도: {selectedInfo.moisture_upper}%</p> 
+                        )}
+                        {selectedInfo?.moisture_lower && (
+                          <p>최저습도: {selectedInfo.moisture_lower}%</p>
+                        )}
+                        {selectedInfo?.max_water_period && (
+                          <p>
+                            최대 물주기: {selectedInfo.max_water_period}일
+                          </p>
+                        )}
                       </Offcanvas.Body>
                     </Offcanvas>
 
@@ -334,9 +245,6 @@ const PlantInfo = () => {
                       onChange={onChangeChildname}
                     />
                     <InputGroup>
-                      <p className="checkP" style={{ color: "red" }}>
-                        {checkNum ? checkNum : errormessage}
-                      </p>
                       <Form.Control
                         type="text"
                         placeholder="시리얼 넘버"
@@ -351,13 +259,16 @@ const PlantInfo = () => {
                         확인
                       </button>
                     </InputGroup>
+                    <p className="checkP" style={{ color: "red", display: "flex", justifyContent: "center" }}>
+                      {checkNum ? checkNum : errormessage}
+                    </p>
                     <Form.Control
                       type="number"
                       placeholder="나이"
                       value={childage}
                       onChange={onChangeChildage}
                     />
-                    <button type="submit" className="custom-button">
+                    <button type="submit" className="custom-button create-btn">
                       만들기
                     </button>
                   </Stack>

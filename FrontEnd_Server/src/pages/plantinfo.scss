@@ -7,12 +7,13 @@
 
 .plant-info-col {
   background-color: white;
-  border: 0.01rem solid black;
   border-radius: 4px;
   margin-left: 30px;
   height: 80vh;
   margin-top: 10px;
   margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .plant-info-col div div {
@@ -57,18 +58,23 @@
   font-weight: bold;
 }
 
-
 /* 커스텀 버튼 스타일 */
 .custom-button {
   border-radius: 4px;
   background-color: #94b9e1; /* 버튼 배경색 */
   color: #fff; /* 버튼 글자색 */
-  border-color: #6499d1; /* 버튼 테두리색 */
+  background-color: #a6ca9f;
+  position: relative;
   font-weight: bold; /* 글자 굵기 */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; /* 애니메이션 효과 */
   cursor: pointer;
 }
-
+.create-btn{
+  height: 50px;
+  width: 100%;
+}
 .custom-button:hover {
   background-color: #527397; /* 버튼 배경색 변경 (마우스 호버 시) */
   border-color: #527397; /* 버튼 테두리색 변경 (마우스 호버 시) */
@@ -78,5 +84,3 @@
   background-color: #4c777b; /* 버튼 배경색 어두워짐 (마우스 클릭 시) */
   border-color: #4c777b; /* 버튼 테두리색 어두워짐 (마우스 클릭 시) */
 }
-
-
