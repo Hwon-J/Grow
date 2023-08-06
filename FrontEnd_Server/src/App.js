@@ -9,7 +9,6 @@ import ImgUpload from './pages/ImgUpload';
 import RegisterNumber from './pages/RegisterNumber';
 import PlantDiary from './pages/PlantDiary';
 import PlantInfo from './pages/PlantInfo';
-
 import {checkToken} from './utils/Users'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
