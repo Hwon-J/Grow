@@ -1,57 +1,111 @@
-/* Login.scss */
-/* flexbox-right와 flexbox-left를 감싸는 container_box 영역의 스타일 */
-.bgimg{
-    width: 80% !important;
-    padding-bottom: 50px;
-}
-.container_box {
-    display: flex; /* flexbox로 정렬 */
-    border: 2px solid #ffffff; /* 테두리 설정 */
-    border-radius: 10px; /* 테두리 둥글기 설정 */
-    overflow: hidden; /* 내부 내용이 넘치면 잘리게 설정 */
-    height: 600px;
-    margin-top: 10%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+// .label {
+//   display: block;
+//   margin-bottom: 5px;
+// }
 
-    ;
+// // .input {
+// //     width: 70%;
+// //     margin-bottom: 10px;
+// //     border: none;
+// //     background-color: #e4e4e4;
+// //     border-radius: 5px;
+// // }
+// .input {
+//   font-size: 15px;
+//   color: #222222;
+//   width: 300px;
+//   border: none;
+//   border-bottom: solid #aaaaaa 1px;
+//   padding-bottom: 10px;
+//   padding-left: 10px;
+//   position: relative;
+//   background: none;
+// }
+
+
+// .button {
+//   display: inline-block;
+//   margin-top: 10px;
+// }
+
+// .login-left {
+//     background-image: url('../assets/0002.png'); /* 배경 이미지 설정 */
+//     background-size: cover;
+//     background-position: center;
+//     background-repeat: no-repeat;
+//     height: 100vh;
+
+//   }
+
+
+
+
+
+
+
+
+// /* Login.scss */
+// /* flexbox-right와 flexbox-left를 감싸는 container_box 영역의 스타일 */
+// // .bgimg{
+// //     width: 80% !important;
+// //     padding-bottom: 50px;
+// // }
+// // .container_box {
+// //     display: flex; /* flexbox로 정렬 */
+// //     border: 2px solid #ffffff; /* 테두리 설정 */
+// //     border-radius: 10px; /* 테두리 둥글기 설정 */
+// //     overflow: hidden; /* 내부 내용이 넘치면 잘리게 설정 */
+// //     height: 600px;
+// //     margin-top: 10%;
+// //     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+// //     overflow: hidden;
+
+// //     ;
     
-}
+// // }
 
 
-/* 배경 이미지가 들어갈 flexbox-left 영역의 스타일 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Vithkuqi:wght@400&display=swap');
+
+
 .flexbox-left {
-    flex: 2;
     background-image: url('../assets/0002.png'); /* 배경 이미지 설정 */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    height: 100vh; /* 높이 설정 */
+    width: 100%; /* 너비 설정 */
   }
+  
     
   /* 로그인 폼 영역의 스타일 */
 .flexbox-right {
-    flex: 3; /* 남은 공간 모두 차지 */
-    padding: 20px;
+    flex: 3;
+    padding: 50px;
+    margin-top: 50px;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(191, 255, 214, 0.2);
-    text-align: center;
+    // text-align: center;
     h2{
-        font-size: 50px;
-        font-weight: bold;
+        font-size: 60px;
+        // font-weight: bold;
         color: #000000;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        margin-top: 10vh;
+        font-family: 'Noto Sans Vithkuqi', sans-serif;
     }
     p{
         margin-top: 4px;
         margin-bottom: 0;
     }
+
+
 }
 .flexbox-right > * {
-    width: 80%;
+    width: 60%;
   }
 
 

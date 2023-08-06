@@ -18,11 +18,11 @@ const PlantDiary = () => {
       <Container className="centered-elements">
         <h1 className='diary_title'>plant Diary</h1>
         <Grid container className="diary-container" spacing={2}>
-          <Grid item sm={12} md={5}>
+          <Grid item xs={12} md={5}>
             <MyInfo />
             <Calendar />
           </Grid>
-          <Grid item sm={12} md={7}>
+          <Grid item xs={12} md={7}>
             <QuestPage />
           </Grid>
         </Grid>
