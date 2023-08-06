@@ -69,6 +69,20 @@
     - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
 
+### 회원 탈퇴
+- 방식: DELETE
+- 서버IP: 기본URI/
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답 :
+  - 성공
+    - 유효한 토큰: { code: 201, message: "회원탈퇴 성공" }
+    - 존재하지 않는 아이디: { code: 202, message: "존재하지 않는 아이디" }
+    - 비밀번호 틀림: { code: 202, message: "비밀번호 불일치" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 ## 화분 관련
 
 - 기본 URI: BaseURI:PORT번호/api/pot

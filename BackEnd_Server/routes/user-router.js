@@ -70,4 +70,6 @@ router.post('/login', userController.login);
 
 router.get('/valid', verify, userController.isValidToken);
 
+router.delete("/", verify, userController.withdrawalUser);
+
 module.exports = router;
