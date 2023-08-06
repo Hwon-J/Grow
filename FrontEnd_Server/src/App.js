@@ -6,7 +6,6 @@ import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import ImgUpload from './pages/ImgUpload';
-import RegisterNumber from './pages/RegisterNumber';
 import PlantDiary from './pages/PlantDiary';
 import PlantInfo from './pages/PlantInfo';
 import {checkToken} from './utils/Users'
@@ -26,7 +25,6 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/register" element={<RegisterNumber />} />
             <Route path="/diary/:id" element={<PlantDiary />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
