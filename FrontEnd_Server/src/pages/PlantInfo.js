@@ -4,19 +4,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import {
+  Alert,
+  Button,
+  Form,
+  Row,
+  Col,
+  Stack,
+  Container,
+  Image,
+  Card,
+  InputGroup,
+  Offcanvas,
+} from "react-bootstrap";
 import NavTop from "../components/NavTop";
 import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import "./plantinfo.scss";
 
-import { styled } from "@mui/material/styles";
-import { TextField, Grid, Container, Paper, Box } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { BASE_URL } from "../utils/Urls";
-
-const PlantInfo = () => {
+const Test = () => {
   const [nickname, setNickname] = useState("");
   const [childname, setChildname] = useState("");
   const [childage, setChildage] = useState("");
@@ -29,13 +34,17 @@ const PlantInfo = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
   const navigate = useNavigate();
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
+  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = (info) => {
+    setSelectedInfo(info);
+    setShow(true);
+  };
+
+  useEffect(() => {
+    console.log(selectedInfo); // 이렇게 하면 selectedInfo의 최신 값이 로그에 표시됩니다
+  }, [selectedInfo]);
 
   useEffect(() => {
     getPlantInfo();
@@ -63,26 +72,31 @@ const PlantInfo = () => {
   const createPlant = async (e) => {
     e.preventDefault();
     console.log("여기");
-    if (checkedResult === false) {
+    console.log("nickname:", nickname);
+    console.log("checkIdx:", checkIdx);
+    console.log("childname:", childname);
+    console.log("childage:", childage);
+    if (checkedResult === true) {
       alert("시리얼 넘버를 확인해주세요");
     } else {
+      console.log(selectedInfo);
       const body = {
         plant_name: nickname,
-        plant_info_index: checkIdx,
+        plant_info_index: selectedInfo?.index,
         serial_number: serialNum,
         child_name: childname,
         child_age: childage,
       };
-      console.log(authToken)
+      console.log(authToken);
       const config = {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${authToken}`,
         },
       };
-  
-      console.log(config);
-  
+
+      console.log(body);
+
       try {
         const response = await axios.post(
           `${BASE_URL}/api/plant/create`,
@@ -98,22 +112,114 @@ const PlantInfo = () => {
   };
 
   const imgPlantInfo = () => {
-    console.log(plantInfo)
+    const a = [
+      {
+        index: 1,
+        species: "청경채",
+        content:
+          "청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고청경채는 어쩌고 저쩌고",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 2,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 3,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 4,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 5,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 6,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 7,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 8,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+      {
+        index: 9,
+        species: "상추",
+        temperature_upper: 35,
+        temperature_lower: 20,
+        moisture_upper: 50,
+        moisture_lower: 40,
+        max_water_period: 10,
+      },
+    ];
+
     return (
-      <div className="image-container">
-        {plantInfo.map((info, index) => (
-          <div key={index} className="image-wrapper">
-            <img
-              className="plantinfoimg"
-              src={`./plantInfoimg/${info.index}.jpg`}
-              onClick={() => onClickInfo(info.index)}
-              style={{
-                border: checkIdx === info.index ? "0.1rem solid rgb(56, 181, 203)" : "none",
-              }}
-            />
-          </div>
+      <Row className="scroll-container">
+        {a.map((info) => (
+          <Col key={info.index} xs={6} md={6}>
+            <Card className="plant-img-card h-100">
+              <Card.Img
+                thumbnail
+                src={`./plantInfoimg/${info.index}.jpg`}
+                onClick={() => handleShow(info)}
+                style={{
+                  border:
+                    selectedInfo?.index === info.index
+                      ? "0.1rem solid rgb(56, 181, 203)"
+                      : "none",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Card>
+          </Col>
         ))}
-      </div>
+      </Row>
     );
   };
 
@@ -128,8 +234,10 @@ const PlantInfo = () => {
     }
   };
 
-  const onClickInfo = (idx) => {
-    setCheckIdx(idx);
+  const onClickInfo = (info) => {
+    setCheckIdx(info.index);
+    setSelectedInfo(info);
+    console.log(info);
   };
 
   const checkSerial = async () => {
@@ -143,11 +251,11 @@ const PlantInfo = () => {
           console.log(response.data.message);
           setCheckedResult(false);
           setErormessage(response.data.message);
-          setCheckNum("")
+          setCheckNum("");
         }
         if (response.data.code === 200) {
           setCheckNum(response.data.message);
-          setErormessage("")
+          setErormessage("");
           console.log(response.data.message);
           setCheckedResult(true);
         }
@@ -156,123 +264,114 @@ const PlantInfo = () => {
         setCheckedResult(false);
       }
     } else {
-      alert("시리얼 넘버를 입력해 주세요!")
+      alert("시리얼 넘버를 입력해 주세요!");
     }
   };
 
   return (
-    <div className="plantinfo-total">
+    <>
       <NavTop />
-      <Container className="plantinfopage">
-        <Grid container spacing={2}>
-          <Grid className="each-components" item xs={12} md={2}>
-            <Item>{imgPlantInfo()}</Item>
-          </Grid>
-          <Grid className="each-components" item xs={12} md={5}>
-            <div className="itemclone">
-              {checkIdx !== null && (
-                <PlantInfoComponent
-                  props={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
-                  key={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
-                />
-              )}
-            </div>
-          </Grid>
-          <Grid className="each-components" item xs={12} md={4}>
-            <div className="itemclone">
-              <form onSubmit={createPlant}>
-                <Grid justifyContent="center" alignItems="center">
-                  <Grid item xs={12}>
-                    <TextField
-                      label="식물의 애칭"
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
+
+      <Container className="plant-info-container">
+        <Row>
+          {/* 좌측 카드 컬럼 */}
+          <Col sm={12} md={5} className="plant-info-col">
+            {imgPlantInfo()}
+          </Col>
+
+          {/* 우측 폼 컬럼 */}
+          <Col sm={12} md={6} className="plant-info-col">
+            <Form onSubmit={createPlant}>
+              <Row
+                style={{
+                  height: "100vh",
+                  justifyContent: "center",
+                  paddingTop: "10%",
+                }}
+              >
+                <Col xs={10}>
+                  <Stack gap={3} className="plantinfo-stack">
+                    <h2>식물 등록</h2>
+
+                    {/* Offcanvas */}
+                    <Offcanvas
+                      show={show}
+                      onHide={handleClose}
+                      placement="top"
+                      className="half-screen-offcanvas"
+                    >
+                      <Offcanvas.Header closeButton>
+                        <Offcanvas.Title>
+                          {selectedInfo?.species}
+                        </Offcanvas.Title>
+                      </Offcanvas.Header>
+                      <Offcanvas.Body>
+                        <p>설명 : {selectedInfo?.content}</p>
+                        <p>
+                          Temperature Upper: {selectedInfo?.temperature_upper}
+                        </p>
+                        <p>
+                          Temperature Lower: {selectedInfo?.temperature_lower}
+                        </p>
+                        <p>Moisture Upper: {selectedInfo?.moisture_upper}</p>
+                        <p>Moisture Lower: {selectedInfo?.moisture_lower}</p>
+                        <p>
+                          Max Water Period: {selectedInfo?.max_water_period}
+                        </p>
+                      </Offcanvas.Body>
+                    </Offcanvas>
+
+                    <Form.Control
+                      type="text"
+                      placeholder="식물 애칭"
                       value={nickname}
                       onChange={onChangeNickname}
                     />
-                  </Grid>
-
-                  <hr />
-
-                  <Grid item xs={12}>
-                    <TextField
-                      label="시리얼넘버"
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      value={serialNum}
-                      onChange={onChangeSerialNum}
+                    <Form.Control
+                      type="text"
+                      placeholder="아이 이름"
+                      value={childname}
+                      onChange={onChangeChildname}
                     />
-                  </Grid>
-                  <br />
-                  <p className="checkP" style={{ color: "red" }}>
-                    {checkNum ? checkNum : errormessage}
-                  </p>
-
-                  <Grid item xs={12}>
-                    <button 
-                    type="button"
-                      className="w-btn-indigo-outline"
-                      onClick={checkSerial}
-                    >
-                      중복체크
-                    </button>
-                  </Grid>
-                </Grid>
-                <hr />
-                <Grid item xs={12}>
-                  <TextField
-                    label="아이의 이름"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    value={childname}
-                    onChange={onChangeChildname}
-                  />
-                </Grid>
-
-                <Box className="childageBox">
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">나이</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                    <InputGroup>
+                      <p className="checkP" style={{ color: "red" }}>
+                        {checkNum ? checkNum : errormessage}
+                      </p>
+                      <Form.Control
+                        type="text"
+                        placeholder="시리얼 넘버"
+                        value={serialNum}
+                        onChange={onChangeSerialNum}
+                      />
+                      <button
+                        type="button"
+                        onClick={checkSerial}
+                        className="custom-button"
+                      >
+                        확인
+                      </button>
+                    </InputGroup>
+                    <Form.Control
+                      type="number"
+                      placeholder="나이"
                       value={childage}
-                      label="Age"
                       onChange={onChangeChildage}
-                    >
-                      <MenuItem value={5}>5</MenuItem>
-                      <MenuItem value={6}>6</MenuItem>
-                      <MenuItem value={7}>7</MenuItem>
-                      <MenuItem value={8}>8</MenuItem>
-                      <MenuItem value={9}>9</MenuItem>
-                      <MenuItem value={10}>10</MenuItem>
-                      <MenuItem value={11}>11</MenuItem>
-                      <MenuItem value={12}>12</MenuItem>
-                      <MenuItem value={13}>13</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <hr />
-
-                <button
-                  className="w-btn-outline w-btn-indigo-outline"
-                  type="submit"
-                  variant="contained"
-                >
-                  만들기
-                </button>
-              </form>
-            </div>
-          </Grid>
-        </Grid>
+                    />
+                    <button type="submit" className="custom-button">
+                      만들기
+                    </button>
+                  </Stack>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
       </Container>
-    </div>
+    </>
   );
 };
 
-export default PlantInfo;
+export default Test;
 
 {
   /* <video autoPlay loop muted width="360" height="640">
