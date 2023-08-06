@@ -12,23 +12,25 @@ const QuestPage = () => {
   const authToken = currentUser.token; // 토큰 저장
   const [showIcon, setShowIcon] = useState(true); // 아이콘이 보이게 할지 말지 정하는 변수
   const [focusedInputIndex, setFocusedInputIndex] = useState(null); // 어떤 input이 포커스 받는지 확인 변수
-  const [questList, setQuestList] = useState([
-  ]); // 질문지 리스트변수
+  const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
   useEffect(() => {
-    getQuest(); inputQuest();
+    getQuest();
+    inputQuest();
   }, []); // axios를 통해서 질문지 리스트 받을 useEffect
   useEffect(() => {
-    inputQuest()
-  }, questList)
+    inputQuest();
+  }, questList);
   const onChangeNewquest = (e) => {
     // 새로운 질문지 작성될떄마다 value값 변경
     setNewquest(e.target.value);
     console.log(e.target.value);
   };
 
-  const handleInputFocus = (index) => {setFocusedInputIndex(index);}; // input이 focus되는지 확인 , index저장
+  const handleInputFocus = (index) => {
+    setFocusedInputIndex(index);
+  }; // input이 focus되는지 확인 , index저장
 
   const handleInputBlur = () => {
     // input의 focus를 잃었을때 발생
@@ -53,16 +55,17 @@ const QuestPage = () => {
       },
     };
     const body = {
-      quest: newquest 
-    }
+      quest: newquest,
+    };
     if (newquest === "") {
       alert("공백은 질문이 될 수 없습니다.");
     } else {
-      console.log("여기까지오나")
-      axios.post(`${BASE_URL}/api/plant/quest/${id}`, body , config)
+      console.log("여기까지오나");
+      axios
+        .post(`${BASE_URL}/api/plant/quest/${id}`, body, config)
         .then((response) => {
           console.log("New question successfully saved:", response.data);
-          getQuest()
+          getQuest();
           setNewquest("");
         })
         .catch((error) => {
@@ -86,9 +89,9 @@ const QuestPage = () => {
             Authorization: `${authToken}`,
           },
         });
-        setQuestList(response.data.data)
-        console.log(questList)
-        console.log("질문받아오기")
+        setQuestList(response.data.data);
+        console.log(questList);
+        console.log("질문받아오기");
       } catch (err) {
         console.log("에러가 발생", err);
       }
@@ -98,6 +101,7 @@ const QuestPage = () => {
   const inputQuest = () => {
     // questList의 각각의 index의 값들을 빼내서 input으로 만들기
     // value는 해당 객체의 quest값
+    console.log(questList);
     return questList
       .slice()
       .reverse()
@@ -106,7 +110,7 @@ const QuestPage = () => {
           <input
             type="text"
             className="quest-input"
-            value={questItem.quest}
+            value={questItem.content}
             readOnly // 변경을 불가
           />
         </div>

@@ -1,134 +1,82 @@
-.plantinfo-total {
-    font-family: 'Hind Madurai', sans-serif;
-    // font-weight: bold;
+/* test1.css 파일 */
+/* 기존 CSS 코드에 추가 스타일을 적용하였습니다. */
 
-}
-.css-mhc70k-MuiGrid-root {
-  margin-left: 0px !important;
-}
-.plantinfoimg {
-  height: 120px;
-  width: 200px;
-  object-fit: contain;
-  background-color: #cfcdcd;
-  border-radius: 30%;
+.plant-info-container {
+  margin-top: 50px;
 }
 
-.plantinfopage {
-  margin-top: 60px;
+.plant-info-col {
+  background-color: white;
+  border: 0.01rem solid black;
+  border-radius: 4px;
+  margin-left: 30px;
+  height: 80vh;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
-// .MuiGrid-container {
-//   display: flex;
-//   justify-content: center; /* Horizontal centering */
-//   height: 50%;
-//   padding-bottom: 100px;
 
-// }
+.plant-info-col div div {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.plantinfo-stack h2 {
+  text-align: center;
+  font-weight: bold;
+}
+
+.plantinfo-stack input {
+  text-align: center;
+  font-weight: bold;
+}
+
+.plantinfo-stack button {
+  text-align: center;
+  font-weight: bold;
+}
+
+.scroll-container {
+  max-height: 100%; /* Adjust this value to fit your needs */
+  overflow-y: auto;
+}
 
 .checkP {
   margin-top: 1px;
   margin-bottom: 0;
 }
 
-.image-container {
-  height: 70vh; /* Set the container height to 70% of the viewport height */
-  overflow-y: auto; /* Add a vertical scrollbar when content exceeds container height */
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+.offcanvas.offcanvas-top {
+  height: 45vh !important;
 }
-.check-serial-btn {
-  margin-top: 5px;
+
+.plant-img-card img {
   cursor: pointer;
-  border: 1px solid rgb(0, 0, 0);
-  border-radius: 5px;
-  width: 50%;
-  display: block;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-left: 7px;
-  margin-bottom: 1rem;
 }
 
-.image-wrapper {
-  display: flex;
-  justify-content: center; /* Center the image horizontally */
-}
-
-.plantinfoimg {
-  max-width: 100%; /* Ensure the image doesn't exceed its container's width */
-}
-
-.each-components {
-  background-color: #fafbfa;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  margin-right: 15px !important;
+.offcanvas-body p {
+  font-weight: bold;
 }
 
 
-.itemclone {
-  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+/* 커스텀 버튼 스타일 */
+.custom-button {
   border-radius: 4px;
-  background-color: #fff;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 1000;
-  font-size: 0.875rem;
-  line-height: 1.43;
-  letter-spacing: 0.01071em;
-  padding: 8px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.6);
-}
-.itemclone .childageBox {
-  width: 100%;
-  left: 30%;
-  height: 50px;
-}
-
-
-
-.w-btn-outline {
-  position: relative;
-  padding: 15px 30px;
-  border-radius: 15px;
-  font-family: "paybooc-Light", sans-serif;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.25s;
-  margin-bottom: 1rem;
-}
-
-.w-btn-indigo-outline {
-  border: 0.1rem solid rgb(65, 198, 187);
-  color: #2b626d;
-}
-
-.w-btn-indigo-outline:hover {
-  color: #1e6b7b;
-  background: aliceblue;
-}
-.w-btn-outline:hover {
-  letter-spacing: 2px;
-  transform: scale(1.2);
+  background-color: #94b9e1; /* 버튼 배경색 */
+  color: #fff; /* 버튼 글자색 */
+  border-color: #6499d1; /* 버튼 테두리색 */
+  font-weight: bold; /* 글자 굵기 */
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; /* 애니메이션 효과 */
   cursor: pointer;
 }
-.w-btn-outline:active {
-  transform: scale(1.5);
+
+.custom-button:hover {
+  background-color: #527397; /* 버튼 배경색 변경 (마우스 호버 시) */
+  border-color: #527397; /* 버튼 테두리색 변경 (마우스 호버 시) */
 }
 
-.nickname-input {
-  margin-left: 10px;
-
+.custom-button:active {
+  background-color: #4c777b; /* 버튼 배경색 어두워짐 (마우스 클릭 시) */
+  border-color: #4c777b; /* 버튼 테두리색 어두워짐 (마우스 클릭 시) */
 }
 
-.serial-input {
-  margin-left: 5px;
-
-  margin-bottom: 30px;
-}
 

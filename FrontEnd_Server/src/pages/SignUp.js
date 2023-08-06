@@ -8,6 +8,7 @@ import "./Login.scss";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
+import { logoutUser } from "../reducers/userSlice";
 
 const SignUp = () => {
   // usdDispatch: dispatch를 사용하겠다 선언
@@ -34,20 +35,19 @@ const SignUp = () => {
   const onChangePassword = (e) => {
     setPassword(e.target.value);
     if (password === confirmPassword) {
-      setConfirmMessage("비밀번호가 일치합니다")
+      setConfirmMessage("비밀번호가 일치합니다");
     } else {
-      setConfirmMessage("비밀번호가 일치하지 않습니다")
+      setConfirmMessage("비밀번호가 일치하지 않습니다");
     }
   };
   const onChangeConfirmPassword = (e) => {
-    
     setConfirmPassword(e.target.value);
     // console.log(password, confirmPassword)
     // console.log(e.target.value)
     if (password === e.target.value) {
-      setConfirmMessage("비밀번호가 일치합니다")
+      setConfirmMessage("비밀번호가 일치합니다");
     } else {
-      setConfirmMessage("비밀번호가 일치하지 않습니다")
+      setConfirmMessage("비밀번호가 일치하지 않습니다");
     }
   };
 
@@ -68,10 +68,11 @@ const SignUp = () => {
       return alert("유효한 이메일 주소를 입력해주세요.");
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!password.match(passwordRegex)) {
       return alert(
-        "비밀번호는 8자 이상이면서 숫자와 영어를 모두 포함해야 합니다."
+        "비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다."
       );
     }
 
@@ -86,15 +87,14 @@ const SignUp = () => {
     };
     dispatch(registerUserAction(body)).then((action) => {
       console.log(currentUser);
-      console.log(action.payload.code)
-      const signup_status = action.payload.code
+      console.log(action.payload.code);
+      const signup_status = action.payload.code;
       if (signup_status === 201) {
-        alert('회원가입 성공! 로그인 페이지로 이동합니다.')
-        navigate('/login')
-      }
-      else {
-        alert('이미 중복된 아이디이므로 다른 아이디로 가입해주세요.')
-        setUserid("")
+        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        navigate("/login");
+      } else {
+        alert("이미 중복된 아이디이므로 다른 아이디로 가입해주세요.");
+        setUserid("");
       }
     });
   };
@@ -107,13 +107,13 @@ const SignUp = () => {
         `${BASE_URL}/api/user/id-check/${userid}`
       );
       console.log(response.data.message);
-      setCheckId(response.data.message)
-      return 
+      setCheckId(response.data.message);
+      return;
     } catch (error) {
+      logoutUser();
       console.log(error);
     }
   };
-
 
   return (
     <>
