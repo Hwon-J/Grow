@@ -34,13 +34,10 @@ const Home = () => {
           <h1>Find friend for your kids</h1>
           <h4>This service makes plant friends for your children</h4>
           <h4>so that they can develop emotionally.</h4>
-          
-        </div>
-        
+        </div> 
       </div>
       <Footer/>
     </>
-        
       </div>
     </div>
   );
