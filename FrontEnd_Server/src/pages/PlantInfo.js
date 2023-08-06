@@ -99,7 +99,7 @@ const Test = () => {
 
       try {
         const response = await axios.post(
-          `http://i9c103.p.ssafy.io:30001/api/plant/create`,
+          `${BASE_URL}/api/plant/create`,
           // `http://192.168.100.37:30001/api/plant/create`,
           body, // body는 요청 바디에 해당하는 부분이므로 여기에 body를 넣어줍니다.
           config // config는 옵션 객체이며, 여기에 headers를 포함하여 설정을 넣어줍니다.
@@ -226,7 +226,7 @@ const Test = () => {
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/api/plant/info`
+        `${BASE_URL}/api/plant/info`
       );
       setPlantInfo(response.data.info);
     } catch (error) {
@@ -244,7 +244,7 @@ const Test = () => {
     if (serialNum) {
       try {
         const response = await axios.get(
-          `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
+          `${BASE_URL}/api/pot/${serialNum}`
         );
         if (response.data.code === 202) {
           // alert(response.data.message);

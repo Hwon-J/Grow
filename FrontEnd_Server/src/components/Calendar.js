@@ -22,11 +22,7 @@ import axios from 'axios';
 import { BASE_URL } from '../utils/Urls';
 
 
-// 달력을 만들때 연월을 표기하고 월을 이동하는 RenderHeader
-// 각각의 요일을 표기하는 RenderDays
-// 날짜를 표기하고 날짜를 클릭하면 선택되는 RenderCells
-
-
+// 가져오는 날짜 형식을 YYYYMMDD로 변환
 const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
     const year = date.getFullYear();
@@ -36,10 +32,11 @@ const formatDate = (isoDateString) => {
   };
 
 
+
+
 // Calender 컴포넌트에서 currentMonth, prevMonth, nextMonth를 가져와 사용한다.
 // format을 사용해 원하는 형태로 출력한다.
-const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
-    
+const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {  
     return (
         <div className="header_cal">
             <Icon icon="bi:chevron-left" onClick={prevMonth} />
@@ -57,6 +54,8 @@ const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
 };
 
 
+
+
 // 요일을 표기하는 RenderDays
 // 각각의 요일을 하나의 div로 만들어 표시하기 위해서 for문을 사용한다.
 const RenderDays = () => {
@@ -71,9 +70,11 @@ const RenderDays = () => {
             </div>,
         );
     }
-
     return <div className="days_cal">{days}</div>;
 };
+
+
+
 
 // 각각의 날짜를 표기하는 RenderCells
 const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
@@ -82,9 +83,9 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
-    // console.log(currentDate);
+
     
-    // 주(rows)와 날짜(days)를 담을 배열을 만든다.0
+    // 주(rows)와 날짜(days)를 담을 배열을 만든다.
     const rows = [];
     let days = [];
     // day 변수에 startDate를 할당, day는 반복문에서 사용될 변수이다.
@@ -92,12 +93,12 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
     // 날짜의 형식을 지정한 문자열을 담을 변수 formattedDate를 생성
     let formattedDate = '';
 
+
     // 각 주마다 반복문을 실행하여 날짜들을 처리
     while (day <= endDate) {
         // 날짜의 형식을 지정한 문자열을 formattedDate에 할당
         for (let i = 0; i < 7; i++) {
             formattedDate = format(day, 'd');
-            // const isWatered = formattedWaterLog.
             const isWatered = formattedWaterLog.includes(formatDate(day));
             
             days.push(
@@ -113,8 +114,7 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
                             
                     } ${isWatered ? 'watered' : ''}`}
                     key={day}
-                >
-                     
+                >   
                     <span
                         className={
                             format(currentMonth, 'M') !== format(day, 'M')
@@ -140,7 +140,7 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
 
 // PlantDiary.js에서 사용할 Calender 컴포넌트
 const Calender = () => {
-    // useState(new Date())를 통해 현재 날짜와 시간을 초기값으로 저장합니다.
+    // useState(new Date())를 통해 현재 날짜와 시간을 초기값으로 저장한다.
     // currentMonth, selectedDate, currentDate만든다.
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -156,8 +156,7 @@ const Calender = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
     
-    //const formattedWaterLog = useMemo(() => waterLog.water_log.data.map(formatDate), []);
-
+    // 유저의 토큰을 가져오기
     const currentUser = useSelector((state) => state.currentUser);
     const token = currentUser.token;
 
@@ -171,26 +170,26 @@ const Calender = () => {
 //http://i9c103.p.ssafy.io:30001/api/plant/water/${id}
 //http://192.168.100.37:30001/api/plant/water/${id}
 
-    
+    // 물 준 기록을 가져오는 함수
     const getWaterLog = async () => {
         try {
         const response = await axios.get(`${BASE_URL}/api/plant/water/${id}`, config);
-            // console.log(response.data);
             setWaterLog(response.data);
-            // console.log(waterLog.data);
         } catch (error) {
         console.error(error);
         }
     };
 
+    // 시작하면 getWaterLog 실행
     useEffect(() => {
         getWaterLog();
     }, []);
+
+    // waterLog.data가 있으면 형식을 변환하여 formattedWaterLog에 저장
     const formattedWaterLog = useMemo(
         () => (waterLog.data ? waterLog.data.map(formatDate) : []),
         [waterLog]
       );
-    // console.log(formattedWaterLog);      
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (

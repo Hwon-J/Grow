@@ -5,6 +5,7 @@ import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
 import beancharacter from './assets/beancharacter.png';
+import board from './assets/board.png';
 import logo from './assets/logo.png';
 // Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -15,7 +16,7 @@ import axios from 'axios';
 import { Provider, useSelector, useDispatch} from 'react-redux';
 import WebSocketComponent from './components/Websocket';
 // useEffect
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import SerialRegister from './components/SerialRegister';
 import Button from 'react-bootstrap/Button';
@@ -24,15 +25,11 @@ import { useParams } from 'react-router-dom';
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
 function Conversation() {
-  // const state_serial_number = useSelector((state) => 
-  //    state.serial_number
-  // )
-  // const state_name = useSelector((state) =>
-  //   state.name
-  // )
+  // 넘겨받은 serial_number를 가져오기 위해 useParams사용 
   const params = useParams()
   console.log(params.serial_number)
   const serial_number = params.serial_number
+  const [sensor, sensor_update] = useState({'온도':'2', '조도': '2', '수분':'2'})
   
 
 
@@ -40,30 +37,32 @@ function Conversation() {
   // 대화 컴포넌트 구조
   return (
     
-    <div className='character-container'>
-      <div className='information'>
-        <h1>온도 : </h1>
-        <h1>습도 : </h1>
-        <h1>수분 : </h1>
-      </div>
+    <div >
+      <img src={board} className='board' />
+      <span className='information'>
+        <h1>온도 : {sensor.온도}</h1>
+        <h1>조도 : {sensor.조도}</h1>
+        <h1>수분 : {sensor.수분}</h1>
+      </span>
       
-      <div className='col-12 row character-row'>
-        <div className='col-3'></div>
-        <div className='col-3'>
-
+      
+        
+       
+      <div className='character-box'>
         <img className="character" src={beancharacter} alt="cancel"  />
-        </div>
-        <div className='col-3'>
-        <div className='bubble '>
-          
-          
-        </div>
-        </div>
+        
       </div>
+      <div className='bubble '>
+        <WebSocketComponent serial_number={serial_number} get_sensor={() => {
+          sensor_update({'온도':'2', '조도': '2', '수분':'2'})
+        }} />
+      </div>
+        
+      
       
       {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
       <div>
-      <WebSocketComponent serial_number={serial_number}/>
+      
 
       </div>
     </div>

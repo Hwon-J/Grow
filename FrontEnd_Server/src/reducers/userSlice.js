@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
 //백앤드 기본 url 설정
 
+// const API_URL = 'http://192.168.100.37:30001';
 //action registerUserAction AJAX비동기 요청
 // signup에서 submit할떄 import 후 실행하기
 export const registerUserAction = createAsyncThunk(
