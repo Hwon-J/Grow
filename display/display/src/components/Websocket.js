@@ -10,6 +10,7 @@ function WebSocketComponent(props) {
     "serial":""
     }
   console.log(props)
+  const sensor_update = props.sensor_update
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
     const newSocket = new WebSocket('ws://192.168.100.37:30002');
@@ -58,6 +59,8 @@ function WebSocketComponent(props) {
   }, [socket]); // socket 또는 serial_number가 변경될 때마다 useEffect 호출
   
   const handleSendMessage = () => {
+    const newData = {'온도':'3', '조도': '52', '수분':'2'}
+    sensor_update(newData);
     console.log(socket)
     if (socket && message) {
         const sendmessage = startmessage
