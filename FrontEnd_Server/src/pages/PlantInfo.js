@@ -21,7 +21,7 @@ import NavTop from "../components/NavTop";
 import PlantInfoComponent from "../components/plant/PlantInfoComponent";
 import "./plantinfo.scss";
 
-const Test = () => {
+const PlantInfo = () => {
   const [nickname, setNickname] = useState("");
   const [childname, setChildname] = useState("");
   const [childage, setChildage] = useState("");
@@ -371,7 +371,7 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default PlantInfo;
 
 {
   /* <video autoPlay loop muted width="360" height="640">
