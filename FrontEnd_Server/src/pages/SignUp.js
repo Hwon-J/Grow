@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Grid, Container } from "@mui/material";
 import { registerUserAction } from "../reducers/userSlice";
 import NavTop from "../components/NavTop";
 import "./Login.scss";
@@ -9,9 +8,17 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
 import { logoutUser } from "../reducers/userSlice";
-
+import { Link } from "react-router-dom";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBIcon,
+  MDBInput,
+} from "mdb-react-ui-kit";
+import { Container } from "react-bootstrap";
 const SignUp = () => {
-  // usdDispatch: dispatch를 사용하겠다 선언
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
@@ -34,7 +41,7 @@ const SignUp = () => {
   };
   const onChangePassword = (e) => {
     setPassword(e.target.value);
-    if (password === confirmPassword) {
+    if (e.target.value === confirmPassword) {
       setConfirmMessage("비밀번호가 일치합니다");
     } else {
       setConfirmMessage("비밀번호가 일치하지 않습니다");
@@ -110,110 +117,125 @@ const SignUp = () => {
       setCheckId(response.data.message);
       return;
     } catch (error) {
-      logoutUser();
       console.log(error);
+      setCheckId(error.message);
     }
   };
 
   return (
     <>
       <NavTop />
-      <Container className="bgimg">
-      <Grid container>
-        <Grid item xs={4}>
-          <div className="flexbox-left"></div>
-        </Grid>
-        <Grid item xs={8}>
-          <div className="flexbox-right">
-            <h2>SignUp</h2>
+      <Container className="auth-container">
+        <MDBRow className="auth-row">
+          <MDBCol sm="5" className="auth-col-left d-none d-sm-block px-0">
+            <img
+              src="/static/media/logo.c128bdb58a80345fd3d8.png"
+              alt="Home"
+              style={{ width: "50px" }}
+            />
+          </MDBCol>
+          <MDBCol sm="7" className="auth-col-right">
             <form onSubmit={handleSubmit}>
-              <Grid
-                className="input-field"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={7}>
-                    <TextField
-                      label={checkId ? checkId : "아이디"}
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      value={userid}
-                      onChange={onChangeUserid}
-                    />
-                  </Grid>
-                  <Grid item xs={5}>
-                    <p
-                      className="idcheckbtn"
-                      variant="contained"
-                      color="primary"
-                      onClick={idChecking}
-                    >
-                      중복검사
-                    </p>
-                  </Grid>
-                </Grid>
-                <Grid>
-                  <TextField
-                    label="이름"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    value={username}
-                    onChange={onChangeName}
-                  />
-                </Grid>
-                <Grid>
-                  <TextField
-                    label="이메일"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    value={email}
-                    onChange={onChangeEmail}
-                  />
-                </Grid>
-                <Grid>
-                  <TextField
-                    label="비밀번호"
-                    fullWidth
-                    type="password"
-                    variant="outlined"
-                    margin="normal"
-                    value={password}
-                    onChange={onChangePassword}
-                  />
-                </Grid>
+              <div className="d-flex flex-row ">
+                <img
+                  src="/static/media/logo.c128bdb58a80345fd3d8.png"
+                  alt="Home"
+                  style={{ width: "50px" }}
+                />
+              </div>
+              <div className="d-flex flex-column justify-content-center w-75 pt-4 mt-3">
+                <h3
+                  className="fw-normal mb-3 ps-5 pb-3"
+                  style={{ letterSpacing: "1px" }}
+                >
+                  Sign Up
+                </h3>
 
-                <Grid item xs={12}>
-                  <TextField
-                    label={confirmMessage ? confirmMessage : "비밀번호 확인"}
-                    fullWidth
-                    type="password"
-                    variant="outlined"
-                    margin="normal"
-                    value={confirmPassword}
-                    onChange={onChangeConfirmPassword}
+                <div className="d-flex form-outline mb-4 mx-5 w-100">
+                  <MDBInput
+                    className="flex-grow-1 me-2 form-outline" // Use className instead of wrapperClass
+                    placeholder="ID"
+                    type="text"
+                    size="lg"
+                    value={userid}
+                    onChange={onChangeUserid}
                   />
-                </Grid>
-
-                <Grid>
                   <button
-                    type="submit"
-                    variant="contained"
-                    className="btn-hover color-5"
+                    type="button"
+                    className="form-outline check-btn"
+                    style={{ flex: "0 0 40%" }}
+                    onClick={idChecking}
                   >
-                    SignUp
+                    중복확인
                   </button>
-                </Grid>
-
-              </Grid>
-
+                </div>
+                <p
+                  className={`ms-5 ${
+                    checkId !== "사용할 수 있는 아이디입니다"
+                      ? "text-danger"
+                      : ""
+                  }`}
+                >
+                  {checkId}
+                </p>
+                <MDBInput
+                  wrapperClass="mb-4 mx-5 w-100"
+                  placeholder="이름"
+                  id="formControlLg"
+                  type="text"
+                  size="lg"
+                  value={username}
+                  onChange={onChangeName}
+                />
+                <MDBInput
+                  wrapperClass="mb-4 mx-5 w-100"
+                  placeholder="Email"
+                  id="formControlLg"
+                  type="email"
+                  size="lg"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
+                <MDBInput
+                  wrapperClass="mb-4 mx-5 w-100"
+                  placeholder="password"
+                  id="formControlLg"
+                  type="password"
+                  size="lg"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+                <MDBInput
+                  wrapperClass="mb-1 mx-5 w-100"
+                  placeholder="confirmPassword"
+                  id="formControlLg"
+                  type="password"
+                  size="lg"
+                  value={confirmPassword}
+                  onChange={onChangeConfirmPassword}
+                />
+                <p
+                  className={`ms-5 ${
+                    confirmMessage !== "비밀번호가 일치합니다"
+                      ? "text-danger"
+                      : ""
+                  }`}
+                >
+                  {confirmMessage}
+                </p>
+                <button className="mb-4 px-5 mx-5 w-100 auth-btn">
+                  SingUp
+                </button>
+                <p className="ms-5">
+                  Do you have an account?{" "}
+                  <Link to="/login" className="link-info">
+                    Login here
+                  </Link>
+                </p>
+              </div>
             </form>
-          </div>
-        </Grid>
-        </Grid>
+          </MDBCol>
+        </MDBRow>
       </Container>
     </>
   );

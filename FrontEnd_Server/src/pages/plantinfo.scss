@@ -61,8 +61,8 @@
 /* 커스텀 버튼 스타일 */
 .custom-button {
   border-radius: 4px;
-  background-color: #94b9e1; /* 버튼 배경색 */
   color: #fff; /* 버튼 글자색 */
+  // background-color: #94b9e1; /* 버튼 배경색 */
   background-color: #a6ca9f;
   position: relative;
   font-weight: bold; /* 글자 굵기 */
@@ -76,8 +76,8 @@
   width: 100%;
 }
 .custom-button:hover {
-  background-color: #527397; /* 버튼 배경색 변경 (마우스 호버 시) */
-  border-color: #527397; /* 버튼 테두리색 변경 (마우스 호버 시) */
+  background-color: #94b9e1; /* 버튼 배경색 변경 (마우스 호버 시) */
+  border-color: #94b9e1; /* 버튼 테두리색 변경 (마우스 호버 시) */
 }
 
 .custom-button:active {
