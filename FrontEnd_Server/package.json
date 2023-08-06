@@ -21,6 +21,7 @@
     "gsap": "^3.12.2",
     "http-proxy-middleware": "^1.0.6",
     "jquery": "^3.7.0",
+    "mdb-react-ui-kit": "^6.1.0",
     "moment": "^2.29.4",
     "nvm": "^0.0.4",
     "polished": "^4.2.2",
