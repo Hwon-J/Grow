@@ -173,9 +173,9 @@ const Profile = () => {
     <div className="profile-total">
       <NavTop />
       <div className="profilepage container">
-        <div className="row">
+        <div className="profile-row">
           
-          <div className="container profile col-lg-8 row">
+          <div className="container profile row">
             <div className="col-12">
               <h1 className="profile_title">PROFILE</h1>
             </div>
@@ -197,7 +197,7 @@ const Profile = () => {
                   
                   
                   <Swiper
-                    slidesPerView={3}
+                    slidesPerView={4}
                     spaceBetween={30}
                     freeMode={true}
                     pagination={{
