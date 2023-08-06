@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../reducers/userSlice";
 import "./navbar.scss";
 import logo from "../assets/logo.png";
-import { current } from "@reduxjs/toolkit";
 
 function NavTop() {
   const dispatch = useDispatch();
@@ -15,6 +14,23 @@ function NavTop() {
     console.log(currentUser);
   };
 
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
+  };
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
   return (
     <>
       <section className="navigation">
@@ -24,8 +40,13 @@ function NavTop() {
               <img src={logo} alt="Home" />
             </NavLink>
           </div>
+          {windowWidth <= 600 && (
+            <div className="nav-mobile" onClick={toggleMobileMenu}>
+              <span className={`hamburger ${showMobileMenu ? "open" : ""}`}></span>
+            </div>
+          )}
           <nav>
-            <ul className="nav-list">
+            <ul className={`nav-list ${showMobileMenu ? "mobile-show" : ""}`}>
               <li>
                 <NavLink to="/" style={{ textDecoration: "none" }}>
                   Home
