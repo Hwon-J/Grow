@@ -65,11 +65,11 @@
 // // }
 
 
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Vithkuqi:wght@400&display=swap');
 
-
 .flexbox-left {
-    background-image: url('../assets/0002.png'); /* 배경 이미지 설정 */
+    background-image: url('../assets/login_img.jpg'); /* 배경 이미지 설정 */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -107,7 +107,9 @@
 .flexbox-right > * {
     width: 60%;
   }
-
+.flexbox-left {
+    flex: 1;
+}
 
 .btn-hover {
     width: 100%;

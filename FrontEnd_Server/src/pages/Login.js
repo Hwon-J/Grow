@@ -8,6 +8,21 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.scss';
+// import HomeVideo2 from '../components/HomeVideo2';
+// import homevideo2 from '../assets/homevideo2.mp4';
+
+
+
+// function HomeBackground () {
+//   return (
+    
+//       <video autoPlay loop muted>
+//         <source src={homevideo2} type="video/mp4" />
+//       </video>
+    
+//   )
+// }
+
 const Login = () => {
   const dispatch = useDispatch(); // dispatch 사용할 예정
   const navigate = useNavigate();
@@ -16,6 +31,7 @@ const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  
 
   const onChangeId = (e) => {
     setId(e.target.value);
@@ -97,7 +113,9 @@ const Login = () => {
     <div className="bgimg">
       <Grid container>
         <Grid item xs={5}>
-          <div className="flexbox-left"></div>
+          <div className="flexbox-left">
+            {/* <HomeBackground /> */}
+          </div>
         </Grid>
         <Grid item xs={7}>
           <div className="flexbox-right">
