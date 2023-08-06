@@ -72,4 +72,6 @@ router.get('/valid', verify, userController.isValidToken);
 
 router.delete("/", verify, userController.withdrawalUser);
 
+router.put("/pw", verify, userController.changePw);
+
 module.exports = router;

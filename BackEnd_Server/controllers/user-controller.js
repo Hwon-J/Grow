@@ -157,10 +157,8 @@ exports.login = async (req, res) => {
 };
 
 exports.isValidToken = (req, res) => {
-  return res
-      .status(200)
-      .json({ code: 200, message: "유효한 토큰" });
-}
+  return res.status(200).json({ code: 200, message: "유효한 토큰" });
+};
 
 // 탈퇴
 // 1. 해당 아이디를 가지는 사람의 salt를 가져온다.
@@ -193,16 +191,63 @@ exports.withdrawalUser = async (req, res) => {
       .update(pw + salt)
       .digest("hex");
 
-    // 데이터베이스에서 멤버 조회
+    // 데이터베이스에서 멤버 삭제
     query = "delete from `member` where id = ? and pw = ?";
     result = await queryPromise(query, [id, hashedPw]);
     console.log(result);
-    if (result === 0){
-      return res.status(202).json({code: 202, message: "비밀번호 불일치"});
+    if (result === 0) {
+      return res.status(202).json({ code: 202, message: "비밀번호 불일치" });
     }
-    return res.status(202).json({code: 201, message: "회원탈퇴 성공"});
+    return res.status(202).json({ code: 201, message: "회원탈퇴 성공" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
-}
+};
+
+exports.changePw = async (req, res) => {
+  try {
+    const { id, pw, newPw } = req.body;
+    winston.info(
+      `userController changePw called. id: ${id}, pw: ${pw}, newPw: ${newPw}`
+    );
+    let query = "select salt from `member` where id=?";
+
+    const queryPromise = util.promisify(connection.query).bind(connection);
+    let result = await queryPromise(query, [id]);
+
+    if (result.length === 0) {
+      winston.info(
+        `userController changePw return '존재하지 않는 아이디' to ${id}`
+      );
+      return res
+        .status(202)
+        .json({ code: 202, message: "존재하지 않는 아이디" });
+    }
+
+    const salt = result[0].salt;
+    // 비밀번호 암호화
+    const hashedPw = crypto
+      .createHash("sha256")
+      .update(pw + salt)
+      .digest("hex");
+
+    // 새 비밀번호 암호화
+    const newHashedPw = crypto
+      .createHash("sha256")
+      .update(newPw + salt)
+      .digest("hex");
+
+    // 데이터베이스에서 비밀번호 변경
+    query = "update `member` pw = ? set where id = ? and pw = ?";
+    result = await queryPromise(query, [newHashedPw, id, hashedPw]);
+    console.log(result);
+    if (result === 0) {
+      return res.status(202).json({ code: 202, message: "비밀번호 불일치" });
+    }
+    return res.status(202).json({ code: 201, message: "비밀번호 변경 성공" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
