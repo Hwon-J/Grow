@@ -119,8 +119,11 @@ const SignUp = () => {
     <>
       <NavTop />
       <Container className="bgimg">
-        <div className="container_box ">
+      <Grid container>
+        <Grid item xs={4}>
           <div className="flexbox-left"></div>
+        </Grid>
+        <Grid item xs={8}>
           <div className="flexbox-right">
             <h2>SignUp</h2>
             <form onSubmit={handleSubmit}>
@@ -182,6 +185,7 @@ const SignUp = () => {
                     onChange={onChangePassword}
                   />
                 </Grid>
+
                 <Grid item xs={12}>
                   <TextField
                     label={confirmMessage ? confirmMessage : "비밀번호 확인"}
@@ -193,6 +197,7 @@ const SignUp = () => {
                     onChange={onChangeConfirmPassword}
                   />
                 </Grid>
+
                 <Grid>
                   <button
                     type="submit"
@@ -202,10 +207,13 @@ const SignUp = () => {
                     SignUp
                   </button>
                 </Grid>
+
               </Grid>
+
             </form>
           </div>
-        </div>
+        </Grid>
+        </Grid>
       </Container>
     </>
   );

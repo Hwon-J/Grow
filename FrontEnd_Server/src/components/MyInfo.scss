@@ -1,26 +1,53 @@
+@font-face {
+  font-family: 'KCC-DodamdodamR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
 
 .info_box {
     display: flex;
     align-items: center;
     justify-content: center; 
     height: 300px;
-    background-color: #fafbfa;
+    background-color: #293e09;
     border-radius: 10px ;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    padding: 20px;
+    position: relative;
+    color: #fff;
+    font-family: 'KCC-DodamdodamR';
+  h1{
+    font-size: 50px;
   }
-  
-  .info_box_left {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex:1;
-  
-  .info_box_right {
-    flex:1; 
+
+  h5{
+    font-size: 24px;
   }
+
   .rounded-image {
-    border-radius: 10px;
-    
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+    border-radius: 10px 0 0 10px;
+  }
+  .info_box_right{
+    padding-left: 15px;
+  }
+  
+  .info_box_button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .info_box_button{
+    padding: 5px 10px;
+    border-radius: 5px; 
+    background-color: #4c9601;
+    color: #fff;
   }
   }
+ 
+
+
+  
