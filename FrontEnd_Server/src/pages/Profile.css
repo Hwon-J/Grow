@@ -17,8 +17,11 @@
 }
 .profilepage {
   width : 100%;
+  
 }
-
+.row {
+  justify-content: center;
+}
 /* 기본 스타일 */
 .videobox {
   display: flex; /* Flex 컨테이너로 설정 */

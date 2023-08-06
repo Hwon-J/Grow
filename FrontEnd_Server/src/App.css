@@ -4,3 +4,7 @@ body {
   height: 100vh; /* body의 높이를 뷰포트 높이로 설정 */
   background-image: linear-gradient(to right, #cfead0, #77a98d);
   }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -53,9 +53,7 @@ function Conversation() {
         
       </div>
       <div className='bubble '>
-        <WebSocketComponent serial_number={serial_number} get_sensor={() => {
-          sensor_update({'온도':'2', '조도': '2', '수분':'2'})
-        }} />
+        <WebSocketComponent serial_number={serial_number} sensor_update={sensor_update} />
       </div>
         
       
