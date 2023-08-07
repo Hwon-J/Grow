@@ -15,6 +15,7 @@ import {FailPage} from './pages/shop/Fail.tsx'
 import { SuccessPage } from './pages/shop/Success.tsx';
 import {checkToken} from './utils/Users'
 
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {

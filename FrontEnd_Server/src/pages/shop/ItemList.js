@@ -2,6 +2,8 @@ import React from 'react';
 import Item from '../../components/shop/Item';
 import { Col, Row } from 'react-bootstrap';
 import './itemlist.css'
+
+
 function ItemList({ items, handleAdd }) {
   return (
     <Row className='itemList-row'>
