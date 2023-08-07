@@ -67,21 +67,16 @@ const PlantInfo = () => {
 
   const createPlant = async (e) => {
     e.preventDefault();
-    console.log("여기");
-    console.log("nickname:", nickname);
-    console.log("checkIdx:", checkIdx);
-    console.log("childname:", childname);
-    console.log("childage:", childage);
-    if (checkedResult === true) {
+    if (checkedResult === false) {
       alert("시리얼 넘버를 확인해주세요");
     } else {
       console.log(selectedInfo);
       const body = {
         plant_name: nickname,
-        plant_info_index: selectedInfo?.index,
         serial_number: serialNum,
+        plant_info_index: selectedInfo?.index,
         child_name: childname,
-        child_age: childage,
+        child_age: parseInt(childage),
       };
       console.log(authToken);
       const config = {
@@ -100,7 +95,7 @@ const PlantInfo = () => {
           body, // body는 요청 바디에 해당하는 부분이므로 여기에 body를 넣어줍니다.
           config // config는 옵션 객체이며, 여기에 headers를 포함하여 설정을 넣어줍니다.
         );
-        navigate(`/diary/${response.data.index}`);
+        navigate(`/profile`);
       } catch (error) {
         console.log(error.message);
       }
