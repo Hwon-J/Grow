@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const util = require("util");
 
+const queryPromise = util.promisify(connection.query).bind(connection);
+
 // 유효성 검사 과정이 필요함
 exports.signup = async (req, res, next) => {
   try {
@@ -13,7 +15,6 @@ exports.signup = async (req, res, next) => {
 
     // 아이디 중복 검사
     let query = "select id from `member` where id=?";
-    const queryPromise = util.promisify(connection.query).bind(connection);
 
     let result = null;
     try {
@@ -69,7 +70,6 @@ exports.idCheck = async (req, res, next) => {
 
     // 데이터베이스에서 해당 아이디 존재하는지 체크
     let query = "select id from `member` where id=?";
-    const queryPromise = util.promisify(connection.query).bind(connection);
 
     let result = await queryPromise(query, [id]);
     if (result.length > 0) {
@@ -102,7 +102,6 @@ exports.login = async (req, res) => {
     winston.info(`userController login called. id: ${id}, pw: ${pw}`);
     let query = "select salt from `member` where id=?";
 
-    const queryPromise = util.promisify(connection.query).bind(connection);
     let result = await queryPromise(query, [id]);
 
     if (result.length === 0) {
@@ -169,7 +168,7 @@ exports.withdrawalUser = async (req, res) => {
     winston.info(`userController withdrawalUser called. id: ${id}`);
     let query = "delete from `member` where id = ?";
     let result = await queryPromise(query, [id]);
-    console.log(result);
+    
     if (result.length === 0) {
       winston.info(
         `userController withdrawalUser return '존재하지 않는 아이디' to ${id}`
@@ -193,7 +192,6 @@ exports.changePw = async (req, res) => {
     );
     let query = "select salt from `member` where id=?";
 
-    const queryPromise = util.promisify(connection.query).bind(connection);
     let result = await queryPromise(query, [id]);
 
     if (result.length === 0) {
