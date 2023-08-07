@@ -147,6 +147,24 @@ const getPlantInfoByIndex = async (index) => {
   // });
 };
 
+// 1. 시리얼을 받는다.
+// 2. 해당 시리얼의 식물 데이터를 받아온다
+// 3. 해당 식물 종류의 데이터를 받는다
+// 4. 식물 인덱스에 해당하는 최신 센서 데이터를 받는다.
+// 5. 식물 종류 데이터와 비교하여, 좋음/나쁨 등으로 치환하여 반환한다.
+const getConditionGoodOrBad = async (serial) => {
+  winston.info(`getPlantInfoByIndex called. index: ${index}`);
+  try {
+    let sql = "select * from `plant_info` where index = ?";
+
+    let result = await query(sql, [index]);
+    return result;
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+};
+
 module.exports = {
   connection,
   checkSerial,
@@ -154,4 +172,5 @@ module.exports = {
   getCondition,
   getWaterLog,
   getPlantInfoByIndex,
+  getConditionGoodOrBad
 };

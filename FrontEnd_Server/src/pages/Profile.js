@@ -112,7 +112,7 @@ const Profile = () => {
       child_name: "김민국",
       difficulty: 5,
       imgname: 6,
-      id: 3,
+      id: 9,
     },
   ]);
   const withdrawal = async () => {
