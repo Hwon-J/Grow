@@ -5,31 +5,41 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { logoutUser } from "../reducers/userSlice";
 
+export const Islogin = () => {
+  const persistedCurrentUser = localStorage.getItem('persist:currentUser');
+  const parsedCurrentUser = JSON.parse(persistedCurrentUser);
+  const token = JSON.parse(parsedCurrentUser.token);
+  console.log("IsLogin 확인")
+  if (parsedCurrentUser) {
+    return token;
+  } 
+  return false;
+}
+
 const CheckToken = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const checkToken = async () => {
-    const persistedCurrentUser = localStorage.getItem('persist:currentUser');
-    const parsedCurrentUser = JSON.parse(persistedCurrentUser);
-    const token = JSON.parse(parsedCurrentUser.token);
+    const checkLogin = Islogin(); 
+    if (!checkLogin) {
+      return
+    }
     const config = {
       headers: {
-        Authorization: token,
+        Authorization: checkLogin,
       },
     };
-    console.log("걸리나")
+    
+    console.log("걸리나");
     try {
       const response = await axios.get(
         `${BASE_URL}/api/user/valid`, config
       );
-      console.log("response" , response)
+      console.log("response", response);
     } catch (error) {
-
       dispatch(logoutUser());
-
       console.log(error);
-
     }
   };
 
