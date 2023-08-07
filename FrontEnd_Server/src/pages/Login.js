@@ -41,10 +41,11 @@ const Login = () => {
       id: id,
       pw: password,
     };
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!password.match(passwordRegex)) {
       return alert(
-        "비밀번호는 8자 이상이면서 숫자와 영어를 모두 포함해야 합니다."
+        "비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다."
       );
     }
 

@@ -8,7 +8,13 @@ import Login from './pages/Login';
 import ImgUpload from './pages/ImgUpload';
 import PlantDiary from './pages/PlantDiary';
 import PlantInfo from './pages/PlantInfo';
+import CheckoutPage from './pages/shop/PaymentToss.tsx';
+
+import ShopMain from './pages/shop/ShopMain';
+import {FailPage} from './pages/shop/Fail.tsx'
+import { SuccessPage } from './pages/shop/Success.tsx';
 import {checkToken} from './utils/Users'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {
@@ -30,6 +36,12 @@ const App = () => {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/plantinfo" element={<PlantInfo />} />
             <Route path="/imgupload" element={<ImgUpload />} />
+
+            <Route path="/shop" element={<ShopMain />} />
+            <Route path="/payment" element={<CheckoutPage />} />
+            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/fail" element={<FailPage />} />
+
             <Route path="/*" element={<NotFound/>} />
           </Route>
         </Routes>
