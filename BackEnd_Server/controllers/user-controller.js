@@ -161,20 +161,15 @@ exports.isValidToken = (req, res) => {
 };
 
 // 탈퇴
-// 1. 해당 아이디를 가지는 사람의 salt를 가져온다.
-//   1.1. 만약 해당 아이디를 가진 사람이 없다면 실패 응답을 보낸다.
-// 2. 입력된 pw를 salt와 합쳐서 암호화 한다.
-// 3. 해당 아이디와 암호화된 pw를 가지는 사람을 삭제한다.
-//   3.1. 없으면 탈퇴 실패 응답을 보낸다.
+// 1. 해당 아이디로 회원을 지운다.
+// 2. 결과가 0이면 탈퇴 실패 응답을 보낸다.
 exports.withdrawalUser = async (req, res) => {
   try {
-    const { id, pw } = req.body;
-    winston.info(`userController withdrawalUser called. id: ${id}, pw: ${pw}`);
-    let query = "select salt from `member` where id=?";
-
-    const queryPromise = util.promisify(connection.query).bind(connection);
+    const id = req.decoded.id;
+    winston.info(`userController withdrawalUser called. id: ${id}`);
+    let query = "delete from `member` where id = ?";
     let result = await queryPromise(query, [id]);
-
+    console.log(result);
     if (result.length === 0) {
       winston.info(
         `userController withdrawalUser return '존재하지 않는 아이디' to ${id}`
@@ -182,22 +177,7 @@ exports.withdrawalUser = async (req, res) => {
       return res
         .status(202)
         .json({ code: 202, message: "존재하지 않는 아이디" });
-    }
-
-    const salt = result[0].salt;
-    // 비밀번호 암호화
-    const hashedPw = crypto
-      .createHash("sha256")
-      .update(pw + salt)
-      .digest("hex");
-
-    // 데이터베이스에서 멤버 삭제
-    query = "delete from `member` where id = ? and pw = ?";
-    result = await queryPromise(query, [id, hashedPw]);
-    console.log(result);
-    if (result === 0) {
-      return res.status(202).json({ code: 202, message: "비밀번호 불일치" });
-    }
+      }
     return res.status(202).json({ code: 201, message: "회원탈퇴 성공" });
   } catch (error) {
     console.error(error);
