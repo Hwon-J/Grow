@@ -1,6 +1,7 @@
 //김태형
 import React, { useEffect, useState, useRef } from "react";
 import PlantCard from "../components/plant/plantCard";
+import Withdrawal from "../components/Withdrawal";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -55,6 +56,7 @@ const Profile = () => {
   }, []);
 
   const withdrawal = async () => {
+    console.log("회원탈퇴")
     try {
       const response = await axios.delete(`${BASE_URL}/api/user/`, config);
       alert(response.data.message);
@@ -143,9 +145,9 @@ const Profile = () => {
                   완료된 식물
                 </button>
               </div>
-              <button className="btn btn-danger signout" onClick={withdrawal}>
+              <Withdrawal  withdrawal={withdrawal}>
                 회원탈퇴
-              </button>
+              </Withdrawal>
             </div>
 
             <div className="container plant">
