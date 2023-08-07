@@ -61,18 +61,20 @@ const SignUp = () => {
   //회원가입시
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    if (userid.length < 6) {
+      return alert("아이디는 6글자 이상으로 입력해주세요")
+    }
     if (password !== confirmPassword) {
       // 비밀번호 다르면 실패
       return alert("입력한 비밀번호가 다릅니다!");
     }
     // Add additional conditions here to check the validity of the registration information
     if (username.length < 3 || username.length > 10) {
-      return alert("이름은 3자 이상, 10자 이하로 입력해주세요.");
+      return alert("이름은 3자 이상, 10자 이하로 입력해주세요");
     }
 
     if (!email.includes("@") || !email.includes(".")) {
-      return alert("유효한 이메일 주소를 입력해주세요.");
+      return alert("유효한 이메일 주소를 입력해주세요");
     }
 
     const passwordRegex =
@@ -109,6 +111,9 @@ const SignUp = () => {
   // registerUserAction을 부르고 body변수를 props로 전달
 
   const idChecking = async () => {
+    if (userid.length < 6) {
+      return alert("아이디는 6글자 이상으로 입력해주세요")
+    }
     try {
       const response = await axios.get(
         `${BASE_URL}/api/user/id-check/${userid}`

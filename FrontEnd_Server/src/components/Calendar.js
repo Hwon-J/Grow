@@ -193,7 +193,12 @@ const Calender = () => {
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
+        <>
+        <div className="waterlog_title">
+            <h1>Water Log Calendar</h1>
+        </div>
         <div className="calendar">
+            
             <RenderHeader
                 currentMonth={currentMonth}
                 prevMonth={prevMonth}
@@ -207,6 +212,7 @@ const Calender = () => {
                 // waterLog={waterLog}
             />
         </div>
+        </>
     );
 };
 
