@@ -24,16 +24,15 @@ import { useParams } from 'react-router-dom';
 
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
+// 따로 파일로 분리 해놓는게 좋겠지만 페이지가 얼마 없어 그냥 여기에 만들었습니다.
 function Conversation() {
   // 넘겨받은 serial_number를 가져오기 위해 useParams사용 
   const params = useParams()
   console.log(params.serial_number)
   const serial_number = params.serial_number
-  const [sensor, sensor_update] = useState({'온도':'2', '조도': '2', '수분':'2'})
+  // 센서값 관련해서 state 설정
+  const [sensor, sensor_update] = useState({'온도':'', '조도': '', '수분':''})
   
-
-
-
   // 대화 컴포넌트 구조
   return (
     
@@ -53,16 +52,14 @@ function Conversation() {
         
       </div>
       <div className='bubble '>
+      {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 
+          현재 센서 업데이트 함수를 자식 컴포넌트로 넘겨주기 그러면 자식컴포넌트에서도 호출 가능 */}
+        
         <WebSocketComponent serial_number={serial_number} sensor_update={sensor_update} />
       </div>
         
       
       
-      {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
-      <div>
-      
-
-      </div>
     </div>
     
   )
@@ -71,10 +68,12 @@ function Conversation() {
 
 
 function App() {
-  const base_serial_number = 'qwer'
-  // 배경화면 설정
+
+  // 기본적으로 라즈베리파이에 시리얼번호가 들어있다고 가정
+  const base_serial_number = 'asdf'
   
   const navigate = useNavigate()
+  // 배경화면 설정
   const backgroundStyles = {
     backgroundImage: `url(${background})`,
     backgroundSize: 'cover',
@@ -88,6 +87,7 @@ function App() {
 
   return (
     // App주변으로 store설정
+    // 혹시 몰라 스토어 설정해놓음
     // <Provider store={store}>
       <div className="App" style={backgroundStyles}>
         <Routes>
