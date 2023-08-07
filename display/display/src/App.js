@@ -5,6 +5,8 @@ import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
 import beancharacter from './assets/beancharacter.png';
+import lettucecharacter from './assets/lettucecharacter.png';
+import tomatocharacter from './assets/tomatocharacter.png';
 import board from './assets/board.png';
 import logo from './assets/logo.png';
 // Router import
@@ -18,7 +20,7 @@ import WebSocketComponent from './components/Websocket';
 // useEffect
 import { useEffect, useState } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
-import SerialRegister from './components/SerialRegister';
+import CharacterChoice from './components/CharacterChoice';
 import Button from 'react-bootstrap/Button';
 import { useParams } from 'react-router-dom';
 
@@ -30,6 +32,8 @@ function Conversation() {
   const params = useParams()
   console.log(params.serial_number)
   const serial_number = params.serial_number
+  const character_list = [beancharacter, lettucecharacter, tomatocharacter]
+  const character_index = params.character_index
   // 센서값 관련해서 state 설정
   const [sensor, sensor_update] = useState({'온도':'', '조도': '', '수분':''})
   
@@ -48,7 +52,7 @@ function Conversation() {
         
        
       <div className='character-box'>
-        <img className="character" src={beancharacter} alt="cancel"  />
+        <img className="character" src={character_list[character_index]} alt="cancel"  />
         
       </div>
       <div className='bubble '>
@@ -70,7 +74,7 @@ function Conversation() {
 function App() {
 
   // 기본적으로 라즈베리파이에 시리얼번호가 들어있다고 가정
-  const base_serial_number = 'asdf'
+  
   
   const navigate = useNavigate()
   // 배경화면 설정
@@ -82,7 +86,7 @@ function App() {
     minHeight: '100vh', // 전체 화면 높이까지 배경이미지가 채워지도록 설정
   }
   useEffect(() => {
-    navigate(`/conversation/${base_serial_number}`)
+    navigate('/characterchoice')
   }, [])
 
   return (
@@ -91,8 +95,8 @@ function App() {
     // <Provider store={store}>
       <div className="App" style={backgroundStyles}>
         <Routes>
-          <Route path="/" element={<SerialRegister />} />
-          <Route path="/conversation/:serial_number" element={<Conversation />} />
+          <Route path="/characterchoice" element={<CharacterChoice />} />
+          <Route path="/conversation/:character_index/:serial_number" element={<Conversation />} />
         </Routes>
       </div>
     //  </Provider> 
