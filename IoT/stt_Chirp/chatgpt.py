@@ -2,7 +2,7 @@ from websocket import create_connection
 import json
 
 def run_websocket_client():
-    ws_url = "ws://i9c103.p.ssafy.io:30002/"
+    ws_url = "ws://i9c103.p.ssafy.io:30002"
     ws = create_connection(ws_url)
 
     # 핸드셰이크 메시지 전송

@@ -56,7 +56,7 @@ GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
 
 # 녹음 설정
-RATE = 22050  # 샘플링 레이트 줄임
+RATE = 48000  # 샘플링 레이트 줄임
 CHANNELS = 1
 BUFFER_SIZE = 60 * RATE # 60초 버퍼
 buffer = np.zeros((BUFFER_SIZE, CHANNELS), dtype='int16')
@@ -76,6 +76,9 @@ def transcribe_file_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["ko-KR"],
         model="long",
+        features=cloud_speech.RecognitionFeatures(
+            enable_automatic_punctuation=True,
+        ),
     )
 
     request = cloud_speech.RecognizeRequest(
@@ -86,12 +89,12 @@ def transcribe_file_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
 
     # Transcribes the audio into text
     response = client.recognize(request=request)
-
+    returntext = ""
     for result in response.results:
         #print(f"Transcript: {result.alternatives[0].transcript}")
-        return result.alternatives[0].transcript
+        returntext += result.alternatives[0].transcript
 
-    
+    return returntext
 
 
 def record_audio():
@@ -103,7 +106,10 @@ def record_audio():
 
     with sd.InputStream(samplerate=RATE, channels=CHANNELS, dtype='int16') as stream:
         while True:
-            data, _ = stream.read(RATE) #  RATE 만큼의 데이터를 읽어옴
+            try:
+                data, _ = stream.read(RATE)
+            except sounddevice.PortAudioError as e:
+                print(f"스트림에서 읽는 도중 오류 발생: {e}")
             if recording:
                 if write_ptr == 0:
                     start_ptr = 0
