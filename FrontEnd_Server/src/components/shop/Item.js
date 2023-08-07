@@ -24,8 +24,6 @@ const Item = ({ item, handleClick }) => {
   return (
     <Figure>
       <Figure.Image
-        width={171}
-        height={180}
         src={item.img} 
         alt='...'
       />

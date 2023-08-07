@@ -7,13 +7,13 @@ const PlantCard = (props) => {
   const goDiary = () => {
     navigate(`/diary/${data.index}`)
   }
-
+  console.log(data)
   return (
     <div className="plantcard">
       <div className="bg">
         <div className="plantcard-details">
           {/* Added className="plantcard-details" */}
-          <img src={`./plantimg/${data.imgname}.png`} />
+          <img src={`./plantimg/${data.plant_info_index-10}.png`} />
           <p className="text-title">{data.plant_name}</p>
           <p className="card-text-body">{data.child_name}의 식물친구</p>
         </div>
