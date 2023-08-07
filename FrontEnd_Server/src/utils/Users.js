@@ -14,8 +14,8 @@ export const checkToken = async () => {
     },
   };
   try {
-    const response = await axios.post(
-      `${BASE_URL}/api/user/valid`,"", config
+    const response = await axios.get(
+      `${BASE_URL}/api/user/valid`, config
     );
     console.log(response)
     if (response.status !== 200) {

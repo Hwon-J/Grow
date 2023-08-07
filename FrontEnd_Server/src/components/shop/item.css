@@ -13,8 +13,7 @@
 }
 
 .img-fluid{
-  height: 200px !important;
-    width: auto !important;
+    width: 100% !important;
 }
 .ripple  {
   display: flex;
@@ -33,4 +32,9 @@
 .item-btn{
   bottom: 0;
   
+}
+
+
+.figure-item {
+  width: 100%;
 }

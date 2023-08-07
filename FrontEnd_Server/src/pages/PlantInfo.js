@@ -111,7 +111,7 @@ const PlantInfo = () => {
             <Card className="plant-img-card h-100">
               <Card.Img
                 thumbnail="true"
-                src={`./plantInfoimg/${info.index}.jpg`}
+                src={`./plantInfoimg/${info.index}.png`}
                 onClick={() => handleShow(info)}
                 style={{
                   border:
