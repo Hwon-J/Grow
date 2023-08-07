@@ -13,7 +13,7 @@ const PlantCard = (props) => {
       <div className="bg">
         <div className="plantcard-details">
           {/* Added className="plantcard-details" */}
-          <img src={`./plantimg/${data.plant_info_index-10}.png`} />
+          <img src={`./plantimg/${data.plant_info_index-20}.png`} />
           <p className="text-title">{data.plant_name}</p>
           <p className="card-text-body">{data.child_name}의 식물친구</p>
         </div>
