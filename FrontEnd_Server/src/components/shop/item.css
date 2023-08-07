@@ -34,7 +34,26 @@
   
 }
 
+.div-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px;
+  border: 0.002rem solid black;
+}
+.figure-img {
+  margin-top: 10px;
+}
 
 .figure-item {
   width: 100%;
+}
+.figure-caption {
+  bottom: 0 !important; 
+  background-color: rgba(0, 0, 0, 0.5); /* 배경색 설정 (옵션) */
+  color: white; /* 텍스트 색상 설정 (옵션) */
+  padding: 8px; /* 필요한 경우 적절한 padding 설정 (옵션) */
+  text-align: center;
+  font-weight: bold;
 }

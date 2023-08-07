@@ -1,29 +1,55 @@
+import React, { useEffect } from 'react';
 import axios from "axios";
 import { BASE_URL } from "./Urls.js";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { logoutUser } from "../reducers/userSlice";
 
-export const checkToken = async () => {
+export const Islogin = () => {
   const persistedCurrentUser = localStorage.getItem('persist:currentUser');
   const parsedCurrentUser = JSON.parse(persistedCurrentUser);
   const token = JSON.parse(parsedCurrentUser.token);
-  console.log('Token:', token);
+  console.log("IsLogin 확인")
+  if (parsedCurrentUser) {
+    return token;
+  } 
+  return false;
+}
 
-  
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
-  try {
-    const response = await axios.get(
-      `${BASE_URL}/api/user/valid`, config
-    );
-    console.log(response)
-    if (response.status !== 200) {
-      localStorage.removeItem('persist:currentUser');
-      console.log('LocalStorage data removed.');
-    } 
+const CheckToken = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const checkToken = async () => {
+    const checkLogin = Islogin(); 
+    if (!checkLogin) {
+      return
+    }
+    const config = {
+      headers: {
+        Authorization: checkLogin,
+      },
+    };
     
-  } catch (error) {
-    console.log(error);
-  }
+    console.log("걸리나");
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/user/valid`, config
+      );
+      console.log("response", response);
+    } catch (error) {
+      dispatch(logoutUser());
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // 페이지가 열릴 때 checkToken 함수 실행
+    checkToken();
+  }, [dispatch, navigate]);
+
+  // 함수 컴포넌트이므로 렌더링할 필요가 없으므로 null 반환
+  return null;
 };
+
+export default CheckToken;

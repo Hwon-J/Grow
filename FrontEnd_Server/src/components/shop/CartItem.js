@@ -1,28 +1,52 @@
-import React from 'react';
-
+import React from "react";
+import { Row, Col, Form, Button, Container } from "react-bootstrap";
+import "./cartitem.css";
 const CartItem = ({
   item,
   checkedItems,
   quantity,
   handleCheckChange,
   handleQuantityChange,
-  handleDelete
+  handleDelete,
 }) => {
   return (
-    <div>
-      <h5>{item.name}</h5>
-      <p>가격: {item.price}원</p>
-      <input
-        type="checkbox"
-        checked={checkedItems.includes(item.id)}
-        onChange={() => handleCheckChange(item.id)}
-      />
-      <input
-        type="number"
-        value={quantity}
-        onChange={(event) => handleQuantityChange(item.id, event.target.value)}
-      />
-      <button onClick={() => handleDelete(item.id)}>삭제</button>
+    <div className="cartitem-div">
+      <Row className="my-3 cart-row">
+        <Col sm={12}>
+          <p>
+            {item.name} 가격: {item.price}원
+          </p>
+        </Col>
+        <Col sm={12}>
+          <Row className="row-cart-center">
+            <Col sm={5} className="col-cart-left">
+              <input
+                type="number"
+                value={quantity}
+                onChange={(event) =>
+                  handleQuantityChange(item.id, event.target.value)
+                }
+                className="w-100" // Add w-100 class to fill the Col width
+              />
+            </Col>
+            <Col sm={5} className="col-cart-right">
+              <button
+                className="btn btn-danger"
+                onClick={() => handleDelete(item.id)}
+              >
+                삭제
+              </button>
+              <input
+              className="checkbox-col"
+                type="checkbox"
+                checked={checkedItems.includes(item.id)}
+                onChange={() => handleCheckChange(item.id)}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <hr />
     </div>
   );
 };

@@ -1,0 +1,10 @@
+.cart-main-div {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-main-div h1 {
+  text-align: center;
+}
