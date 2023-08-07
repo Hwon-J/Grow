@@ -4,11 +4,8 @@
 import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
-import flowercharacter from './assets/flowercharacter.png';
-import lettucecharacter from './assets/lettucecharacter.png';
-import tomatocharacter from './assets/tomatocharacter.png';
-import potcharacter from './assets/potcharacter.png';
 import beancharacter from './assets/beancharacter.png';
+import board from './assets/board.png';
 import logo from './assets/logo.png';
 // Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -19,49 +16,63 @@ import axios from 'axios';
 import { Provider, useSelector, useDispatch} from 'react-redux';
 import WebSocketComponent from './components/Websocket';
 // useEffect
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import SerialRegister from './components/SerialRegister';
+import Button from 'react-bootstrap/Button';
+import { useParams } from 'react-router-dom';
 
 
 // 캐릭터와 대화하는 화면 컴포넌트 생성
+// 따로 파일로 분리 해놓는게 좋겠지만 페이지가 얼마 없어 그냥 여기에 만들었습니다.
 function Conversation() {
-  const state_serial_number = useSelector((state) => 
-     state.serial_number
-  )
-  const state_name = useSelector((state) =>
-    state.name
-  )
-  // serial번호가 등록이 되었는지 확인 차원에서 렌더링 될 때 한번 출력
-  useEffect(() => {
-    console.log(state_serial_number); // 처음 렌더링 시에만 출력
-    // console.log(store)
-  }, [])
-
-  const character_style = {
-    height : '300px'
-
-  }
-
+  // 넘겨받은 serial_number를 가져오기 위해 useParams사용 
+  const params = useParams()
+  console.log(params.serial_number)
+  const serial_number = params.serial_number
+  // 센서값 관련해서 state 설정
+  const [sensor, sensor_update] = useState({'온도':'', '조도': '', '수분':''})
+  
   // 대화 컴포넌트 구조
   return (
-    <div>
-      <h1>{state_name}</h1>
-      <img src={flowercharacter} alt="cancel" style={character_style} />
-      <img src={lettucecharacter} alt="cancel" style={character_style} />
-      <img src={tomatocharacter} alt="cancel" style={character_style} />
-      <img src={potcharacter} alt="cancel" style={character_style} />
-      <img src={beancharacter} alt="cancel" style={character_style} />
-      <h1>{state_serial_number}</h1>
-      {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 */}
-      <WebSocketComponent />
+    
+    <div >
+      <img src={board} className='board' />
+      <span className='information'>
+        <h1>온도 : {sensor.온도}</h1>
+        <h1>조도 : {sensor.조도}</h1>
+        <h1>수분 : {sensor.수분}</h1>
+      </span>
+      
+      
+        
+       
+      <div className='character-box'>
+        <img className="character" src={beancharacter} alt="cancel"  />
+        
+      </div>
+      <div className='bubble '>
+      {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 
+          현재 센서 업데이트 함수를 자식 컴포넌트로 넘겨주기 그러면 자식컴포넌트에서도 호출 가능 */}
+        
+        <WebSocketComponent serial_number={serial_number} sensor_update={sensor_update} />
+      </div>
+        
+      
+      
     </div>
+    
   )
 }
 
 
 
 function App() {
+
+  // 기본적으로 라즈베리파이에 시리얼번호가 들어있다고 가정
+  const base_serial_number = 'asdf'
+  
+  const navigate = useNavigate()
   // 배경화면 설정
   const backgroundStyles = {
     backgroundImage: `url(${background})`,
@@ -70,14 +81,18 @@ function App() {
     backgroundPosition: 'center',
     minHeight: '100vh', // 전체 화면 높이까지 배경이미지가 채워지도록 설정
   }
+  useEffect(() => {
+    navigate(`/conversation/${base_serial_number}`)
+  }, [])
 
   return (
     // App주변으로 store설정
+    // 혹시 몰라 스토어 설정해놓음
     // <Provider store={store}>
       <div className="App" style={backgroundStyles}>
         <Routes>
           <Route path="/" element={<SerialRegister />} />
-          <Route path="/conversation" element={<Conversation />} />
+          <Route path="/conversation/:serial_number" element={<Conversation />} />
         </Routes>
       </div>
     //  </Provider> 

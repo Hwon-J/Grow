@@ -1,8 +1,8 @@
 const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
 const db = require("./util/db.js");
-const deleteEmoji = require("./util/delete-emoji");
-const winston = require("../util/winston.js");
+const stringPurify = require("./util/string-purifier");
+const winston = require("./util/winston.js");
 require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: process.env.PORT });
@@ -46,7 +46,7 @@ wss.on("connection", (ws, req) => {
   }
 
   // 3. 클라이언트로부터 메세지 수신 이벤트 처리
-  ws.on("message", (msg) => {
+  ws.on("message", async (msg) => {
     // 히스토리 없는 형태로 진행중
     history = [
       {
@@ -62,33 +62,43 @@ wss.on("connection", (ws, req) => {
 
     // 연결 후 클라이언트는 첫 메세지로 핸드셰이크를 보낸다
     if (msgJson.role == "handshake") {
-      result = db.checkSerial(msgJson.serial);
+      let result = await db.checkSerial(msgJson.serial);
+      
       if (result === "ok") {
-        ws.send({
+        winston.info("success: Successful connection to the server. (IP: " + ip + ")");
+        ws.send(JSON.stringify({
           status: "success",
           message: "Successful connection to the server. Welcome.",
-        });
+        }));
       } else {
         // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
-        if (result === "unsigned") {
-          ws.send({
+        if (result === "unregistered") {
+          winston.info("fail: Unregistered serial number. Please check again. (IP: " + ip + ")");
+          ws.send(JSON.stringify({
             status: "fail",
             message: "Unregistered serial number. Please check again",
-          });
+          }));
         } else if (result === "not exist") {
-          ws.send({
+          winston.info("fail: a non-existent serial number. Please check again. (IP: " + ip + ")");
+          ws.send(JSON.stringify({
             status: "fail",
             message: "a non-existent serial number. Please check again",
-          });
+          }));
         } else {
-          ws.send({ status: "fail", message: "Error occured in handshake." });
+          winston.info("fail: Error occured in handshake. (IP: " + ip + ")");
+          ws.send(JSON.stringify({ status: "fail", message: "Error occured in handshake." }));
         }
+
         ws.close();
       }
 
+      // clients에 시리얼 넘버를 엮어서 저장
       ws.serial = msgJson.serial;
       clients.push(ws);
     } else if (msgJson.role == "gpt") {
+      // DB에 유저의 입력 저장
+      
+
       // 히스토리에 유저의 답변 저장
       history.push({
         role: "user",
@@ -97,11 +107,11 @@ wss.on("connection", (ws, req) => {
       // 1. gpt에게 답변을 받는다.
       // 2. count를 1증가 시킨다.
       // 3. gpt의 답변 맨 마지막에 ?가 들어 있으면 count를 다시 1 감소 시킨다.
-      // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위
+      // 4. count가 randomPoint와 같아졌다면, db를 통해 무작위 질문을 붙인다.
       (async () => {
         let result = await gpt(history);
         // 답변속 이모지 제거
-        result = deleteEmoji(result);
+        result = stringPurify(result);
         // 답변 저장
         history.push({
           role: "assistant",

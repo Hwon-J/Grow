@@ -3,18 +3,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import { BASE_URL } from "../utils/Urls";
+import {
+  Form,
+  Row,
+  Col,
+  Stack,
+  Container,
+  Card,
+  InputGroup,
+  Offcanvas,
+} from "react-bootstrap";
 import NavTop from "../components/NavTop";
-import PlantInfoComponent from "../components/plant/PlantInfoComponent";
-import "./plantinfo.css";
-
-import { styled } from "@mui/material/styles";
-import { TextField, Grid, Container, Paper, Box } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-
+import "./plantinfo.scss";
 
 const PlantInfo = () => {
   const [nickname, setNickname] = useState("");
@@ -29,13 +30,17 @@ const PlantInfo = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
   const navigate = useNavigate();
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
+  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = (info) => {
+    setSelectedInfo(info);
+    setShow(true);
+  };
+
+  useEffect(() => {
+    console.log(selectedInfo); // 이렇게 하면 selectedInfo의 최신 값이 로그에 표시됩니다
+  }, [selectedInfo]);
 
   useEffect(() => {
     getPlantInfo();
@@ -62,193 +67,218 @@ const PlantInfo = () => {
 
   const createPlant = async (e) => {
     e.preventDefault();
-    if (checkedResult === false) {
+    console.log("여기");
+    console.log("nickname:", nickname);
+    console.log("checkIdx:", checkIdx);
+    console.log("childname:", childname);
+    console.log("childage:", childage);
+    if (checkedResult === true) {
       alert("시리얼 넘버를 확인해주세요");
     } else {
-      // 데이터를 함께 보낼 객체를 생성 nickname, serialNum
+      console.log(selectedInfo);
       const body = {
         plant_name: nickname,
-        plant_info_index: checkIdx,
-        serialNum: serialNum,
-        token: authToken,
+        plant_info_index: selectedInfo?.index,
+        serial_number: serialNum,
         child_name: childname,
         child_age: childage,
       };
+      console.log(authToken);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${authToken}`,
+        },
+      };
+
+      console.log(body);
+
       try {
         const response = await axios.post(
-          `http://i9c103.p.ssafy.io:30001/api/plant/create`,
-          body
+          `${BASE_URL}/api/plant/create`,
+          // `http://192.168.100.37:30001/api/plant/create`,
+          body, // body는 요청 바디에 해당하는 부분이므로 여기에 body를 넣어줍니다.
+          config // config는 옵션 객체이며, 여기에 headers를 포함하여 설정을 넣어줍니다.
         );
         navigate(`/diary/${response.data.index}`);
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
     }
   };
 
   const imgPlantInfo = () => {
+    console.log(plantInfo);
     return (
-      <div className="image-container">
-        {plantInfo.map((info, index) => (
-          <div key={index} className="image-wrapper">
-            <img
-              className="plantinfoimg"
-              src={`./plantinfoimg/${info.species}.jpg`}
-              onClick={() => onClickInfo(info.index)}
-              style={{
-                border: checkIdx === info.index ? "2px solid black" : "none",
-              }}
-            />
-          </div>
+      <Row className="scroll-container">
+        {plantInfo.map((info) => (
+          <Col key={info.index} xs={4} md={6}>
+            <Card className="plant-img-card h-100">
+              <Card.Img
+                thumbnail="true"
+                src={`./plantInfoimg/${info.index}.jpg`}
+                onClick={() => handleShow(info)}
+                style={{
+                  border:
+                    selectedInfo?.index === info.index
+                      ? "0.1rem solid rgb(56, 181, 203)"
+                      : "none",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Card>
+          </Col>
         ))}
-      </div>
+      </Row>
     );
   };
 
   const getPlantInfo = async () => {
     try {
-      const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/api/plant/info`
-      );
+      const response = await axios.get(`${BASE_URL}/api/plant/info`);
       setPlantInfo(response.data.info);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onClickInfo = (idx) => {
-    setCheckIdx(idx);
-  };
-
   const checkSerial = async () => {
-    try {
-      const response = await axios.get(
-        `http://i9c103.p.ssafy.io:30001/api/pot/${serialNum}`
-      );
-      if (response.data.code === 202) {
-        // alert(response.data.message);
-        console.log(response.data.message);
+    if (serialNum) {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/pot/${serialNum}`);
+        if (response.data.code === 202) {
+          // alert(response.data.message);
+          console.log(response.data.message);
+          setCheckedResult(false);
+          setErormessage(response.data.message);
+          setCheckNum("");
+        }
+        if (response.data.code === 200) {
+          setCheckNum(response.data.message);
+          setErormessage("");
+          console.log(response.data.message);
+          setCheckedResult(true);
+        }
+      } catch (error) {
+        alert.log("서버에러");
         setCheckedResult(false);
-        setErormessage(response.data.message);
       }
-      if (response.data.code === 200) {
-        setCheckNum(response.data.message);
-        setCheckedResult(true);
-      }
-    } catch (error) {
-      alert.log("서버에러");
-      setCheckedResult(false);
+    } else {
+      alert("시리얼 넘버를 입력해 주세요!");
     }
   };
 
   return (
-    <div className="plantinfo-total">
+    <>
       <NavTop />
-      <Container className="plantinfopage">
-        <Grid container spacing={2}>
-          <Grid item xs={4} md={2}>
-            <Item>{imgPlantInfo()}</Item>
-          </Grid>
-          <Grid item xs={8} md={6}>
-            <div className="itemclone">
-              {checkIdx !== null && (
-                <PlantInfoComponent
-                  props={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
-                  key={checkIdx !== -1 ? plantInfo[checkIdx - 1] : {}}
-                />
-              )}
-            </div>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <div className="itemclone">
-              <form onSubmit={createPlant}>
-                <Grid justifyContent="center" alignItems="center">
-                  <Grid item xs={12}>
-                    <TextField
-                      label="식물의 애칭"
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
+
+      <Container className="plant-info-container">
+        <Row>
+          {/* 좌측 카드 컬럼 */}
+          <Col sm={12} md={4} className="plant-info-col">
+            {imgPlantInfo()}
+          </Col>
+
+          {/* 우측 폼 컬럼 */}
+          <Col sm={12} md={6} className="plant-info-col">
+            <Form onSubmit={createPlant}>
+              <Row
+                style={{
+                  height: "100vh",
+                  justifyContent: "center",
+                  paddingTop: "10%",
+                }}
+              >
+                <Col xs={10}>
+                  <Stack gap={3} className="plantinfo-stack">
+                    <h2>식물 등록</h2>
+
+                    <Offcanvas
+                      show={show}
+                      onHide={handleClose}
+                      placement="top"
+                      className="half-screen-offcanvas"
+                    >
+                      <Offcanvas.Header closeButton>
+                        <Offcanvas.Title>
+                          {selectedInfo?.species}
+                        </Offcanvas.Title>
+                      </Offcanvas.Header>
+                      <Offcanvas.Body>
+                        {selectedInfo?.info && <p>설명: {selectedInfo.info}</p>}
+                        {selectedInfo?.temperature_upper && (
+                          <p>
+                            최고: {selectedInfo.temperature_upper}도
+                          </p>
+                        )}
+                        
+                        {selectedInfo?.temperature_lower && (
+                          <p>
+                            최저온도: {selectedInfo.temperature_lower}도
+                          </p>
+                        )}
+                        {selectedInfo?.moisture_upper&& (
+                          <p>최고습도: {selectedInfo.moisture_upper}%</p> 
+                        )}
+                        {selectedInfo?.moisture_lower && (
+                          <p>최저습도: {selectedInfo.moisture_lower}%</p>
+                        )}
+                        {selectedInfo?.max_water_period && (
+                          <p>
+                            최대 물주기: {selectedInfo.max_water_period}일
+                          </p>
+                        )}
+                      </Offcanvas.Body>
+                    </Offcanvas>
+
+                    <Form.Control
+                      type="text"
+                      placeholder="식물 애칭"
                       value={nickname}
                       onChange={onChangeNickname}
                     />
-                  </Grid>
-
-                  <hr />
-
-                  <Grid item xs={12}>
-                    <TextField
-                      label="시리얼넘버"
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      value={serialNum}
-                      onChange={onChangeSerialNum}
+                    <Form.Control
+                      type="text"
+                      placeholder="아이 이름"
+                      value={childname}
+                      onChange={onChangeChildname}
                     />
-                  </Grid>
-                  <br />
-                  <p className="checkP" style={{ color: "red" }}>
-                    {errormessage}
-                  </p>
-
-                  <Grid item xs={12}>
-                    <button
-                      className="w-btn-indigo-outline"
-                      onClick={checkSerial}
-                    >
-                      중복체크
-                    </button>
-                  </Grid>
-                </Grid>
-                <hr />
-                <Grid item xs={12}>
-                  <TextField
-                    label="아이이름"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    value={childname}
-                    onChange={onChangeChildname}
-                  />
-                </Grid>
-
-                <Box className="childageBox">
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">나이</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                    <InputGroup>
+                      <Form.Control
+                        type="text"
+                        placeholder="시리얼 넘버"
+                        value={serialNum}
+                        onChange={onChangeSerialNum}
+                      />
+                      <button
+                        type="button"
+                        onClick={checkSerial}
+                        className="custom-button"
+                      >
+                        확인
+                      </button>
+                    </InputGroup>
+                    <p className="checkP" style={{ color: "red", display: "flex", justifyContent: "center" }}>
+                      {checkNum ? checkNum : errormessage}
+                    </p>
+                    <Form.Control
+                      type="number"
+                      placeholder="나이"
                       value={childage}
-                      label="Age"
                       onChange={onChangeChildage}
-                    >
-                      <MenuItem value={5}>5</MenuItem>
-                      <MenuItem value={6}>6</MenuItem>
-                      <MenuItem value={7}>7</MenuItem>
-                      <MenuItem value={8}>8</MenuItem>
-                      <MenuItem value={9}>9</MenuItem>
-                      <MenuItem value={10}>10</MenuItem>
-                      <MenuItem value={11}>11</MenuItem>
-                      <MenuItem value={12}>12</MenuItem>
-                      <MenuItem value={13}>13</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <hr />
-
-                <button
-                  className="w-btn-outline w-btn-indigo-outline"
-                  type="submit"
-                  variant="contained"
-                >
-                  만들기
-                </button>
-              </form>
-            </div>
-          </Grid>
-        </Grid>
+                    />
+                    <button type="submit" className="custom-button create-btn">
+                      만들기
+                    </button>
+                  </Stack>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
       </Container>
-    </div>
+    </>
   );
 };
 

@@ -1,99 +1,97 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, NavLink  } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../reducers/userSlice';
-import './navbar.scss';
-import logo from '../assets/logo.png';
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../reducers/userSlice";
+import "./navbar.scss";
+import logo from "../assets/logo.png";
 
 function NavTop() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.currentUser);  // 로그인 되어있는 유저
-  const handleNavItemClick = (e) => {   // Service 아래로 toogle처리
-    e.stopPropagation();
-    const clickedNavItem = e.currentTarget;
-    const siblings = Array.from(
-      clickedNavItem.parentElement.children
-    ).filter((el) => el !== clickedNavItem);
+  const currentUser = useSelector((state) => state.currentUser);
 
-    siblings.forEach((sibling) => {
-      const dropdown = sibling.querySelector('.nav-dropdown');
-      if (dropdown) {
-        dropdown.style.display = 'none';
-      }
-    });
-
-    const dropdown = clickedNavItem.querySelector('.nav-dropdown');
-    if (dropdown) {
-      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    }
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    console.log(currentUser);
   };
 
-  const handleNavToggle = () => {
-    setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
   };
 
-  const handleLogout = () => {   // 로그아웃 처리 
-    dispatch(logoutUser());   // 로그아웃 dispatch불러오기
-    // navigate('/login'); // 로그아웃 완료되었을시 login으로 이동
-    console.log(currentUser)  
-  };
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
 
   return (
     <>
       <section className="navigation">
         <div className="nav-container">
           <div className="brand">
-            <Link to="/home">
+            <NavLink to="/home" style={{ textDecoration: "none" }}>
               <img src={logo} alt="Home" />
-            </Link>
+            </NavLink>
           </div>
-          <nav>
-            <div className="nav-mobile">
-              <a id="nav-toggle" href="#!" onClick={handleNavToggle}>
-                <span></span>
-              </a>
+          {windowWidth <= 600 && (
+            <div className="nav-mobile" onClick={toggleMobileMenu}>
+              <span className={`hamburger ${showMobileMenu ? "open" : ""}`}></span>
             </div>
-            <ul className={`nav-list ${isNavOpen ? 'open' : ''}`}>
+          )}
+          <nav>
+            <ul className={`nav-list ${showMobileMenu ? "mobile-show" : ""}`}>
               <li>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/" style={{ textDecoration: "none" }}>
+                  Home
+                </NavLink>
               </li>
-              <li>
-                <NavLink to="/profile">Profile</NavLink>
-              </li>
-              <li>
-                <NavLink to="/plantinfo">plantinfo</NavLink>
-              </li>
-              {/* <li onClick={handleNavItemClick}>
-                <Link to="#">Services</Link>
-                <ul className="nav-dropdown">
-                  <li onClick={(e) => e.stopPropagation()}>
-                    <Link to="/services/web-design">Web Design</Link>
+              {currentUser.token ? (
+                <>
+                  <li>
+                    <NavLink to="/profile" style={{ textDecoration: "none" }}>
+                      Profile
+                    </NavLink>
                   </li>
-                  <li onClick={(e) => e.stopPropagation()}>
-                    <Link to="/services/web-development">Web Development</Link>
+                  <li>
+                    <NavLink to="/plantinfo" style={{ textDecoration: "none" }}>
+                      plantinfo
+                    </NavLink>
                   </li>
-                  <li onClick={(e) => e.stopPropagation()}>
-                    <Link to="/services/graphic-design">Graphic Design</Link>
+                  <li>
+                    <NavLink to="/shop" style={{ textDecoration: "none" }}>
+                      Shop
+                    </NavLink>
                   </li>
-                </ul>
-              </li> */}
-              
-              <li onClick={handleNavItemClick}>
-                {!currentUser.token ? (<NavLink to="/login">Login</NavLink>):
-                (<NavLink onClick={handleLogout} to="/login">Logout</NavLink>)
-                
-              }
-                
-                
-              </li>
-              
+                </>
+              ) : null}
               <li>
+                {!currentUser.token ? (
+                  <NavLink to="/login" style={{ textDecoration: "none" }}>
+                    Login
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    onClick={handleLogout}
+                    to="/login"
+                    style={{ textDecoration: "none" }}
+                  >
+                    Logout
+                  </NavLink>
+                )}
               </li>
-              
-              <li onClick={handleNavItemClick}>
-                <NavLink to="/signup">SignUp</NavLink>
+              <li>
+                {!currentUser.token ? (
+                  <NavLink to="/signup" style={{ textDecoration: "none" }}>
+                    SignUp
+                  </NavLink>
+                ) : null}
               </li>
             </ul>
           </nav>

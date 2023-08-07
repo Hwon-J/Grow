@@ -1,13 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
 
+.waterlog_title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: bold;
+  color: #459b2a;
+  text-align: center;
+  margin: 20px 0;
+  text-shadow: 2px 2px 2px rgb(168, 168, 168);
+}
+
 .calendar {
   font-family: 'Outfit', sans-serif;
   // border: 1px solid #5c5c5c;
-  margin-top: 30px;
+  margin-top: 20px;
   border-radius: 10px;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   padding: 5px;
+
+  // h1{
+  //   font-weight: bold;
+  //   color: #459b2a;
+  //   text-align: center;
+  // }
 }
 .header_cal {
     display: flex;
@@ -17,6 +32,8 @@
     color: #459b2a;
     font-weight: bold;
     justify-content: space-between;
+    // border-top: #459b2a 1px solid;
+    // border-bottom: #459b2a 1px solid;
 
     .month{
       margin: 0 5px;
@@ -63,6 +80,9 @@
     }
 .text.current-day {
   font-weight: bold; /* 오늘 날짜의 글자를 굵게 설정 */
+  background-color: #d9f4da;
+  box-shadow: 0 0 5px rgba(86, 153, 64, 0.3);
+  border-radius: 5px;
 }
 .watered { 
   background-image: url(../assets/water2.png);
@@ -71,4 +91,7 @@
 }
 .text.not-valid {
   color: rgb(193, 192, 192);
+}
+.cell_col.selected{
+  background-color: #77f34e;
 }

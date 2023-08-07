@@ -5,7 +5,7 @@ const PlantCard = (props) => {
   const data = props.props;
   const navigate = useNavigate();
   const goDiary = () => {
-    navigate(`/diary/${data.id}`)
+    navigate(`/diary/${data.index}`)
   }
 
   return (
@@ -13,9 +13,9 @@ const PlantCard = (props) => {
       <div className="bg">
         <div className="plantcard-details">
           {/* Added className="plantcard-details" */}
+          <img src={`./plantimg/${data.imgname}.png`} />
           <p className="text-title">{data.plant_name}</p>
-          <p className="text-body">{data.child_name}의 식물친구</p>
-          <img src={`./plantimg/${data.imgname}.avif`} />
+          <p className="card-text-body">{data.child_name}의 식물친구</p>
         </div>
       </div>
       <div className="blob"></div>

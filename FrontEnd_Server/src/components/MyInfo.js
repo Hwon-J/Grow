@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import myImage from '../assets/1.jpg';
+import { useParams } from 'react-router-dom';
 import './MyInfo.scss';
+import { useSelector } from "react-redux";
+import { BASE_URL } from '../utils/Urls';
+import { Grid } from '@mui/material';
 
 
-const data = {
-  "plant_idx": 1,
-  "plant_name": "상추",
-  "plant_nickname": "상츠",
-  "child_name": "김민국",
-  "start_day": "2023-07-09T12:00:00",
-  "img": "src/assets/1.jpg"
-};
-
+// 가져오는 날짜 형식을 YYYYMMDD로 변환
 const formatDate = (isoDateString) => {
   const date = new Date(isoDateString);
   const year = date.getFullYear();
@@ -21,6 +17,8 @@ const formatDate = (isoDateString) => {
   return `${year}${month}${day}`;
 };
 
+
+// 두 날짜 사이의 차이를 구하는 함수
 const calDay = (firstDate, secondDate) => {
   const dateFirstDate = new Date(firstDate.substring(0, 4), firstDate.substring(4, 6) - 1, firstDate.substring(6, 8));
   const dateSecondDate = new Date(secondDate.substring(0, 4), secondDate.substring(4, 6) - 1, secondDate.substring(6, 8));
@@ -28,48 +26,100 @@ const calDay = (firstDate, secondDate) => {
   return Math.floor(betweenTime / (1000 * 60 * 60 * 24));
 };
 
+
+
+
+
+
+// 해당 식물의 정보를 보여주는 컴포넌트
 const MyInfo = () => {
-  // const navigate = useNavigate();
-  const [plantInfo, setPlantInfo] = useState(data);
-  const today = new Date(); // Date 객체로 초기화
+  // 오늘 날짜와 식물을 키우기 시작한 날짜를 가져옴
+  const [myplant, setMyplant] = useState([]);
+  const today = new Date(); 
   const formattedToday = formatDate(today.toISOString());
-  const formattedStartDay = formatDate(plantInfo.start_day);
+  const formattedStartDay = formatDate(myplant.start_date);
+  
+  // params로 식물 id를 가져옴
+  const { id } = useParams();
 
-  console.log(formattedToday);
-  console.log(formattedStartDay);
+  // 현재 로그인한 유저의 토큰을 가져옴
+  const currentUser = useSelector((state) => state.currentUser);
+  const token = currentUser.token;
 
+  // 식물을 키운 기간을 구함
   const daysDifference = calDay(formattedStartDay, formattedToday)+1;
 
-  console.log(daysDifference);
 
+  // 서버 주소
+  //http://i9c103.p.ssafy.io:30001/api/plant/myplant/${id}
+  //http://192.168.100.37:30001/api/plant/myplant/${id}
+  //http://192.168.100.37:30001/api/plant/complete/${id}
+
+
+  // 식물 키우기 완료로 상태를 바꿔주는 함수
+  // PUT으로 수정
+  const completePlant = async () => {
+    console.log(token);
+    const config = {
+        headers: {
+          Authorization: token,
+        },
+      };
+      try {
+        const response = await axios.put(`${BASE_URL}/api/plant/complete/${id}`,"", config);
+        console.log(response.data);
+        console.log('성공');
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+  
+  
+  // 해당 식물의 정보를 가져오는 함수
+  const getPlantInfo = async () => {
+    const config = {
+      headers: {
+        Authorization: token,
+      },
+    };
+
+    try {
+      const response = await axios.get(`${BASE_URL}/api/plant/myplant/${id}`, config);
+      setMyplant(response.data.data[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 시작하면 getPlantInfo 실행
   useEffect(() => {
-    // 백엔드 API로부터 데이터를 가져옵니다
-    // 예를 들어, fetch나 Axios를 사용하여 데이터를 가져올 수 있습니다
-    // 여기서는 setTimeout을 사용하여 가짜 API 호출을 시뮬레이션합니다
-    setTimeout(() => {
-      // 백엔드에서 가져온 데이터를 'data' 변수에 가정합니다
-      setPlantInfo(data);
-
-    }, 1000); // 1초의 지연을 시뮬레이션하기 위해 1000ms를 사용합니다
+    getPlantInfo();
   }, []);
 
-  // const handleQuestPageButtonClick = () => {
-  //   navigate('/questpage'); // Use navigate to navigate to /questpage
-  // };
-
+  // myplant가 없으면 로딩중
+  if (!myplant) {
+    return <div>Loading...</div>;
+  }
   
   return (
     <>
       <div className='info_box'>
-        <div className='info_box_left'>
-        <img className="rounded-image" src={myImage} alt="Image Description" />
-        </div>
-        <div className='info_box_right'>
-          <h5>{plantInfo.child_name}(이)가 키우는 {plantInfo.plant_nickname}</h5>
-          {/* <h5>키운지 { today }일째</h5> */}
-          <h5>키운 지 {daysDifference}일째</h5>
-          {/* <button onClick={handleQuestPageButtonClick}>질문 등록</button> */}
-        </div>
+      <Grid 
+          item xs={5}
+          className="rounded-image"
+          style={{ backgroundImage: `url(${myImage})` }}
+        >
+        </Grid>
+        <Grid item xs={7} className='info_box_right'>
+          <div className='info_box_button' onClick={completePlant}>Complete</div>
+          <h1>{myplant.plant_name}상치</h1>
+          <h5 >종: 상추</h5>
+          <h5>친구 : 잼민이</h5>
+          <h5>시작일: 2023.08.01(3일차) </h5>
+          {/* <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5> */}
+          {/* <h5>키운 지 {daysDifference}일째</h5> */}
+        </Grid>
       </div>       
     </>
   )

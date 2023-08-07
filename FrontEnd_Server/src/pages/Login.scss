@@ -1,116 +1,48 @@
-/* Login.scss */
-/* flexbox-right와 flexbox-left를 감싸는 container_box 영역의 스타일 */
-.bgimg{
-    width: 80% !important;
-    padding-bottom: 50px;
-}
-.container_box {
-    display: flex; /* flexbox로 정렬 */
-    border: 2px solid #ffffff; /* 테두리 설정 */
-    border-radius: 10px; /* 테두리 둥글기 설정 */
-    overflow: hidden; /* 내부 내용이 넘치면 잘리게 설정 */
-    height: 600px;
-    margin-top: 10%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-
-    ;
-    
+/* 추가한 스타일 */
+.auth-col-right {
+  height: 100%;
+  width: 100%;
+//   overflow: auto; /* 스크롤 처리 */
 }
 
-
-/* 배경 이미지가 들어갈 flexbox-left 영역의 스타일 */
-.flexbox-left {
-    flex: 2;
-    background-image: url('../assets/0002.png'); /* 배경 이미지 설정 */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-    
-  /* 로그인 폼 영역의 스타일 */
-.flexbox-right {
-    flex: 3; /* 남은 공간 모두 차지 */
-    padding: 20px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(191, 255, 214, 0.2);
-    text-align: center;
-    h2{
-        font-size: 50px;
-        font-weight: bold;
-        color: #000000;
-        margin-bottom: 20px;
-    }
-    p{
-        margin-top: 4px;
-        margin-bottom: 0;
-    }
-}
-.flexbox-right > * {
-    width: 80%;
-  }
-
-
-.btn-hover {
-    width: 100%;
-    font-size: 16px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    
-    height: 55px;
-    text-align:center;
-    border: none;
-    background-size: 300% 100%;
-
-    border-radius: 20px;
-    moz-transition: all .4s ease-in-out;
-    -o-transition: all .4s ease-in-out;
-    -webkit-transition: all .4s ease-in-out;
-    transition: all .4s ease-in-out;
-
-    margin-top: 15px;
+/* 기존 스타일 유지 */
+.auth-container {
+  height: 100vh;
+  
 }
 
-.btn-hover:hover {
-    background-position: 100% 0;
-    moz-transition: all .4s ease-in-out;
-    -o-transition: all .4s ease-in-out;
-    -webkit-transition: all .4s ease-in-out;
-    transition: all .4s ease-in-out;
+.auth-row {
+//   border: 0.001rem solid black;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
 }
 
-.btn-hover:focus {
-    outline: none;
+.auth-col-left {
+  background-image: url('../assets/0002.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
 }
 
-.btn-hover.color-5 {
-    background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
-    box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
-}
-
-.idcheckbtn {
-    width: 100%;
-    font-size: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    background-color: #60b9df;
+.auth-btn {
+    background-color: rgb(67, 154, 125);
+    border-radius: 10px;
     height: 40px;
-    text-align: center;
-    border: none;
-    background-size: 300% 100%;
-    border-radius: 20px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+}
 
-  .checkIdp {
-    margin-left: 50px;
-    color: red;
-  }
+.auth-div{
+    width: 100%;
+}
+
+.form-control-lg {
+    font-size: 1rem !important; 
+}
+
+.check-btn{
+    border: 0.1rem solid black;
+    background-color: #3fa67d;
+    border-radius: 10px;
+}

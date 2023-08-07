@@ -16,19 +16,23 @@ import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
 
-import homevideo2 from '../assets/homevideo2.mp4';
-
+import homevideo2 from "../assets/homevideo2.mp4";
+import { BASE_URL } from "../utils/Urls";
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const authToken = currentUser.token;
-  console.log(currentUser, authToken);
+  const token = currentUser.token;
+  console.log(token);
   const navigate = useNavigate();
-
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
   const [growinPlant, setGrowinPlant] = useState([
     {
       plant_info: "상추",
-      plant_name: "뷔",
+      plant_name: "싱싱이",
       child_name: "김태형",
       difficulty: 5,
       imgname: 1,
@@ -36,21 +40,68 @@ const Profile = () => {
     },
     {
       plant_info: "상추",
-      plant_name: "뷔vs",
+      plant_name: "추상이",
       child_name: "김태형",
       difficulty: 5,
       imgname: 2,
-      id: 72,
+      id: 2,
     },
     {
       plant_info: "상추",
-      plant_name: "귀요미",
+      plant_name: "마토",
       child_name: "김태형",
       difficulty: 5,
       imgname: 3,
       id: 62,
     },
-    
+    {
+      plant_info: "상추",
+      plant_name: "닉넴추천",
+      child_name: "김태형",
+      difficulty: 5,
+      imgname: 4,
+      id: 3,
+    },
+    {
+      plant_info: "상추",
+      plant_name: "흰꽃",
+      child_name: "김태형",
+      difficulty: 5,
+      imgname: 5,
+      id: 4,
+    },
+    {
+      plant_info: "상추",
+      plant_name: "푸른이",
+      child_name: "김태형",
+      difficulty: 6,
+      imgname: 6,
+      id: 5,
+    },
+    {
+      plant_info: "상추",
+      plant_name: "빨갱이",
+      child_name: "김태형",
+      difficulty: 7,
+      imgname: 7,
+      id: 6,
+    },
+    {
+      plant_info: "상추",
+      plant_name: "이름없는꽃",
+      child_name: "김태형",
+      difficulty: 5,
+      imgname: 8,
+      id: 67,
+    },
+    {
+      plant_info: "상추",
+      plant_name: "미니나무",
+      child_name: "김태형",
+      difficulty: 5,
+      imgname: 9,
+      id: 8,
+    },
   ]);
   const [plantComplete, setPlantComplete] = useState([
     {
@@ -59,25 +110,41 @@ const Profile = () => {
       child_name: "김민국",
       difficulty: 5,
       imgname: 6,
-      id: 3,
+      id: 9,
     },
   ]);
-  // // 식물 종 데이터 변경할 메서드
-  // const getPlants = async () => {
-  //   try {
-  //     const response = await axios.get("식물 데이터 주소");
-  //     const plantsList = response.data;
-  //     const growing = plantsList.filter((plant) => plant.complete === 0);
-  //     const complete = plantsList.filter((plant) => plant.complete === 1);
-  //     setGrowinPlant(growing);
-  //     setPlantComplete(complete);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getPlants();
-  // }, []);
+  const withdrawal = async () => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/api/user/`, config);
+      console.log(response.data.message);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // 식물 종 데이터 변경할 메서드
+  const getPlants = async () => {
+    console.log("보내기 " + token);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/plant/myplant/`,
+        config
+      );
+      console.log(response.data.data);
+      const plantsList = response.data.data;
+      const growing = plantsList.filter((plant) => plant.complete === 0);
+      const complete = plantsList.filter((plant) => plant.complete === 1);
+      setGrowinPlant(growing);
+      setPlantComplete(complete);
+      console.log(growinPlant);
+      console.log(plantComplete);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getPlants();
+  }, []);
 
   const NotcompleteCardSet = () => {
     return (
@@ -104,27 +171,81 @@ const Profile = () => {
   };
 
   const createCard = () => {
-    navigate('/register');
-  }
+    navigate("/plantinfo");
+  };
+  const [showInProgress, setShowInProgress] = useState(true);
 
   return (
     <div className="profile-total">
       <NavTop />
       <div className="profilepage container">
-        <div className="row">
-          <div className=" col-12 col-lg-3  videobox">
-            <video autoPlay loop muted height="400">
-                <source src={homevideo2} type="video/mp4" />
-            </video>
-          </div>
-          <div className="container col-md-8">
-            <div>
-              <h1>PROFILE</h1>
+        <div className="profile-row">
+          <div className="container profile row">
+            <div className="col-12">
+              <h1 className="profile_title">PROFILE</h1>
             </div>
+            <div class="button-container">
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowInProgress(true)}
+                >
+                  진행중인 식물
+                </button>
+                <span> | </span>
+                <button
+                  className="btn btn-success"
+                  onClick={() => setShowInProgress(false)}
+                >
+                  완료된 식물
+                </button>
+              </div>
+              <button className="btn btn-danger signout" onClick={withdrawal}>
+                회원탈퇴
+              </button>
+            </div>
+
             <div className="container plant">
-              <div className="plant-ing">
-                <div>
-                  <h2>진행중인 식물</h2>
+              {showInProgress && (
+                <div className="plant-ing">
+                  <div>
+                    <Swiper
+                      slidesPerView={4}
+                      spaceBetween={30}
+                      freeMode={true}
+                      pagination={{
+                        clickable: true,
+                      }}
+                      modules={[FreeMode, Pagination]}
+                      className="mySwiper"
+                    >
+                      {NotcompleteCardSet()}
+                      <SwiperSlide>
+                        <div className="plantcard">
+                          <div className="bg">
+                            <div className="plantcard-details">
+                              <h5>
+                                새 식물친구
+                                <br />
+                                등록해주기
+                              </h5>
+                            </div>
+                          </div>
+                          <div className="blob"></div>
+                          <button
+                            className="button type1 plantcard-button"
+                            onClick={createCard}
+                          >
+                            <span className="btn-txt">+</span>
+                          </button>
+                        </div>
+                      </SwiperSlide>
+                    </Swiper>
+                  </div>
+                </div>
+              )}
+              {!showInProgress && (
+                <div className="plant-complete">
                   <Swiper
                     slidesPerView={3}
                     spaceBetween={20}
@@ -135,45 +256,15 @@ const Profile = () => {
                     modules={[FreeMode, Pagination]}
                     className="mySwiper"
                   >
-                    {NotcompleteCardSet()}
-                    <SwiperSlide>
-                      <div className="plantcard">
-                        <div className="bg">
-                          <div className="plantcard-details">
-                            <h5>새 식물친구<br/>등록해주기</h5>
-                          </div>
-                        </div>
-                        <div className="blob"></div>
-                        <button className="button type1 plantcard-button" onClick={createCard}>
-                          <span className="btn-txt">+</span>
-                        </button>
-                      </div>
-                    </SwiperSlide>
+                    {completeCardSet()}
                   </Swiper>
                 </div>
-              </div>
-              <div className="plant-complete">
-                <h2>완료된 식물</h2><br/>
-                <Swiper
-                  slidesPerView={3}
-                  spaceBetween={20}
-                  freeMode={true}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  modules={[FreeMode, Pagination]}
-                  className="mySwiper"
-                >
-                  {completeCardSet()}
-
-                </Swiper>
-              </div>
-              </div>
+              )}
             </div>
           </div>
+        </div>
       </div>
-      </div>
-    
+    </div>
   );
 };
 

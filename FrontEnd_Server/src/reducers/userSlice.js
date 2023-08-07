@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { BASE_URL } from "../utils/Urls";
 //백앤드 기본 url 설정
-const API_URL = "http://i9c103.p.ssafy.io:30001";
 
 // const API_URL = 'http://192.168.100.37:30001';
 //action registerUserAction AJAX비동기 요청
@@ -13,7 +12,7 @@ export const registerUserAction = createAsyncThunk(
     console.log(userData);
     try {
       const response = await axios.post(
-        `${API_URL}/api/user/signup`,
+        `${BASE_URL}/api/user/signup`,
         userData,
         { withCredentials: false }
       );
@@ -33,7 +32,7 @@ export const loginUserAction = createAsyncThunk(
     console.log(loginData);
 
     try {
-      const response = await axios.post(`${API_URL}/api/user/login`, loginData);
+      const response = await axios.post(`${BASE_URL}/api/user/login`, loginData);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -78,15 +77,15 @@ const userSlice = createSlice({
     builder.addCase(registerUserAction.fulfilled, (state, action) => {
       state.status = "success";
       state.isAuth = true;
-      
-      console.log(action.payload)
+
+      console.log(action.payload);
     });
     //registerUserAction이 실패했을때 상태값 바꿔주기
     // 에러메세지 변경
     builder.addCase(registerUserAction.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
-      console.log(action)
+      console.log(action);
     });
 
     // 로그인 비동기 액션 크리에이터와 연결
@@ -102,7 +101,7 @@ const userSlice = createSlice({
     builder.addCase(loginUserAction.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
-      console.log(state.error)
+      console.log(state.error);
     });
   },
 });
