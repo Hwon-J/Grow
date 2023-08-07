@@ -51,7 +51,7 @@
   ```
 - 응답:
   - 성공
-    - 로그인 성공: { code: 200, message: "로그인 성공", token }
+    - 로그인 성공: { code: 200, message: "로그인 성공", token, name, email, emailDomain }
     - 존재하지 않는 아이디: { code: 202, message: "존재하지 않는 아이디" }
     - 비밀번호 틀림: { code: 202, message: "비밀번호 불일치" }
   - 실패
