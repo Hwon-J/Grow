@@ -7,7 +7,7 @@
 
 // module.exports = removeEmojis;
 
-exports.stringPurify = (str) => {
+const stringPurify = (str) => {
   // 이모지 및 괄호와 그 내용 제거
   const cleanedString = str
     .replace(
@@ -17,3 +17,5 @@ exports.stringPurify = (str) => {
     .replace(/\(.*?\)/g, "");
   return cleanedString;
 };
+
+module.exports = stringPurify;

@@ -123,6 +123,9 @@ exports.login = async (req, res) => {
     // 데이터베이스에서 멤버 조회
     query = "select * from `member` where id = ? and pw = ?";
     result = await queryPromise(query, [id, hashedPw]);
+    const name = result[0].name;
+    const email = result[0].email;
+    const emailDomain = result[0].email_domain;
 
     // 로그인 실패
     if (result.length !== 1) {
@@ -146,9 +149,17 @@ exports.login = async (req, res) => {
     );
 
     winston.info(`userController login return '로그인 성공' to ${id}`);
+    console.log(result[0]);
     return res
       .status(200)
-      .json({ code: 200, message: "로그인 성공", token: token });
+      .json({
+        code: 200,
+        message: "로그인 성공",
+        token: token,
+        name: name,
+        email: email,
+        emailDomain: emailDomain,
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ code: 500, message: "서버 오류" });
@@ -168,7 +179,7 @@ exports.withdrawalUser = async (req, res) => {
     winston.info(`userController withdrawalUser called. id: ${id}`);
     let query = "delete from `member` where id = ?";
     let result = await queryPromise(query, [id]);
-    
+
     if (result.length === 0) {
       winston.info(
         `userController withdrawalUser return '존재하지 않는 아이디' to ${id}`
@@ -176,7 +187,7 @@ exports.withdrawalUser = async (req, res) => {
       return res
         .status(202)
         .json({ code: 202, message: "존재하지 않는 아이디" });
-      }
+    }
     return res.status(202).json({ code: 201, message: "회원탈퇴 성공" });
   } catch (error) {
     console.error(error);
