@@ -1,0 +1,35 @@
+.home_container {
+  // background-image: ;
+  background-size: contain; /* 이미지를 비율을 유지하면서 요소에 꽉 차도록 설정 */
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 80vh;
+  min-width: 80vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .home_title {
+    position: absolute;
+    left: 20%;
+    flex: 1;
+    padding: 20px;
+
+    h1 {
+      font-size: 50px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 20px;
+      color: #ffffff;
+    }
+  }
+}
+
+.video-background nav ul li a, .video-background nav ul li p {
+  color : white !important;
+}

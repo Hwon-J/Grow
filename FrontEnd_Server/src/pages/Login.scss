@@ -1,0 +1,48 @@
+/* 추가한 스타일 */
+.auth-col-right {
+  height: 100%;
+  width: 100%;
+//   overflow: auto; /* 스크롤 처리 */
+}
+
+/* 기존 스타일 유지 */
+.auth-container {
+  height: 100vh;
+  
+}
+
+.auth-row {
+//   border: 0.001rem solid black;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+}
+
+.auth-col-left {
+  background-image: url('../assets/0002.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+}
+
+.auth-btn {
+    background-color: rgb(67, 154, 125);
+    border-radius: 10px;
+    height: 40px;
+}
+
+.auth-div{
+    width: 100%;
+}
+
+.form-control-lg {
+    font-size: 1rem !important; 
+}
+
+.check-btn{
+    border: 0.1rem solid black;
+    background-color: #3fa67d;
+    border-radius: 10px;
+}
