@@ -3,7 +3,7 @@ const connection = require("../util/connection.js");
 const winston = require("../util/winston.js");
 const util = require("util");
 
-exports.insertSensorData = async (req, res, next) => {
+exports.updateSensorData = async (req, res, next) => {
   winston.info(
     `sensorController insertSensorData called. serial: ${req.body.serial_number}`
   );
@@ -36,13 +36,13 @@ exports.insertSensorData = async (req, res, next) => {
 
     // 해당하는 식물 번호가 존재하면, 그 식물 번호에 해당하는 센서값 등록
     query =
-      "insert into `plant_condition`(plant_index, temperature, moisture, light) values (?, ?, ?, ?)";
+      "update `plant_condition` set temperature = ?, moisture = ?, light=? where plant_index=?";
     try {
       await queryPromise(query, [
-        result[0].index,
         temperature,
         moisture,
         light,
+        result[0].index,
       ]);
     } catch (error) {
       winston.error("센서값 등록중 데이터베이스 에러 발생");
