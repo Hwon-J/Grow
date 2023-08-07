@@ -117,7 +117,7 @@ const Login = () => {
                   Login
                 </button>
                 <p className="small mb-5 pb-lg-3 ms-5">
-                  <a class="text-muted" href="#!">
+                  <a className="text-muted" href="#!">
                     Forgot password?
                   </a>
                 </p>

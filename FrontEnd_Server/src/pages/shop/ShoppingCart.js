@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CartItem from "../../components/shop/CartItem";
+
 import { useNavigate } from "react-router-dom";
 export default function ShoppingCart({
   items,
@@ -75,7 +76,7 @@ export default function ShoppingCart({
   return (
     <div >
       <div>
-        <h1 >장바구니</h1><br/>
+        <h1 >장바구니</h1>
         <span>
           <h3>전체선택</h3>
           <input
@@ -108,12 +109,12 @@ export default function ShoppingCart({
           )}
 
           <div>
-            {/* <h3>
+            <h3>
               {checkedItems?.map((index) => {
                 const item = items[index];
                 return item ? item.name : null;
               })}
-            </h3> */}
+            </h3>
             <p>총 가격: {total.price}원</p>
             <p>총 수량: {total.quantity}</p>
             <button onClick={buytotal}>구매하기</button>

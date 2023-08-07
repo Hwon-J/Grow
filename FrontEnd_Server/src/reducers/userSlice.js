@@ -97,6 +97,9 @@ const userSlice = createSlice({
       state.status = "success";
       state.isAuth = true;
       state.token = action.payload.token; // 응답 데이터에서 JWT 토큰을 저장합니다.
+      state.name = action.payload.name; // 응답 데이터에서 JWT 토큰을 저장합니다.
+      state.email = action.payload.email; // 응답 데이터에서 JWT 토큰을 저장합니다.
+      state.emailDomain = action.payload.emailDomain; // 응답 데이터에서 JWT 토큰을 저장합니다.
     });
     builder.addCase(loginUserAction.rejected, (state, action) => {
       state.status = "failed";
