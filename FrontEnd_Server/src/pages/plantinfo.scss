@@ -1,11 +1,27 @@
 /* test1.css 파일 */
 /* 기존 CSS 코드에 추가 스타일을 적용하였습니다. */
 
+.top_section{
+  height: 30vh;
+  // background-color: #245a18;
+  background-image: url('../assets/top1.jpg');
+  background-size: cover;
+  h1{
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10vh;
+
+  }
+}
+
 .plant-info-container {
   height: 100%;
   margin-top: 50px;
   margin-bottom: 0px;
   padding-bottom: 0px !important;
+  
   
 }
 .plant-colo{
@@ -23,6 +39,9 @@
   form {
     margin-top: 50px;
   }
+  ::-webkit-scrollbar {
+    display: none;
+}
 }
 
 .plant-info-col div div {

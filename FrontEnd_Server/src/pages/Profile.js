@@ -111,20 +111,20 @@ const Profile = () => {
               <h1 className="profile_title">PROFILE</h1>
             </div>
             <div className="button-container">
-              <div>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowInProgress(true)}
-                >
-                  진행중인 식물
-                </button>
-                <span> | </span>
-                <button
-                  className="btn btn-success"
-                  onClick={() => setShowInProgress(false)}
-                >
-                  완료된 식물
-                </button>
+              <div className="btn-left">
+              <div
+                className={`plant-btn${showInProgress ? " selected" : ""}`}
+                onClick={() => setShowInProgress(true)}
+              >
+                진행중인 식물
+              </div>
+
+              <div
+                className={`plant-btn${!showInProgress ? " selected" : ""}`}
+                onClick={() => setShowInProgress(false)}
+              >
+                완료된 식물
+              </div>
               </div>
               <button className="btn btn-danger signout" onClick={withdrawal}>
                 회원탈퇴

@@ -15,7 +15,6 @@ import {FailPage} from './pages/shop/Fail.tsx'
 import { SuccessPage } from './pages/shop/Success.tsx';
 import {checkToken} from './utils/Users'
 
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {
@@ -34,6 +33,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/diary/:id" element={<PlantDiary />} />
             <Route path="/login" element={<Login />} />
+
             <Route path="/signup" element={<SignUp />} />
             <Route path="/plantinfo" element={<PlantInfo />} />
             <Route path="/imgupload" element={<ImgUpload />} />

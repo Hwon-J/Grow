@@ -167,7 +167,9 @@ const PlantInfo = () => {
   return (
     <>
       <NavTop />
-
+      <div className="top_section">
+        <h1>식물 등록</h1>
+      </div>
       <Container className="plant-info-container">
         <Row>
           {/* 좌측 카드 컬럼 */}
