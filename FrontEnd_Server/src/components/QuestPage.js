@@ -110,11 +110,32 @@ const QuestPage = () => {
           </div>
           <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} />
+              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} 
+              onClick={() => deleteQuest(questItem._id)}/>
 
               </div>
         </div>
       ));
+  };
+
+  const deleteQuest = (questId) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${authToken}`,
+      },
+    };
+
+    axios
+      .delete(`${BASE_URL}/api/plant/quest/${id}/주소..`, config)
+      .then((response) => {
+        console.log("삭제성공:", response.data);
+        // getQuest();
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
   };
 
   return (
