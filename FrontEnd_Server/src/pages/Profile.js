@@ -15,11 +15,13 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
-
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../reducers/userSlice";
 import homevideo2 from "../assets/homevideo2.mp4";
 import { BASE_URL } from "../utils/Urls";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const token = currentUser.token;
   console.log(token);
@@ -44,7 +46,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 2,
-      id: 1,
+      id: 2,
     },
     {
       plant_info: "상추",
@@ -60,7 +62,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 4,
-      id: 1,
+      id: 3,
     },
     {
       plant_info: "상추",
@@ -68,7 +70,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 5,
-      id: 62,
+      id: 4,
     },
     {
       plant_info: "상추",
@@ -76,7 +78,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 6,
       imgname: 6,
-      id: 62,
+      id: 5,
     },
     {
       plant_info: "상추",
@@ -84,7 +86,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 7,
       imgname: 7,
-      id: 62,
+      id: 6,
     },
     {
       plant_info: "상추",
@@ -92,7 +94,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 8,
-      id: 62,
+      id: 7,
     },
     {
       plant_info: "상추",
@@ -100,7 +102,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 9,
-      id: 62,
+      id: 8,
     },
   ]);
   const [plantComplete, setPlantComplete] = useState([
@@ -115,9 +117,10 @@ const Profile = () => {
   ]);
   const withdrawal = async () => {
     try {
-      const response = await axios.delete(`${BASE_URL}/api/user/`, config);
-      console.log(response.data.message);
-      
+      const response = await axios.delete(`${BASE_URL}/api/user/`,config);
+      alert(response.data.message);
+      dispatch(logoutUser())
+      navigate("/signup");
     } catch (error) {
       console.log(error);
     }
@@ -150,8 +153,8 @@ const Profile = () => {
     return (
       <div className="cardContainer">
         {growinPlant.map((plant) => (
-          <SwiperSlide>
-            <PlantCard key={plant.id} props={plant} />
+          <SwiperSlide key={plant.id}>
+            <PlantCard  props={plant} />
           </SwiperSlide>
         ))}
       </div>
@@ -162,8 +165,8 @@ const Profile = () => {
     return (
       <div className="cardContainer">
         {plantComplete.map((plant) => (
-          <SwiperSlide>
-            <PlantCard key={plant.id} props={plant} />
+          <SwiperSlide key={plant.id}>
+            <PlantCard  props={plant} />
           </SwiperSlide>
         ))}
       </div>
@@ -184,7 +187,7 @@ const Profile = () => {
             <div className="col-12">
               <h1 className="profile_title">PROFILE</h1>
             </div>
-            <div class="button-container">
+            <div className="button-container">
               <div>
                 <button
                   className="btn btn-primary"

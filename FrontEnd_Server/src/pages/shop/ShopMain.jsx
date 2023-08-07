@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../../utils/Urls";
 import NavTop from "../../components/NavTop";
+import { updateCartItems } from "../../reducers/shop";
 import {
   Form,
   Row,
@@ -20,8 +22,18 @@ import ItemList from "./ItemList";
 import "./shop.css";
 
 function ShopMain() {
+  const storecart = useSelector((state) => state.cartList.cartItems);
+  const dispatch = useDispatch();
   const [items, setItems] = useState(initialState.items);
-  const [cartItems, setCartItems] = useState(initialState.cartItems);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    setCartItems(storecart);
+  }, []);
+
+  useEffect(() => {
+    dispatch(updateCartItems(cartItems));
+  }, [cartItems]);
 
   // 장바구니에 아이템을 추가하여 cartItems에 넣는 메소드
   const addToCart = (itemId) => {
