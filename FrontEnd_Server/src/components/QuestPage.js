@@ -106,19 +106,24 @@ const QuestPage = () => {
         <div key={index} className="quest-tm">
           <div className="quest-left">
             <p>{questItem.content}</p>
-            {questItem?.date && (
+            {questItem?.registered_date && (
               <p style={{ display: "inline-block", marginRight: "5px" }}>
-                {questItem.date}
+                {questItem.registered_date.slice(0,10)}일 등록
               </p>
             )}
           </div>
           <div className="quest-right">
-            <Icon icon="bi:bell" />
-            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem._id)} />
+          {questItem?.audio_file_path && <Icon icon="bi:bell" onClick={listenAudio} />}
+            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem.index)} />
           </div>
         </div>
       ));
   };
+
+  const listenAudio = () => {
+    
+  }
+
 
   const deleteQuest = (questId) => {
     const config = {
@@ -129,7 +134,7 @@ const QuestPage = () => {
     };
 
     axios
-      .delete(`${BASE_URL}/api/plant/quest/delete/${questId}/`, config)
+      .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
       .then((response) => {
         console.log("삭제성공:", response.data);
         // getQuest();

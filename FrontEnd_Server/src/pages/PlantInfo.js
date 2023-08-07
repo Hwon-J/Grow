@@ -171,12 +171,12 @@ const PlantInfo = () => {
       <Container className="plant-info-container">
         <Row>
           {/* 좌측 카드 컬럼 */}
-          <Col sm={12} md={4} className="plant-info-col">
+          <Col sm={12} md={5} className="plant-info-col">
             {imgPlantInfo()}
           </Col>
 
           {/* 우측 폼 컬럼 */}
-          <Col sm={12} md={6} className="plant-info-col">
+          <Col sm={12} md={6} className="plant-info-col plant-colo">
             <Form onSubmit={createPlant}>
               <Row
                 style={{
