@@ -87,10 +87,10 @@ function ShopMain() {
       <NavTop />
       <Container>
         <Row>
-          <Col md={9} xs={12} className="main-col">
+          <Col lg={7} xs={12} className="main-col">
             <ItemList handleAdd={addToCart} items={items} />
           </Col>
-          <Col md={3} xs={12} className="shop-cart-main">
+          <Col lg={4} xs={12} className="shop-cart-main">
             <ShoppingCart
               cartItems={cartItems}
               items={items}

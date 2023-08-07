@@ -22,7 +22,7 @@ const Item = ({ item, handleClick }) => {
   };
 
   return (
-    <Figure>
+    <div className='div-item'>
       <Figure.Image
         src={item.img} 
         alt='...'
@@ -31,7 +31,7 @@ const Item = ({ item, handleClick }) => {
       {item.name}
       <button href='#' onClick={handleClick} className="custom-button create-btn item-btn">장바구니 추가</button>
       </Figure.Caption>
-    </Figure>
+    </div>
   );
 };
 

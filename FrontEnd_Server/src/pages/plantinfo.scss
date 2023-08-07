@@ -69,13 +69,14 @@
 
 /* 커스텀 버튼 스타일 */
 .custom-button {
+  border: 0 !important;
   border-radius: 4px;
   color: #fff; /* 버튼 글자색 */
   // background-color: #94b9e1; /* 버튼 배경색 */
   background-color: #a6ca9f;
   position: relative;
   font-weight: bold; /* 글자 굵기 */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; /* 애니메이션 효과 */
   cursor: pointer;

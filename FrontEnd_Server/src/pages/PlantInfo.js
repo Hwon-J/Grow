@@ -139,7 +139,7 @@ const PlantInfo = () => {
   };
 
   const checkSerial = async () => {
-    if (serialNum) {
+    if (serialNum && serialNum.length===5) {
       try {
         const response = await axios.get(`${BASE_URL}/api/pot/${serialNum}`);
         if (response.data.code === 202) {
@@ -160,7 +160,7 @@ const PlantInfo = () => {
         setCheckedResult(false);
       }
     } else {
-      alert("시리얼 넘버를 입력해 주세요!");
+      alert("숫자5개를 입력해 주세요!");
     }
   };
 

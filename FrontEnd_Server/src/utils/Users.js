@@ -18,22 +18,18 @@ const CheckToken = () => {
         Authorization: token,
       },
     };
-
+    console.log("걸리나")
     try {
       const response = await axios.get(
         `${BASE_URL}/api/user/valid`, config
       );
-      console.log(response)
-      if (response.status !== 200) {
-        localStorage.removeItem('persist:currentUser');
-        dispatch(logoutUser());
-        navigate('/login');
-        console.log('LocalStorage data removed.');
-      } else {
-        console.log("정상적인 토큰입니다")
-      }
+      console.log("response" , response)
     } catch (error) {
+
+      dispatch(logoutUser());
+
       console.log(error);
+
     }
   };
 
