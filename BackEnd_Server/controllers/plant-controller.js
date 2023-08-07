@@ -30,10 +30,12 @@ exports.getPlantInfos = async (req, res, next) => {
 // 2. 토큰속에 있던 아이디의 유효성 검사를 한다.
 // 3. 시리얼을 조회한다.
 // 4. 나머지 값(plant_name, plant_info_index, child_name, child_age)의 유효성 검사를 한다.
-// 5. 트랜젝션을 건다
+// 5. 트랜잭션을 건다
 // 6. 화분의 상태를 업데이트 한다.
 // 7. 식물을 등록한다.
-// 8. 트랜젝션을 해제한다.
+// 8. 새로 등록한 식물의 index를 얻어온다.
+// 9. 등록한 식물에 대한 condition을 디폴트값으로 생성한다.
+// 10. 트랜잭션을 해제한다.
 exports.registPlant = async (req, res) => {
   winston.info(`plantController registPlant called.`);
   try {
@@ -145,7 +147,7 @@ exports.registPlant = async (req, res) => {
       // 7. 식물을 등록한다.
       const insertQuery =
         "INSERT INTO `plant` (pot_index, plant_info_index, plant_name, child_name, child_age, member_index) VALUES (?, ?, ?, ?, ?, ?)";
-      await queryPromise(insertQuery, [
+      let result = await queryPromise(insertQuery, [
         potIndex,
         infoIndex,
         plantName,
@@ -154,7 +156,15 @@ exports.registPlant = async (req, res) => {
         memberIndex,
       ]);
 
-      // 8. 트랜잭션을 커밋한다.
+      // 8. 가장 최근에 올린 식물의 인덱스를 가져온다.
+      const newPlantId = result.insertId;
+
+      //9 . 등록한 식물에 대한 condition을 디폴트값으로 생성한다.
+      const sql = `insert into \`plant_condition\` (plant_index, temperature, moisture, light)
+      values (?, ?, ?, ?)`;
+      await queryPromise(sql, [newPlantId, 0, 0, 0]);
+
+      // 10. 트랜잭션을 커밋한다.
       await queryPromise("COMMIT");
     } catch (error) {
       // 오류 발생 시 롤백
@@ -307,13 +317,6 @@ exports.getQuestionList = async (req, res) => {
   const id = req.decoded.id;
   const index = req.params.index;
   winston.info(
-    `plantController setComplete called. id:${id}, plantIndex:${index}`
-  );
-};
-exports.getQuestionList = async (req, res) => {
-  const id = req.decoded.id;
-  const index = req.params.index;
-  winston.info(
     `plantController getQuestionList called. id:${id}, plantIndex:${index}`
   );
   try {
@@ -328,7 +331,7 @@ exports.getQuestionList = async (req, res) => {
         .json({ code: 202, message: "유효하지 않은 id 또는 index" });
     }
 
-    query = `select content, completed from question where plant_index = ?`;
+    query = `select * from question where plant_index = ?`;
     result = await queryPromise(query, [index]);
     // console.log(result);
 
@@ -360,7 +363,7 @@ exports.registQuestion = async (req, res) => {
         .status(202)
         .json({ code: 202, message: "유효하지 않은 id 또는 index" });
     }
-    if (result[0].complete == 1){
+    if (result[0].complete == 1) {
       winston.info("already completed plant. index: " + index);
       return res
         .status(202)

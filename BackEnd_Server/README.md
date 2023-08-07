@@ -312,13 +312,16 @@
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
     - 서버 오류: { code: 500, message: "서버 오류" }
 
+### 특정 질문 삭제하기
+- 미구현
+
 ## 센서 관련
 
 - 기본 URI: BaseURI:PORT번호/api/sensor
 
 ### 센서 데이터 입력
 
-- 방식: POST
+- 방식: PUT
 - 주소: 기본URI/
 - 요청 Body
   ```json
@@ -340,7 +343,7 @@
 ### 물 준 기록 입력
 
 - 방식: POST
-- 주소: 기본URI/water-log
+- 주소: 기본URI/
 - 요청 Body
   ```json
   {
