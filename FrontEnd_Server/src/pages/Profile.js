@@ -32,88 +32,10 @@ const Profile = () => {
     },
   };
   const [growinPlant, setGrowinPlant] = useState([
-    {
-      plant_info: "상추",
-      plant_name: "싱싱이",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 1,
-      id: 1,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "추상이",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 2,
-      id: 2,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "마토",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 3,
-      id: 62,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "닉넴추천",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 4,
-      id: 3,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "흰꽃",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 5,
-      id: 4,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "푸른이",
-      child_name: "김태형",
-      difficulty: 6,
-      imgname: 6,
-      id: 5,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "빨갱이",
-      child_name: "김태형",
-      difficulty: 7,
-      imgname: 7,
-      id: 6,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "이름없는꽃",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 8,
-      id: 7,
-    },
-    {
-      plant_info: "상추",
-      plant_name: "미니나무",
-      child_name: "김태형",
-      difficulty: 5,
-      imgname: 9,
-      id: 8,
-    },
+
   ]);
   const [plantComplete, setPlantComplete] = useState([
-    {
-      plant_info: "깻잎",
-      plant_name: "깬닙이",
-      child_name: "김민국",
-      difficulty: 5,
-      imgname: 6,
-      id: 9,
-    },
+
   ]);
   const withdrawal = async () => {
     try {
@@ -150,10 +72,11 @@ const Profile = () => {
   }, []);
 
   const NotcompleteCardSet = () => {
+    console.log(growinPlant)
     return (
       <div className="cardContainer">
         {growinPlant.map((plant) => (
-          <SwiperSlide key={plant.id}>
+          <SwiperSlide key={plant.index}>
             <PlantCard  props={plant} />
           </SwiperSlide>
         ))}
@@ -165,7 +88,7 @@ const Profile = () => {
     return (
       <div className="cardContainer">
         {plantComplete.map((plant) => (
-          <SwiperSlide key={plant.id}>
+          <SwiperSlide key={plant.index}>
             <PlantCard  props={plant} />
           </SwiperSlide>
         ))}

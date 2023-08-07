@@ -6,7 +6,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
@@ -75,7 +75,6 @@ const QuestPage = () => {
     }
   };
 
-
   const getQuest = async () => {
     // 처음시작했을떄 질문지리스트 받을예정
     console.log("id : " + id);
@@ -88,8 +87,8 @@ const QuestPage = () => {
           },
         });
         setQuestList(response.data.data);
-        console.log(questList);
         console.log("질문받아오기");
+        console.log(questList);
       } catch (err) {
         console.log("에러가 발생", err);
       }
@@ -106,14 +105,17 @@ const QuestPage = () => {
       .map((questItem, index) => (
         <div key={index} className="quest-tm">
           <div className="quest-left">
-              <p>{questItem.content}</p>
+            <p>{questItem.content}</p>
+            {questItem?.date && (
+              <p style={{ display: "inline-block", marginRight: "5px" }}>
+                {questItem.date}
+              </p>
+            )}
           </div>
-          <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} 
-              onClick={() => deleteQuest(questItem._id)}/>
-
-              </div>
+          <div className="quest-right">
+            <Icon icon="bi:bell" />
+            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem._id)} />
+          </div>
         </div>
       ));
   };
@@ -127,7 +129,7 @@ const QuestPage = () => {
     };
 
     axios
-      .delete(`${BASE_URL}/api/plant/quest/${id}/주소..`, config)
+      .delete(`${BASE_URL}/api/plant/quest/delete/${questId}/`, config)
       .then((response) => {
         console.log("삭제성공:", response.data);
         // getQuest();
@@ -139,28 +141,28 @@ const QuestPage = () => {
   };
 
   return (
-    <> 
+    <>
       <div className="quest-container">
-          <h1>아이에게 질문해 주세요!</h1>
-          <div className="input-container">
-            <input
-              type="text"
-              className="quest-input plus"
-              value={newquest}
-              onChange={onChangeNewquest}
-              onFocus={() => handleInputFocus(questList.length)}
-              onBlur={handleInputBlur}
-              placeholder="질문을 등록하세요"
-            />
+        <h1>아이에게 질문해 주세요!</h1>
+        <div className="input-container">
+          <input
+            type="text"
+            className="quest-input plus"
+            value={newquest}
+            onChange={onChangeNewquest}
+            onFocus={() => handleInputFocus(questList.length)}
+            onBlur={handleInputBlur}
+            placeholder="질문을 등록하세요"
+          />
 
-            <button className="btnQ" onClick={createQuest}>
-              등록
-            </button>
-          </div>
+          <button className="btnQ" onClick={createQuest}>
+            등록
+          </button>
+        </div>
 
-          <div className="quest-section">
-            {inputQuest()}
-            {/* <div className="quest-tm">
+        <div className="quest-section">
+          {inputQuest()}
+          {/* <div className="quest-tm">
 
               <div className="quest-left">
               <div className="question">Q: 엄마가 좋아 아빠가 좋아??</div>
@@ -189,13 +191,8 @@ const QuestPage = () => {
               </div>
 
             </div> */}
-
-
-
-          </div>
-
         </div>
-
+      </div>
     </>
   );
 };
