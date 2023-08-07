@@ -19,4 +19,6 @@ router.get("/quest/:index", verify, plantController.getQuestionList);
 
 router.post("/quest/:index", verify, plantController.registQuestion);
 
+router.delete("/quest/:index", verify, plantController.deleteQuestion);
+
 module.exports = router;

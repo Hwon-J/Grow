@@ -153,12 +153,70 @@ const getPlantInfoByIndex = async (index) => {
 // 4. 식물 인덱스에 해당하는 최신 센서 데이터를 받는다.
 // 5. 식물 종류 데이터와 비교하여, 좋음/나쁨 등으로 치환하여 반환한다.
 const getConditionGoodOrBad = async (serial) => {
-  winston.info(`getPlantInfoByIndex called. index: ${index}`);
+  winston.info(`getConditionGoodOrBad called. serial: ${serial}`);
   try {
-    let sql = "select * from `plant_info` where index = ?";
+    let sql = `select * 
+    from \`pot\` join \`plant\` on pot.index = plant.pot_index 
+    join plant_info on plant.plant_info_index = plant_info.index
+    where serial_number = ?`;
 
     let result = await query(sql, [index]);
-    return result;
+    if (result.length == 0) {
+      return "no data";
+    }
+    let limitData = result[0];
+    let lightMsg = null;
+    let moistureMsg = null;
+    let temperatureMsg = null;
+
+    // 최신 센서 데이터 가져오기
+
+    // 조도 상황 확인
+    if (limitData.light_upper === null) {
+      limitData.light_upper = 1_000_000_000;
+    }
+    if (limitData.light_lower === null) {
+      limitData.light_lower = 0;
+    }
+    if (light < limitData.light_lower) {
+      lightMsg = "부족";
+    } else if (light < limitData.light_upper) {
+      lightMsg = "적당";
+    } else {
+      lightMsg = "과다";
+    }
+
+    // 수분량 상황 확인
+    if (limitData.moisture_upper === null) {
+      limitData.moisture_upper = 1_000_000_000;
+    }
+    if (limitData.moisture_lower === null) {
+      limitData.moisture_lower = 0;
+    }
+    if (moisture < limitData.moisture_lower) {
+      moistureMsg = "부족";
+    } else if (moisture < limitData.moisture_upper) {
+      moistureMsg = "적당";
+    } else {
+      moistureMsg = "과다";
+    }
+    
+    // 온도 상황 확인
+    if (limitData.temperature_upper === null) {
+      limitData.temperature_upper = 1_000_000_000;
+    }
+    if (limitData.temperature_lower === null) {
+      limitData.temperature_lower = 0;
+    }
+    if (temperature < limitData.temperature_lower) {
+      temperatureMsg = "부족";
+    } else if (temperature < limitData.temperature_upper) {
+      temperatureMsg = "적당";
+    } else {
+      temperatureMsg = "과다";
+    }
+
+    return { "light": lightMsg, "moisture": moistureMsg, "temperature": temperatureMsg, "temperValue": temperature };
   } catch (error) {
     winston.error(error);
     return "error";
@@ -172,5 +230,5 @@ module.exports = {
   getCondition,
   getWaterLog,
   getPlantInfoByIndex,
-  getConditionGoodOrBad
+  getConditionGoodOrBad,
 };
