@@ -13,18 +13,16 @@ import CheckoutPage from './pages/shop/PaymentToss.tsx';
 import ShopMain from './pages/shop/ShopMain';
 import {FailPage} from './pages/shop/Fail.tsx'
 import { SuccessPage } from './pages/shop/Success.tsx';
-import {checkToken} from './utils/Users'
+import CheckToken from './utils/Users';
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {
-  useEffect(() => {
-    // 페이지가 열릴 때 checkToken 함수 실행
-    checkToken();
-  }, []);
+
   return (
     <React.Fragment>
+      <CheckToken />
         <div>
         <Routes>
           <Route path="/" element={<Outlet />}>

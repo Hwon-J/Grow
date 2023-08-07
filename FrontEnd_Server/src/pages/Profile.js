@@ -1,6 +1,7 @@
 //김태형
 import React, { useEffect, useState, useRef } from "react";
 import PlantCard from "../components/plant/plantCard";
+import Withdrawal from "../components/Withdrawal";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -31,17 +32,35 @@ const Profile = () => {
       Authorization: token,
     },
   };
-  const [growinPlant, setGrowinPlant] = useState([
+  const [growinPlant, setGrowinPlant] = useState([]);
+  const [plantComplete, setPlantComplete] = useState([]);
+  const [slidesPerView, setSlidesPerView] = useState(4);  //슬라이드 갯수 조정
+  const calculateSlidesPerView = () => {
+    const width = window.innerWidth;
+    if (width >= 1200) {
+      setSlidesPerView(4);
+    } else if (width >= 1000) {
+      setSlidesPerView(3);
+    } else if (width >= 770) {
+      setSlidesPerView(2);
+    } else {
+      setSlidesPerView(2);
+    }
+  };
+  useEffect(() => {
+    calculateSlidesPerView();
+    window.addEventListener("resize", calculateSlidesPerView);
+    return () => {
+      window.removeEventListener("resize", calculateSlidesPerView);
+    };
+  }, []);
 
-  ]);
-  const [plantComplete, setPlantComplete] = useState([
-
-  ]);
   const withdrawal = async () => {
+    console.log("회원탈퇴")
     try {
-      const response = await axios.delete(`${BASE_URL}/api/user/`,config);
+      const response = await axios.delete(`${BASE_URL}/api/user/`, config);
       alert(response.data.message);
-      dispatch(logoutUser())
+      dispatch(logoutUser());
       navigate("/signup");
     } catch (error) {
       console.log(error);
@@ -72,12 +91,12 @@ const Profile = () => {
   }, []);
 
   const NotcompleteCardSet = () => {
-    console.log(growinPlant)
+    console.log(growinPlant);
     return (
       <div className="cardContainer">
         {growinPlant.map((plant) => (
           <SwiperSlide key={plant.index}>
-            <PlantCard  props={plant} />
+            <PlantCard props={plant} />
           </SwiperSlide>
         ))}
       </div>
@@ -89,7 +108,7 @@ const Profile = () => {
       <div className="cardContainer">
         {plantComplete.map((plant) => (
           <SwiperSlide key={plant.index}>
-            <PlantCard  props={plant} />
+            <PlantCard props={plant} />
           </SwiperSlide>
         ))}
       </div>
@@ -126,9 +145,9 @@ const Profile = () => {
                   완료된 식물
                 </button>
               </div>
-              <button className="btn btn-danger signout" onClick={withdrawal}>
+              <Withdrawal  withdrawal={withdrawal}>
                 회원탈퇴
-              </button>
+              </Withdrawal>
             </div>
 
             <div className="container plant">
@@ -136,7 +155,7 @@ const Profile = () => {
                 <div className="plant-ing">
                   <div>
                     <Swiper
-                      slidesPerView={4}
+                      slidesPerView={slidesPerView}
                       spaceBetween={30}
                       freeMode={true}
                       pagination={{
@@ -173,7 +192,7 @@ const Profile = () => {
               {!showInProgress && (
                 <div className="plant-complete">
                   <Swiper
-                    slidesPerView={3}
+                    slidesPerView={slidesPerView}
                     spaceBetween={20}
                     freeMode={true}
                     pagination={{

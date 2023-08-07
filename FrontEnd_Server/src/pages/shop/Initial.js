@@ -2,63 +2,63 @@ export const initialState =
 {
   "items": [
     {
-      "id": 11,
+      "id": 21,
       "name": "청경채",
-      "img": "../plantInfoimg/11.png",
+      "img": "../plantInfoimg/21.png",
       "price": 3000
     },
     {
-      "id": 12,
+      "id": 22,
       "name": "상추",
-      "img": "../plantInfoimg/12.png",
+      "img": "../plantInfoimg/22.png",
       "price": 2000
     },
     {
-      "id": 13,
+      "id": 23,
       "name": "토마토",
-      "img": "../plantInfoimg/13.png",
+      "img": "../plantInfoimg/23.png",
       "price": 4000
     },
     {
-      "id": 14,
+      "id": 24,
       "name": "몬스테라",
-      "img": "../plantInfoimg/14.png",
+      "img": "../plantInfoimg/24.png",
       "price": 5000
     },
     {
-      "id": 15,
+      "id": 25,
       "name": "치자나무",
-      "img": "../plantInfoimg/15.png",
+      "img": "../plantInfoimg/25.png",
       "price": 7000
     },
     {
-      "id": 16,
+      "id": 26,
       "name": "싱고니움",
-      "img": "../plantInfoimg/16.png",
+      "img": "../plantInfoimg/26.png",
       "price": 2600
     },
     {
-      "id": 17,
+      "id": 27,
       "name": "베고니아",
-      "img": "../plantInfoimg/17.png",
+      "img": "../plantInfoimg/27.png",
       "price": 3400
     },
     {
-      "id": 18,
+      "id": 28,
       "name": "시클라멘",
-      "img": "../plantInfoimg/18.png",
+      "img": "../plantInfoimg/28.png",
       "price": 9000
     },
     {
-      "id": 19,
+      "id": 29,
       "name": "율마",
-      "img": "../plantInfoimg/19.png",
+      "img": "../plantInfoimg/29.png",
       "price": 15000
     },
     {
-      "id": 20,
+      "id": 30,
       "name": "알로카시아",
-      "img": "../plantInfoimg/20.png",
+      "img": "../plantInfoimg/30.png",
       "price": 20000
     }
   ],
