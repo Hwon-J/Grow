@@ -16,13 +16,15 @@ const QuestPage = () => {
   const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
+  
   useEffect(() => {
     getQuest();
     inputQuest();
   }, []); // axios를 통해서 질문지 리스트 받을 useEffect
+
   useEffect(() => {
     inputQuest();
-  }, questList);
+  }, [questList]);
   const onChangeNewquest = (e) => {
     // 새로운 질문지 작성될떄마다 value값 변경
     setNewquest(e.target.value);
