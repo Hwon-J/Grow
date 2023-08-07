@@ -104,13 +104,15 @@ const QuestPage = () => {
       .slice()
       .reverse()
       .map((questItem, index) => (
-        <div key={index}>
-          <input
-            type="text"
-            className="quest-input"
-            value={questItem.content}
-            readOnly // 변경을 불가
-          />
+        <div key={index} className="quest-tm">
+          <div className="quest-left">
+              <p>{questItem.content}</p>
+          </div>
+          <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
+              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} />
+
+              </div>
         </div>
       ));
   };
@@ -137,7 +139,7 @@ const QuestPage = () => {
 
           <div className="quest-section">
             {inputQuest()}
-            <div className="quest-tm">
+            {/* <div className="quest-tm">
 
               <div className="quest-left">
               <div className="question">Q: 엄마가 좋아 아빠가 좋아??</div>
@@ -165,7 +167,7 @@ const QuestPage = () => {
 
               </div>
 
-            </div>
+            </div> */}
 
 
 
