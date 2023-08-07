@@ -51,7 +51,10 @@ function WebSocketComponent(props) {
     const serial_number = props.serial_number
     if (socket) {
       const handshakemessage = {
-        "role": "handshake", "serial":serial_number
+        purpose: "handshake",
+        role: "display",
+        content: null,
+        serial: {serial_number}
       };
       console.log(handshakemessage);
       socket.send(JSON.stringify(handshakemessage));
