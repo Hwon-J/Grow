@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const gpt = require("./util/call-gpt");
 const db = require("./util/db.js");
-const deleteEmoji = require("./util/delete-emoji");
+const stringPurify = require("./util/string-purifier");
 const winston = require("./util/winston.js");
 require("dotenv").config();
 
@@ -111,7 +111,7 @@ wss.on("connection", (ws, req) => {
       (async () => {
         let result = await gpt(history);
         // 답변속 이모지 제거
-        result = deleteEmoji(result);
+        result = stringPurify(result);
         // 답변 저장
         history.push({
           role: "assistant",
