@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'KCC-DodamdodamR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+.profile-total{
+  font-family: 'KCC-DodamdodamR';
+}
 
 .cardContainer {
   display: flex;
@@ -126,4 +135,23 @@
 .button-container {
   display: flex;
   justify-content: space-between;
+}
+
+.btn-left{
+  display: flex;
+  
+}
+.plant-btn{
+  font-size: 30px;
+  display: inline-block;
+  margin-right: 30px;
+}
+.plant-btn.selected {
+  font-weight: bold;
+  color: black;
+  /*text-shadow:0 2px 10px rgba(0, 0, 0, 0.2);*/
+}
+
+.plant-btn:not(.selected) {
+  color: rgb(168, 168, 168);
 }
