@@ -64,6 +64,11 @@ function NavTop() {
                       plantinfo
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink to="/shop" style={{ textDecoration: "none" }}>
+                      Shop
+                    </NavLink>
+                  </li>
                 </>
               ) : null}
               <li>

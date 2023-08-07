@@ -115,9 +115,9 @@ const Profile = () => {
   ]);
   const withdrawal = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/user/`, "", config);
-      alert(response.data.message);
-      navigate("/signup");
+      const response = await axios.delete(`${BASE_URL}/api/user/`, config);
+      console.log(response.data.message);
+      
     } catch (error) {
       console.log(error);
     }
