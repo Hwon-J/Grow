@@ -22,6 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  
 }
 
 .App-link {
@@ -47,14 +48,14 @@
 .character-box {
   display : flex;
   position : fixed;
-  left : 600px;
-  top : 180px;
+  left : 550px;
+  top : 80px;
   
 }
 .character {
 
   margin-right: 50px;
-  height: 400px;
+  height: 500px;
 }
 
 
@@ -66,14 +67,14 @@
 {
 position: fixed;
 width: 270px;
-height: 300px;
+height: 500px;
 padding: 0px;
 background: #FFFFFF;
 -webkit-border-radius: 10px;
 -moz-border-radius: 10px;
 border-radius: 10px;
 left : 950px;
-top : 200px;
+top : 120px;
 
 }
 
@@ -103,19 +104,19 @@ top: 75px;
   justify-items: left;
   position : fixed;
   left : 180px;
-  top : 350px;
+  top : 250px;
 
 }
 
 .information h1 {
-  font-size: 20px;
+  font-size: 45px;
   
 }
 
 .board {
-  height: 400px;
+  height: 500px;
   position : fixed;
-  left : 150px;
-  top : 270px;
+  left : 120px;
+  top : 170px;
   z-index: 0;
 }

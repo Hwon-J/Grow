@@ -42,7 +42,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 2,
-      id: 1,
+      id: 2,
     },
     {
       plant_info: "상추",
@@ -58,7 +58,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 4,
-      id: 1,
+      id: 3,
     },
     {
       plant_info: "상추",
@@ -66,7 +66,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 5,
-      id: 62,
+      id: 4,
     },
     {
       plant_info: "상추",
@@ -74,7 +74,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 6,
       imgname: 6,
-      id: 62,
+      id: 5,
     },
     {
       plant_info: "상추",
@@ -82,7 +82,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 7,
       imgname: 7,
-      id: 62,
+      id: 6,
     },
     {
       plant_info: "상추",
@@ -90,7 +90,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 8,
-      id: 62,
+      id: 67,
     },
     {
       plant_info: "상추",
@@ -98,7 +98,7 @@ const Profile = () => {
       child_name: "김태형",
       difficulty: 5,
       imgname: 9,
-      id: 62,
+      id: 8,
     },
     
   ]);
@@ -109,7 +109,7 @@ const Profile = () => {
       child_name: "김민국",
       difficulty: 5,
       imgname: 6,
-      id: 3,
+      id: 9,
     },
   ]);
 
@@ -175,7 +175,7 @@ const Profile = () => {
       <div className="profilepage container">
         <div className="row">
           
-          <div className="container profile col-lg-8 row">
+          <div className="container profile row">
             <div className="col-12">
               <h1 className="profile_title">PROFILE</h1>
             </div>
