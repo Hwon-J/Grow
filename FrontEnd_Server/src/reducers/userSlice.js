@@ -47,6 +47,9 @@ export const loginUserAction = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    name : "",
+    email: "",
+    emailDomain: "",
     token: "",
     status: "", // 상태 초기값 추가
     error: null, // 에러 초기값 추가
@@ -56,6 +59,9 @@ const userSlice = createSlice({
     logoutUser: (state) => {
       // 로그아웃 reducer의 logoutUser액션이 불려졌을때 초기값으로 만들어 주는 코드
       return {
+        name : "",
+        email: "",
+        emailDomain: "",
         token: "",
         status: "",
         error: null,
