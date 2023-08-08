@@ -139,7 +139,7 @@ const QuestPage = () => {
       .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
       .then((response) => {
         console.log("삭제성공:", response.data);
-        // getQuest();
+        getQuest();
         window.location.reload();
       })
       .catch((error) => {
