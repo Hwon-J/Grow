@@ -5,7 +5,7 @@ const util = require("util");
 
 exports.updateSensorData = async (req, res, next) => {
   winston.info(
-    `sensorController insertSensorData called. serial: ${req.body.serial_number}`
+    `sensorController updateSensorData called. serial: ${req.body.serial_number}`
   );
   try {
     const { serial_number: serial, temperature, moisture, light } = req.body;
@@ -26,7 +26,7 @@ exports.updateSensorData = async (req, res, next) => {
     // 시리얼 넘버 유효 체크
     if (result === null || result.length == 0) {
       winston.info(
-        "sensorController insertSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버"
+        "sensorController updateSensorData return: 사용중이지 않거나 유효하지 않은 시리얼 넘버"
       );
       return res.status(202).json({
         code: 202,
@@ -49,7 +49,7 @@ exports.updateSensorData = async (req, res, next) => {
       winston.error(error);
       return res.status(202).json({ code: 202, message: "등록 실패" });
     }
-    winston.info("sensorController insertSensorData return: '등록 성공'");
+    winston.info("sensorController updateSensorData return: '등록 성공'");
     return res.status(201).json({ code: 201, message: "등록 성공" });
   } catch (error) {
     console.error(error);

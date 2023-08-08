@@ -381,3 +381,44 @@ exports.registQuestion = async (req, res) => {
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };
+
+// 1. id와 질문의 index로 소유권을 확인한다.
+// 2. 소유권이 있다면 삭제를 진행한다.
+exports.deleteQuestion = async(req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController deleteQuestion called. ID: ${id}, Question Index: ${index}`
+  );
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+
+    // 사용자, 사용자의 식물, 그 식물에 등록된 질문들을 조회
+    let query = `select * 
+    from \`member\` join \`plant\` on member.index = plant.member_index
+    join \`question\` on plant.index = question.plant_index
+    where \`member\`.id = ? and question.index = ?
+    `;
+
+    let result = await queryPromise(query, [id, index]);
+    if (result.length === 0){
+      return res.status(403).json({code:400, message: "권한이 없거나 존재하지 않는 index"});
+    }
+
+    // 삭제 진행
+    query = `delete from question where \`index\` = ?`
+    result = await queryPromise(query, [index]);
+
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    winston.info(`plantController deleteQuestion successfully completed`)
+    return res
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};

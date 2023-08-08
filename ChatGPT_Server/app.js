@@ -10,13 +10,13 @@ const wss = new WebSocket.Server({ port: process.env.PORT });
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
 
-function sendSersorData(){
+function sendSersorData() {
   clients.forEach((client) => {
-    if (
-      client.role === "display" &&
-      client.readyState === WebSocket.OPEN
-    ) {
-      client.send({about:"sensor", content: db.getConditionGoodOrBad(client.serial)});
+    if (client.role === "display" && client.readyState === WebSocket.OPEN) {
+      client.send({
+        about: "sensor",
+        content: db.getConditionGoodOrBad(client.serial),
+      });
     }
   });
 }
@@ -71,52 +71,73 @@ wss.on("connection", (ws, req) => {
 
     let msgJson = JSON.parse(msg);
     console.log(
-      `message from client[${ip}]:${msgJson.role}, ${msgJson.message}, ${msgJson.serial}`
+      `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
     );
 
     // 연결 후 클라이언트는 첫 메세지로 핸드셰이크를 보낸다
-    if (msgJson.role == "handshake") {
+    if (msgJson.purpose == "handshake") {
       let result = await db.checkSerial(msgJson.serial);
-      
+
       if (result === "ok") {
-        winston.info("success: Successful connection to the server. (IP: " + ip + ")");
-        ws.send(JSON.stringify({
-          status: "success",
-          message: "Successful connection to the server. Welcome.",
-        }));
+        winston.info(
+          "success: Successful connection to the server. (IP: " + ip + ")"
+        );
+        ws.send(
+          JSON.stringify({
+            status: "success",
+            message: "Successful connection to the server. Welcome.",
+          })
+        );
       } else {
         // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
         if (result === "unregistered") {
-          winston.info("fail: Unregistered serial number. Please check again. (IP: " + ip + ")");
-          ws.send(JSON.stringify({
-            status: "fail",
-            message: "Unregistered serial number. Please check again",
-          }));
+          winston.info(
+            "fail: Unregistered serial number. Please check again. (IP: " +
+              ip +
+              ")"
+          );
+          ws.send(
+            JSON.stringify({
+              status: "fail",
+              message: "Unregistered serial number. Please check again",
+            })
+          );
         } else if (result === "not exist") {
-          winston.info("fail: a non-existent serial number. Please check again. (IP: " + ip + ")");
-          ws.send(JSON.stringify({
-            status: "fail",
-            message: "a non-existent serial number. Please check again",
-          }));
+          winston.info(
+            "fail: a non-existent serial number. Please check again. (IP: " +
+              ip +
+              ")"
+          );
+          ws.send(
+            JSON.stringify({
+              status: "fail",
+              message: "a non-existent serial number. Please check again",
+            })
+          );
         } else {
           winston.info("fail: Error occured in handshake. (IP: " + ip + ")");
-          ws.send(JSON.stringify({ status: "fail", message: "Error occured in handshake." }));
+          ws.send(
+            JSON.stringify({
+              status: "fail",
+              message: "Error occured in handshake.",
+            })
+          );
         }
 
         ws.close();
       }
 
-      // clients에 시리얼 넘버를 엮어서 저장
+      // clients에 시리얼 넘버와 디스플레이/라즈베리를 엮어서 저장
       ws.serial = msgJson.serial;
+      ws.role = msgJson.role;
       clients.push(ws);
-    } else if (msgJson.role == "gpt") {
+    } else if (msgJson.purpose === "gpt") {
       // DB에 유저의 입력 저장
-      
 
       // 히스토리에 유저의 답변 저장
       history.push({
         role: "user",
-        content: msgJson.message,
+        content: msgJson.content,
       });
       // 1. gpt에게 답변을 받는다.
       // 2. count를 1증가 시킨다.
@@ -155,10 +176,25 @@ wss.on("connection", (ws, req) => {
             client.serial === ws.serial &&
             client.readyState === WebSocket.OPEN
           ) {
-            client.send(`gpt answer: ${result}`);
+            let answer = { about: "gpt", content: result };
+            if (client.role == "raspi") {
+              client.send(JSON.stringify(answer));
+            } else {
+              client.send(answer);
+            }
           }
         });
       })();
+    } else if (msgJson.purpose === "closer") {
+      clients.forEach((client) => {
+        if (
+          client.role === "display" &&
+          client.serial === msgJson.serial &&
+          client.readyState === WebSocket.OPEN
+        ) {
+          client.send({ about: "closer" });
+        }
+      });
     } else {
       ws.send("error: role needed");
     }
