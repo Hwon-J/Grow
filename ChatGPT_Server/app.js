@@ -10,7 +10,7 @@ const wss = new WebSocket.Server({ port: process.env.PORT });
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
 
-function sendSersorData() {
+function sendSensorData() {
   clients.forEach(async (client) => {
     if (client.role === "display" && client.readyState === WebSocket.OPEN) {
       let content = await db.getConditionGoodOrBad(client.serial);
@@ -43,7 +43,7 @@ wss.on("connection", (ws, req) => {
   });
 
   // 10초에 한번씩 센서의 데이터를 디스플레이 클라이언트로 보내는 부분
-  setInterval(sendSersorData, 10000);
+  setInterval(sendSensorData, 10000);
 
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
@@ -189,17 +189,19 @@ wss.on("connection", (ws, req) => {
         });
       })();
     } else if (msgJson.purpose === "closer") {
+      winston.info(`"closer" accepted from ${ws.serial}`);
       clients.forEach((client) => {
         if (
           client.role === "display" &&
           client.serial === msgJson.serial &&
           client.readyState === WebSocket.OPEN
-        ) {
-          winston.info(`send "closer" to ${client.serial}`);
-          client.send(JSON.stringify({ about: "closer" }));
-        }
-      });
-    } else if (msgJson.purpose === "further") {
+          ) {
+            winston.info(`send "closer" to ${client.serial}`);
+            client.send(JSON.stringify({ about: "closer" }));
+          }
+        });
+      } else if (msgJson.purpose === "further") {
+      winston.info(`"further" accepted from ${ws.serial}`);
       clients.forEach((client) => {
         if (
           client.role === "display" &&
