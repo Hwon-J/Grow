@@ -11,6 +11,31 @@ function WebSocketComponent(props) {
     }
   console.log(props)
   const sensor_update = props.sensor_update
+  function getmessage (message) {
+    console.log(message)
+    const mes = JSON.parse(message)
+    console.log(mes)
+    if (mes.about === 'sensor'){
+      console.log('getsensor')
+      const light_value = mes.content.light
+      const moisture = mes.content.moisture
+      const temperature = mes.content.temperature
+      const temperValue = mes.content.temperValue
+      const newData = {"light":light_value,"moisture":moisture,"temperature":temperature,"temperValue":temperValue}
+    sensor_update(newData);
+
+    }
+    else if (mes.about === 'gpt') {
+      console.log('getgpt')
+    }
+    else if (mes.about === 'closer') {
+      console.log('closer')
+    }
+    else if (mes.about === 'further') {
+      console.log('further')
+    }
+  }
+
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
     const newSocket = new WebSocket('ws://192.168.100.37:30002');
@@ -20,20 +45,17 @@ function WebSocketComponent(props) {
     newSocket.onopen = () => {
       console.log('WebSocket connection established.');
       setSocket(newSocket);
-      // console.log(socket)
-      // const handshakemessage = {
-      //   "role": "handshake", "serial": serial_number
-      // }
-      // console.log(handshakemessage)
-      // socket.send(JSON.stringify(handshakemessage));
+      
     };
     
     
     // 웹소켓으로부터 메시지를 받았을 때의 이벤트 핸들러
     newSocket.onmessage = (event) => {
-      setReceivedMessage(event.data);
       console.log(event.data)
       console.log('getmessage')
+      // setReceivedMessage(event.data)
+      setReceivedMessage('안녕 나는 씨앗이야, 오늘 학교에서 무슨 일이 있었니')
+      getmessage(event.data)
     };
     
     // 웹소켓이 닫혔을 때의 이벤트 핸들러
@@ -54,7 +76,7 @@ function WebSocketComponent(props) {
         purpose: "handshake",
         role: "display",
         content: null,
-        serial: {serial_number}
+        serial: ""+serial_number
       };
       console.log(handshakemessage);
       socket.send(JSON.stringify(handshakemessage));
@@ -97,7 +119,7 @@ function WebSocketComponent(props) {
         <button onClick={handleSendMessage}>Send</button>
       </div>
       <div style={messagebox}>
-        <p>Received Message: {receivedMessage}</p>
+        <p>{receivedMessage}</p>
       </div>
     </div>
   );

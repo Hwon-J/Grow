@@ -11,7 +11,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 export default function CharacterChoice() {
     // navigate와 dispatch를 사용하기 위해 기능 변수 설정
     const navigate = useNavigate();
-    const base_serial_number = 15648
+    const base_serial_number = '97745'
     const character_list = [beancharacter, lettucecharacter, tomatocharacter]
     
     
