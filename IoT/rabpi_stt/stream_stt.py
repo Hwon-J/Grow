@@ -242,9 +242,8 @@ async def main():
     async with websockets.connect(uri) as websocket:
         await handshacking(websocket)
 
-        thread_stt = threading.Thread(target=stt_setting)
         thread_sense = threading.Thread(target=sense_filter)
-
+        thread_stt = threading.Thread(target=stt_setting)
         thread_stt.start()
         thread_sense.start()
 

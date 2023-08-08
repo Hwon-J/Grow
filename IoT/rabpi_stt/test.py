@@ -1,45 +1,31 @@
-import pyaudio
-import wave
-from playsound import playsound
+import asyncio
+import websockets
+import json
+import logging
 
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 16000
-WAVE_OUTPUT_FILENAME = r'38_assistant\output.wav'
+serial_num = "qwer"
 
-def start():
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT,
-                    channels=CHANNELS,
-                    rate=RATE,
-                    input=True,
-                    frames_per_buffer=CHUNK)
+# 설정할 로그 파일 경로
+LOG_FILE_PATH = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/rabpi_stt/logfile.log"
 
-    print('음성녹음을 시작합니다.')
+# 로거 생성
+logger = logging.getLogger("websocket_logger")
+logger.setLevel(logging.DEBUG)
 
-    frames = []
+# 파일 핸들러 추가
+file_handler = logging.FileHandler(LOG_FILE_PATH)
+file_handler.setLevel(logging.DEBUG)
 
-    try:
-        while True:
-            data = stream.read(CHUNK)
-            frames.append(data)
+# 로그 포맷 지정
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
 
-    #except KeyboardInterrupt:
-    except:
-        stream.stop_stream
-        stream.close
-        p.terminate
+# 핸들러를 로거에 추가
+logger.addHandler(file_handler)
 
-    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-    wf.setnchannels(CHANNELS)
-    wf.setsampwidth(p.get_sample_size(FORMAT))
-    wf.setframerate(RATE)
-    wf.writeframes(b' '.join(frames))
-    wf.close()
 
-    print('녹음된 파일을 재생합니다.')
-    playsound(WAVE_OUTPUT_FILENAME)
-
-if __name__ == '__main__':
-    start()
+async def main():
+    logger.info("start")
+    
+if __name__ == "__main__":
+    main()
