@@ -313,7 +313,17 @@
     - 서버 오류: { code: 500, message: "서버 오류" }
 
 ### 특정 질문 삭제하기
-- 미구현
+- 방식: DELETE
+- 서버IP: 기본URI/quest/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 201, message: "요청 처리 성공" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 권한이 없거나 존재하지 않는 index의 질문: { code:400, message: "권한이 없거나 존재하지 않는 index"}
+    - 서버 오류: { code: 500, message: "서버 오류" }
 
 ## 센서 관련
 
