@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-import loginImage from "../assets/0002.png";
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "../reducers/userSlice";
 import style from './LoginPage.module.scss';
 import NavTop from '../components/NavTop';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBIcon,
-  MDBInput,
-} from "mdb-react-ui-kit";
-
 
 
 const LoginPage = () => {
