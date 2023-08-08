@@ -21,7 +21,7 @@ const Withdrawal = ({ withdrawal }) => {
   };
   return (
     <>
-      <button className="btn btn-danger signout" onClick={toggleShow}>회원탈퇴</button>
+      <button className="signout-btn" onClick={toggleShow}>회원탈퇴</button>
       <MDBModal show={basicModal} setShow={setBasicModal} tabIndex='-1'>
         <MDBModalDialog>
           <MDBModalContent>
