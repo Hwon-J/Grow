@@ -19,9 +19,6 @@ const NotFound = () => {
     return (
         <div className='not_found'>
             <NavTop/>
-            {/* <div class="error-page">
-            <h1 data-h1="404">404</h1>
-            </div> */}
             <Grid container>
                 <Grid className="not_left" item xs={6}>
                     <div>
