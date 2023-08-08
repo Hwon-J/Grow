@@ -167,22 +167,22 @@ const Profile = () => {
                       {NotcompleteCardSet()}
                       <SwiperSlide>
                         <div className="plantcard_new">
-                          <div className="bg">
-                            <div className="plantcard-details">
-                              <h5>
-                                새 식물친구
-                                <br />
-                                등록해주기
-                              </h5>
-                            </div>
+                          <div className="new_register" onClick={createCard}>
+                            <h5>
+                            새 식물친구
+                            </h5>
+                            <h5>
+                            등록해주기
+                            </h5>
                           </div>
-                          <div className="blob"></div>
+                         
+                          {/* <div className="blob"></div>
                           <button
                             className="button type1 plantcard-button"
                             onClick={createCard}
                           >
                             +
-                          </button>
+                          </button> */}
                           
                         </div>
                       </SwiperSlide>
