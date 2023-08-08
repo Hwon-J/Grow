@@ -21,7 +21,7 @@ import WebSocketComponent from './components/Websocket';
 import { useEffect, useState } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import CharacterChoice from './components/CharacterChoice';
-import Button from 'react-bootstrap/Button';
+import Verify from './components/Verify';
 import { useParams } from 'react-router-dom';
 
 
@@ -86,7 +86,7 @@ function App() {
     minHeight: '100vh', // 전체 화면 높이까지 배경이미지가 채워지도록 설정
   }
   useEffect(() => {
-    navigate('/characterchoice')
+    navigate('/verify')
   }, [])
 
   return (
@@ -95,6 +95,7 @@ function App() {
     // <Provider store={store}>
       <div className="App" style={backgroundStyles}>
         <Routes>
+          <Route path="/verify" element={<Verify />} />
           <Route path="/characterchoice" element={<CharacterChoice />} />
           <Route path="/conversation/:character_index/:serial_number" element={<Conversation />} />
         </Routes>
