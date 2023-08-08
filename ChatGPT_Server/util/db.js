@@ -16,18 +16,18 @@ connection.connect((error) => {
   winston.info("Successfully connected to the database.");
 });
 
-const queryPromise = util.promisify(connection.query).bind(connection);
-// const queryPromise = (sql, params) => {
-//   return new Promise((resolve, reject) => {
-//     connection.query(sql, params, (error, results, fields) => {
-//       if (error) {
-//         reject(error);
-//       } else {
-//         resolve(results);
-//       }
-//     });
-//   });
-// };
+// const queryPromise = util.promisify(connection.query).bind(connection);
+const queryPromise = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    connection.query(sql, params, (error, results, fields) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
 
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
@@ -65,35 +65,28 @@ const checkSerial = async (serial) => {
 
 // 사용자의 입력과 gpt의 대답을 기록하기
 const saveChatLog = async (log) => {
-  winston.info(
-    `saveChatLog called. serial: ${log.serial}, role: ${log.role}`
-  );
+  winston.info(`saveChatLog called. serial: ${log.serial}, role: ${log.role}`);
   winston.info(`content: ${log.content}`);
   try {
-    let sql =
+    let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
+    let result = await queryPromise(sql, [log.serial]);
+    if (result.length === 0) {
+      return `something wrong happened... there is no plant that pot's serial number is ${log.serial}`;
+    }
+
+    sql =
       "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)";
-    let result = await queryPromise(sql, [
-      log.plantIndex,
-      log.role,
-      log.content,
-    ]);
+    result = await queryPromise(sql, [result[0].pindex, log.role, log.content]);
 
     if (result === 0) {
-      return "something wrong happened...";
+      return "something wrong happened... insert does not run normally";
     }
+    
     return "ok";
   } catch (error) {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [log.plantIndex, log.role, log.content], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return "ok";
-  // });
 };
 
 // 식물 상황 받아오기
@@ -237,7 +230,9 @@ const getConditionGoodOrBad = async (serial) => {
       temperatureMsg = "과다";
     }
 
-    winston.info(`getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}`);
+    winston.info(
+      `getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}`
+    );
     return {
       light: lightMsg,
       moisture: moistureMsg,

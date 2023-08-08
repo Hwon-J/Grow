@@ -134,13 +134,21 @@ wss.on("connection", (ws, req) => {
       ws.serial = msgJson.serial;
       ws.role = msgJson.role;
       clients.push(ws);
-    } else if (msgJson.purpose === "gpt") {
+      // purpose가 gpt이며, undefined, null, ""가 아닌 경우
+    } else if (
+      msgJson.purpose === "gpt" &&
+      msgJson.content !== undefined &&
+      msgJson.content !== null &&
+      msgJson.content !== ""
+    ) {
       // DB에 유저의 입력 저장
-      // await db.saveChatLog({
-      //   serial: msgJson.serial,
-      //   role: "user",
-      //   content: msgJson.content,
-      // });
+      winston.info(
+        await db.saveChatLog({
+          serial: msgJson.serial,
+          role: "user",
+          content: msgJson.content,
+        })
+      );
 
       // 히스토리에 유저의 답변 저장
       history.push({
@@ -166,11 +174,13 @@ wss.on("connection", (ws, req) => {
           }
         }
         // 답변 DB에 저장
-        // await db.saveChatLog({
-        //   serial: msgJson.serial,
-        //   role: "assistant",
-        //   content: result,
-        // });
+        winston.info(
+          await db.saveChatLog({
+            serial: msgJson.serial,
+            role: "assistant",
+            content: result,
+          })
+        );
         // 답변 히스토리에 저장
         history.push({
           role: "assistant",
@@ -195,25 +205,25 @@ wss.on("connection", (ws, req) => {
           client.role === "display" &&
           client.serial === msgJson.serial &&
           client.readyState === WebSocket.OPEN
-          ) {
-            winston.info(`send "closer" to ${client.serial}`);
-            client.send(JSON.stringify({ about: "closer" }));
-          }
-        });
-      } else if (msgJson.purpose === "further") {
+        ) {
+          winston.info(`send "closer" to ${client.serial}, ${client.role}`);
+          client.send(JSON.stringify({ about: "closer" }));
+        }
+      });
+    } else if (msgJson.purpose === "further") {
       winston.info(`"further" accepted from ${ws.serial}`);
       clients.forEach((client) => {
         if (
           client.role === "display" &&
           client.serial === msgJson.serial &&
           client.readyState === WebSocket.OPEN
-          ) {
-          winston.info(`send "further" to ${client.serial}`);
+        ) {
+          winston.info(`send "further" to ${client.serial}, ${client.role}`);
           client.send(JSON.stringify({ about: "further" }));
         }
       });
     } else {
-      ws.send("error: purpose needed");
+      ws.send(JSON.stringify({about:"error", content: "purpose needed or purpose gpt need content"}));
     }
   });
 
