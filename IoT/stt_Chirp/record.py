@@ -191,10 +191,14 @@ if __name__ == "__main__":
 
             if distance < 15 and not recording: # 거리가 10cm 미만일 때 녹음 시작
                 print("Recording started...")
+                message = json.dumps({"role": "closer", "serial": "qwer"}) # 수정된 부분
+                ws.send(message)
                 recording = True
 
             elif distance >= 15 and recording: # 거리가 10cm 이상일 때 녹음 종료
                 print("Recording stopped...")
+                message = json.dumps({"role": "further", "serial": "qwer"}) # 수정된 부분
+                ws.send(message)
                 recording = False
                 save_data = True
 
