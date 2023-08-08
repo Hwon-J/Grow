@@ -42,7 +42,7 @@ function WebSocketComponent(props) {
 
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
-    const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
     console.log(props.serial_number)
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
