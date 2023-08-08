@@ -66,7 +66,7 @@ const checkSerial = async (serial) => {
 // 사용자의 입력과 gpt의 대답을 기록하기
 const saveChatLog = async (log) => {
   winston.info(
-    `saveChatLog called. plantIndex: ${log.plantIndex}, role: ${log.role}`
+    `saveChatLog called. serial: ${log.serial}, role: ${log.role}`
   );
   winston.info(`content: ${log.content}`);
   try {
