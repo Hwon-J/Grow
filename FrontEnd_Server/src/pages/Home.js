@@ -4,6 +4,8 @@ import "./Home.scss";
 import NavTop from "../components/NavTop";
 import Footer from "../components/Footer";
 import Service1 from "../components/home/Service1";
+import Service2 from "../components/home/Service2";
+import Service3 from "../components/home/Service3";
 import "./MainVideoBackground.css";
 import homevideo1 from "../assets/homevideo1.mp4";
 import { ScrollToTopOnMount, SectionsContainer, Section } from 'react-fullpage';
@@ -18,7 +20,7 @@ function HomeBackground() {
 
 const Home = () => {
   let options = {
-    anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
+    anchors: ['sectionOne', 'sectionTwo', 'sectionThree', 'sectionFour',],
   };
   const navigate = useNavigate();
 
@@ -42,11 +44,14 @@ const Home = () => {
             </div>
           </div>
         </Section>
-        <Section anchor="sectionTwo" className={`content-home service1-bgimg `}>
+        <Section anchor="sectionTwo" className={`content-home `}>
           <Service1 />
         </Section>
         <Section anchor="sectionThree" className={`content-home `}>
-          <Service1 />
+          <Service2 />
+        </Section>
+        <Section anchor="sectionFour" className={`content-home `}>
+          <Service3 />
         </Section>
       </SectionsContainer>
     </>
