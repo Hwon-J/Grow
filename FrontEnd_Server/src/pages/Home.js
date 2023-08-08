@@ -1,45 +1,55 @@
-// src/components/Home.js
-import React from 'react';
-import './Home.scss';
-// import { Container } from '@mui/material';
-import NavTop from '../components/NavTop';
-import Footer from '../components/Footer';
-import HomeVideo from '../components/HomeVideo';
-import HomeVideo2 from '../components/HomeVideo2';
-import './MainVideoBackground.css';
-import homevideo1 from '../assets/homevideo1.mp4';
+import React, {useEffect} from "react";
+import { useNavigate } from "react-router";
+import "./Home.scss";
+import NavTop from "../components/NavTop";
+import Footer from "../components/Footer";
+import Service1 from "../components/home/Service1";
+import "./MainVideoBackground.css";
+import homevideo1 from "../assets/homevideo1.mp4";
+import { ScrollToTopOnMount, SectionsContainer, Section } from 'react-fullpage';
 
-function HomeBackground () {
+function HomeBackground() {
   return (
-    
-      <video autoPlay loop muted>
-        <source src={homevideo1} type="video/mp4" />
-      </video>
-    
-  )
+    <video autoPlay loop muted>
+      <source src={homevideo1} type="video/mp4" />
+    </video>
+  );
 }
 
-
 const Home = () => {
-  
+  let options = {
+    anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
+  };
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if there's a hash in the URL and scroll to the corresponding section
+    navigate('/home#sectionOne')
+  }, []);
   return (
-    <div className="video-background">
-      <HomeBackground />
-      <div className="content">
-      <>
-      <NavTop className="homenav" />
-      
-      <div className="home_container">
-        <div className="home_title">
-          <h1>Find friend for your kids</h1>
-          <h4>This service makes plant friends for your children</h4>
-          <h4>so that they can develop emotionally.</h4>
-        </div> 
-      </div>
-      <Footer/>
+    <>
+      <SectionsContainer {...options}  className="home-main-container" >
+        <Section anchor="sectionOne" className={`video-background content-home `}>
+          <HomeBackground />
+          <NavTop className="homenav" />
+          <div className="content">
+            <div className="home_container">
+              <div className="home_title">
+                <h1>Find friend for your kids</h1>
+                <h4>This service makes plant friends for your children</h4>
+                <h4>so that they can develop emotionally.</h4>
+              </div>
+            </div>
+          </div>
+        </Section>
+        <Section anchor="sectionTwo" className={`content-home service1-bgimg `}>
+          <Service1 />
+        </Section>
+        <Section anchor="sectionThree" className={`content-home `}>
+          <Service1 />
+        </Section>
+      </SectionsContainer>
     </>
-      </div>
-    </div>
   );
 };
 
