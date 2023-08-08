@@ -22,7 +22,6 @@ const App = () => {
   return (
     <React.Fragment>
       <CheckToken />
-        <div>
         <Routes>
           <Route path="/" element={<Outlet />}>
             {/* NavTop과 Footer가 있는 라우트 */}
@@ -44,7 +43,6 @@ const App = () => {
             <Route path="/*" element={<NotFound/>} />
           </Route>
         </Routes>
-      </div>
     </React.Fragment>
   );
 };

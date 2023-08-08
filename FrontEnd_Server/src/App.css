@@ -5,3 +5,6 @@ body {
   background-image: linear-gradient(to right, white, white);
   /* background-color: white; */
   }
+#root {
+  height: 100%;
+}
