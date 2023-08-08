@@ -11,12 +11,13 @@ const wss = new WebSocket.Server({ port: process.env.PORT });
 let clients = [];
 
 function sendSersorData() {
-  clients.forEach((client) => {
+  clients.forEach(async (client) => {
     if (client.role === "display" && client.readyState === WebSocket.OPEN) {
-      client.send({
+      let content = await db.getConditionGoodOrBad(client.serial);
+      client.send(JSON.stringify({
         about: "sensor",
-        content: db.getConditionGoodOrBad(client.serial),
-      });
+        content: content,
+      }));
     }
   });
 }
@@ -40,7 +41,7 @@ wss.on("connection", (ws, req) => {
   });
 
   // 10초에 한번씩 센서의 데이터를 디스플레이 클라이언트로 보내는 부분
-  // setInterval(sendSersorData, 10000);
+  setInterval(sendSersorData, 10000);
 
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
@@ -52,7 +53,7 @@ wss.on("connection", (ws, req) => {
   //   // 처음 보는 IP라면 새 배열을 만들고 그 배열에 웹소켓을 추가
   //   clients.set(ip, [ws]);
   // }
-  console.log(`new client[${ip}] connected`);
+  winston.info(`new client[${ip}] connected`);
 
   // 2. 클라이언트에게 메세지 전송(현재는 생략됨)
   if (ws.readyState === ws.OPEN) {
@@ -70,7 +71,7 @@ wss.on("connection", (ws, req) => {
     ];
 
     let msgJson = JSON.parse(msg);
-    console.log(
+    winston.info(
       `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
     );
 
@@ -80,12 +81,12 @@ wss.on("connection", (ws, req) => {
 
       if (result === "ok") {
         winston.info(
-          "success: Successful connection to the server. (IP: " + ip + ")"
+          "success: Successfully connection to the server. (IP: " + ip + ")"
         );
         ws.send(
           JSON.stringify({
             status: "success",
-            message: "Successful connection to the server. Welcome.",
+            message: "Successfully connected to the server. Welcome.",
           })
         );
       } else {
@@ -161,7 +162,7 @@ wss.on("connection", (ws, req) => {
           }
         }
 
-        console.log(`gpt answer: ${result}`);
+        winston.info(`gpt answer: ${result}`);
         // ws.send(`gpt answer: ${result}`);
         // IP가 '특정 IP'인 클라이언트들에게 메시지를 전송
         // if (clients.has(ip)) {
@@ -202,14 +203,14 @@ wss.on("connection", (ws, req) => {
 
   // 4. 에러 처리
   ws.on("error", (error) => {
-    console.log(`error occured from client[${ip}]: ${error}`);
+    winston.info(`error occured from client[${ip}]: ${error}`);
   });
 
   // 5. 연결 종료 이벤트 처리
   ws.on("close", () => {
     // 클라이언트 연결이 닫히면 해당 웹소켓을 배열에서 제거
     clients = clients.filter((client) => client !== ws);
-    console.log(`client[${ip}] connection closed`);
+    winston.info(`client[${ip}] connection closed`);
   });
 });
 

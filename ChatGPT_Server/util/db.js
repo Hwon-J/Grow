@@ -16,7 +16,18 @@ connection.connect((error) => {
   winston.info("Successfully connected to the database.");
 });
 
-const query = util.promisify(connection.query).bind(connection);
+const queryPromise = util.promisify(connection.query).bind(connection);
+// const queryPromise = (sql, params) => {
+//   return new Promise((resolve, reject) => {
+//     connection.query(sql, params, (error, results, fields) => {
+//       if (error) {
+//         reject(error);
+//       } else {
+//         resolve(results);
+//       }
+//     });
+//   });
+// };
 
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
@@ -24,7 +35,7 @@ const checkSerial = async (serial) => {
   let sql = "select * from `pot` where `serial_number`=?";
 
   try {
-    let result = await query(sql, [serial]);
+    let result = await queryPromise(sql, [serial]);
 
     if (result.length == undefined || result.length === 0) {
       return "not exist";
@@ -61,7 +72,11 @@ const saveChatLog = async (log) => {
   try {
     let sql =
       "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)";
-    let result = await query(sql, [log.plantIndex, log.role, log.content]);
+    let result = await queryPromise(sql, [
+      log.plantIndex,
+      log.role,
+      log.content,
+    ]);
 
     if (result === 0) {
       return "something wrong happened...";
@@ -88,7 +103,7 @@ const getCondition = async (plantIndex) => {
     let sql =
       "select * from `plant_condition` where `plant_index` = ? order by `measurement_date` desc limit 1";
 
-    let result = await query(sql, [plantIndex]);
+    let result = await queryPromise(sql, [plantIndex]);
     return result;
   } catch (error) {
     winston.error(error);
@@ -109,7 +124,7 @@ const getWaterLog = async (plantIndex) => {
   winston.info(`getWaterLog called. plantIndex: ${plantIndex}`);
   try {
     let sql = "select * from `water_log` where plant_index = ?";
-    let result = await query(sql, [plantIndex]);
+    let result = await queryPromise(sql, [plantIndex]);
     return result;
   } catch (error) {
     winston.error(error);
@@ -131,7 +146,7 @@ const getPlantInfoByIndex = async (index) => {
   try {
     let sql = "select * from `plant_info` where index = ?";
 
-    let result = await query(sql, [index]);
+    let result = await queryPromise(sql, [index]);
     return result;
   } catch (error) {
     winston.error(error);
@@ -155,13 +170,14 @@ const getPlantInfoByIndex = async (index) => {
 const getConditionGoodOrBad = async (serial) => {
   winston.info(`getConditionGoodOrBad called. serial: ${serial}`);
   try {
-    let sql = `select * 
+    let sql = `select *, plant.index as pindex
     from \`pot\` join \`plant\` on pot.index = plant.pot_index 
     join plant_info on plant.plant_info_index = plant_info.index
     where serial_number = ?`;
 
-    let result = await query(sql, [index]);
+    let result = await queryPromise(sql, [serial]);
     if (result.length == 0) {
+      winston.info(`getConditionGoodOrBad returned "no data"`);
       return "no data";
     }
     let limitData = result[0];
@@ -170,6 +186,11 @@ const getConditionGoodOrBad = async (serial) => {
     let temperatureMsg = null;
 
     // 최신 센서 데이터 가져오기
+    sql = `select * from plant_condition where plant_index = ?`;
+    result = await queryPromise(sql, [limitData.pindex]);
+    let light = result[0].light;
+    let moisture = result[0].moisture;
+    let temperature = result[0].temperature;
 
     // 조도 상황 확인
     if (limitData.light_upper === null) {
@@ -200,7 +221,7 @@ const getConditionGoodOrBad = async (serial) => {
     } else {
       moistureMsg = "과다";
     }
-    
+
     // 온도 상황 확인
     if (limitData.temperature_upper === null) {
       limitData.temperature_upper = 1_000_000_000;
@@ -216,7 +237,13 @@ const getConditionGoodOrBad = async (serial) => {
       temperatureMsg = "과다";
     }
 
-    return { "light": lightMsg, "moisture": moistureMsg, "temperature": temperatureMsg, "temperValue": temperature };
+    winston.info(`getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}`);
+    return {
+      light: lightMsg,
+      moisture: moistureMsg,
+      temperature: temperatureMsg,
+      temperValue: temperature,
+    };
   } catch (error) {
     winston.error(error);
     return "error";
