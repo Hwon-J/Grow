@@ -58,7 +58,7 @@ function WebSocketComponent(props) {
       console.log(event.data)
       console.log('getmessage')
       // setReceivedMessage(event.data)
-      setReceivedMessage('안녕 나는 씨앗이야, 오늘 학교에서 무슨 일이 있었니')
+      
       getmessage(event.data)
     };
     
