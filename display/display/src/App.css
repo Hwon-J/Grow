@@ -103,13 +103,13 @@ top: 75px;
   align-items:start;
   justify-items: left;
   position : fixed;
-  left : 180px;
+  left : 150px;
   top : 250px;
 
 }
 
 .information h1 {
-  font-size: 45px;
+  font-size: 40px;
   
 }
 
