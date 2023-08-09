@@ -91,6 +91,7 @@
   font-size: 30px;
   display: inline-block;
   margin-right: 30px;
+  cursor: pointer;
 }
 .plant-btn.selected {
   font-weight: bold;

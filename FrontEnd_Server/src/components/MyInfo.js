@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "./MyInfo.scss";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/Urls";
 import { Grid } from "@mui/material";
-
+import PlantDeleteComponent from "./plant/PlantDelete";
 // 가져오는 날짜 형식을 YYYYMMDD로 변환
 const formatDate = (isoDateString) => {
   const date = new Date(isoDateString);
@@ -44,7 +44,7 @@ const MyInfo = () => {
   const [spices, setSpices] = useState();
   // params로 식물 id를 가져옴
   const { id } = useParams();
-
+  const navigate = useNavigate();
   // 현재 로그인한 유저의 토큰을 가져옴
   const currentUser = useSelector((state) => state.currentUser);
   const token = currentUser.token;
@@ -80,6 +80,7 @@ const MyInfo = () => {
         "",
         config
       );
+      window.location.href = "/profile";
       console.log(response.data);
       console.log("성공");
     } catch (error) {
@@ -117,6 +118,24 @@ const MyInfo = () => {
     return <div>Loading...</div>;
   }
 
+  // 해당 식물 삭제
+  const deletePlantData = async () => {
+    const config = {
+      headers: {
+        Authorization: token,
+      },
+    };
+
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/api/plant/myplant/${id}`,
+        config
+      );
+      window.location.href = "/profile";
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="info_box">
@@ -127,10 +146,15 @@ const MyInfo = () => {
           />
         </Grid>
         <Grid item xs={7} className="info_box_right">
-        {myplant.complete !== 1 && (
+          {myplant.complete !== 1 && (
             <div className="info_box_button" onClick={completePlant}>
               Complete
             </div>
+          )}
+          {myplant.complete === 1 && (
+            <PlantDeleteComponent deletePlantData={deletePlantData}>
+              회원탈퇴
+            </PlantDeleteComponent>
           )}
 
           {myplant && myplant.plant_name && <h3>{myplant.plant_name}</h3>}
