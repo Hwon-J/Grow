@@ -77,6 +77,7 @@ wss.on("connection", (ws, req) => {
       `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
     );
 
+    // 클라이언트의 메세지가 핸드셰이크인 경우
     // 연결 후 클라이언트는 첫 메세지로 핸드셰이크를 보낸다
     if (msgJson.purpose == "handshake") {
       let result = await db.checkSerial(msgJson.serial);
@@ -87,12 +88,13 @@ wss.on("connection", (ws, req) => {
         );
         ws.send(
           JSON.stringify({
-            status: "success",
-            message: "Successfully connected to the server. Welcome.",
+            about: "serialCheck",
+            content: "success",
           })
         );
       } else {
         // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
+        // 등록되지 않은 시리얼인 경우
         if (result === "unregistered") {
           winston.info(
             "fail: Unregistered serial number. Please check again. (IP: " +
@@ -101,10 +103,11 @@ wss.on("connection", (ws, req) => {
           );
           ws.send(
             JSON.stringify({
-              status: "fail",
-              message: "Unregistered serial number. Please check again",
+              about: "serialCheck",
+              content: "unregistered",
             })
           );
+          // 존재하지 않는 시리얼인 경우
         } else if (result === "not exist") {
           winston.info(
             "fail: a non-existent serial number. Please check again. (IP: " +
@@ -113,16 +116,17 @@ wss.on("connection", (ws, req) => {
           );
           ws.send(
             JSON.stringify({
-              status: "fail",
-              message: "a non-existent serial number. Please check again",
+              about: "serialCheck",
+              content: "not exist",
             })
           );
+          // 그 이외의 에러처리
         } else {
           winston.info("fail: Error occured in handshake. (IP: " + ip + ")");
           ws.send(
             JSON.stringify({
-              status: "fail",
-              message: "Error occured in handshake.",
+              about: "serialCheck",
+              content: "error",
             })
           );
         }
@@ -134,6 +138,7 @@ wss.on("connection", (ws, req) => {
       ws.serial = msgJson.serial;
       ws.role = msgJson.role;
       clients.push(ws);
+
       // purpose가 gpt이며, undefined, null, ""가 아닌 경우
     } else if (
       msgJson.purpose === "gpt" &&

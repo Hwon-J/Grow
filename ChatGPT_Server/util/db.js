@@ -63,6 +63,17 @@ const checkSerial = async (serial) => {
   // });
 };
 
+// 최신 채팅로그를 가져오기
+const getRecentChatLog = async (serial) => {
+  winston.info(`getRecentChatLog called. serial: ${serial}`);
+  try {
+    let sql = `select `
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+};
+
 // 사용자의 입력과 gpt의 대답을 기록하기
 const saveChatLog = async (log) => {
   winston.info(`saveChatLog called. serial: ${log.serial}, role: ${log.role}`);
@@ -248,6 +259,7 @@ const getConditionGoodOrBad = async (serial) => {
 module.exports = {
   connection,
   checkSerial,
+  getRecentChatLog,
   saveChatLog,
   getCondition,
   getWaterLog,
