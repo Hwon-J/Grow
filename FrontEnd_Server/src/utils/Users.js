@@ -32,7 +32,6 @@ const CheckToken = () => {
       },
     };
 
-    console.log("걸리나");
     try {
       const response = await axios.get(`${BASE_URL}/api/user/valid`, config);
       console.log("response", response);

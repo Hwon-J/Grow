@@ -16,7 +16,9 @@ const Service3 = () => {
           </div>
           <h2 className="col2-h2">아이와 부모의 편지</h2>
           <div>
-            <p className="col2-p2">부모와 아이의 이해, 아이의 행복을 키우는 첫 걸음</p>
+            <p className="col2-p2">
+              부모와 아이의 이해, 아이의 행복을 키우는 첫 걸음
+            </p>
           </div>
         </Col>
       </Row>
