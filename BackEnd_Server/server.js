@@ -30,5 +30,5 @@ const plantRoutes = require("./routes/plant-router");
 app.use("/api/plant", plantRoutes);
 
 app.listen(PORT, () => {
-  winston.info(`Server is running on port ${PORT}(ver.1.0.7)`);
+  winston.info(`Server is running on port ${PORT}(ver.1.0.8)`);
 });
