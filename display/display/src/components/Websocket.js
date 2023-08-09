@@ -101,7 +101,7 @@ function WebSocketComponent(props) {
     overflowY: 'auto',
     whiteSpace: 'normal',
     overflowWrap: 'break-word',
-    fontSize : '30px',
+    fontSize : '40px',
     fontFamily: 'iceSotong-Rg'
   };
   return (
