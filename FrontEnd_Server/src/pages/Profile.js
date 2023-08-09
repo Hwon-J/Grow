@@ -124,7 +124,7 @@ const Profile = () => {
     <>
       <NavTop />
       <div className="top_section">
-        <h1>Profile</h1>
+        <h1 style={{ fontSize : "100px" }}>Profile</h1>
       </div>
       <div className="profilepage container">
         <div className="profile-row">

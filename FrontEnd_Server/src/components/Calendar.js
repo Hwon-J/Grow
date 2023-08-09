@@ -167,9 +167,6 @@ const Calender = () => {
       };
     
       
-//http://i9c103.p.ssafy.io:30001/api/plant/water/${id}
-//http://192.168.100.37:30001/api/plant/water/${id}
-
     // 물 준 기록을 가져오는 함수
     const getWaterLog = async () => {
         try {
@@ -194,9 +191,6 @@ const Calender = () => {
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
         <>
-        <div className="waterlog_title">
-            <h1>Water Log Calendar</h1>
-        </div>
         <div className="calendar">
             
             <RenderHeader
@@ -209,8 +203,8 @@ const Calender = () => {
                 currentMonth={currentMonth}
                 currentDate={currentDate}
                 formattedWaterLog={formattedWaterLog}
-                // waterLog={waterLog}
             />
+            
         </div>
         </>
     );

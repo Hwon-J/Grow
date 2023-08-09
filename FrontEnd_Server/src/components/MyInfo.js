@@ -64,10 +64,6 @@ const MyInfo = () => {
     "율마",
     "알로카시아",
   ];
-  // 서버 주소
-  //http://i9c103.p.ssafy.io:30001/api/plant/myplant/${id}
-  //http://192.168.100.37:30001/api/plant/myplant/${id}
-  //http://192.168.100.37:30001/api/plant/complete/${id}
 
   // 식물 키우기 완료로 상태를 바꿔주는 함수
   // PUT으로 수정
@@ -133,9 +129,11 @@ const MyInfo = () => {
           <img className="myinfo-img" src={`/plantInfoimg/${myplant.plant_info_index}.png`} />
         </Grid>
         <Grid item xs={7} className="info_box_right">
-          <div className="info_box_button" onClick={completePlant}>
-            Complete
-          </div>
+        {myplant.complete !== 1 && (
+            <div className="info_box_button" onClick={completePlant}>
+              Complete
+            </div>
+          )}
 
           {myplant && myplant.plant_name && <h3>{myplant.plant_name}</h3>}
 
@@ -151,8 +149,6 @@ const MyInfo = () => {
               일차)
             </h5>
           )}
-          {/* <h5>{myplant.child_name}(이)가 키우는 {myplant.plant_name}</h5> */}
-          {/* <h5>키운 지 {daysDifference}일째</h5> */}
         </Grid>
       </div>
     </>

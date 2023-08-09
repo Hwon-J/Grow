@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BsPlusCircle } from "react-icons/bs";
 import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
@@ -16,6 +15,8 @@ const QuestPage = () => {
   const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
+
+  const [currentPage, setCurrentPage] = useState(1);
   
   useEffect(() => {
     getQuest();
@@ -25,11 +26,19 @@ const QuestPage = () => {
   useEffect(() => {
     inputQuest();
   }, [questList]);
+
+  const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+    };
+
+
   const onChangeNewquest = (e) => {
     // 새로운 질문지 작성될떄마다 value값 변경
     setNewquest(e.target.value);
     console.log(e.target.value);
   };
+
+  
 
   const handleInputFocus = (index) => {
     setFocusedInputIndex(index);
@@ -39,16 +48,6 @@ const QuestPage = () => {
     // input의 focus를 잃었을때 발생
     setFocusedInputIndex(null); // 어떤 input도 focus상태가 아니다
   };
-
-  // const handleIconClick = () => {
-  //   // icon을 클릭했을때
-  //   setShowIcon(false); // 안보이게 하기
-  // };
-
-  // const handleOutsideClick = () => {
-  //   // icon이외의 것을 클릭하였을때 다시보이게 하기
-  //   setShowIcon(true);
-  // };
 
   const createQuest = () => {
     const config = {
@@ -101,15 +100,21 @@ const QuestPage = () => {
     // questList의 각각의 index의 값들을 빼내서 input으로 만들기
     // value는 해당 객체의 quest값
     console.log(questList);
+
+    const itemsPerPage = 5;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage; 
+
     return questList
       .slice()
       .reverse()
+      .slice(startIndex, endIndex)
       .map((questItem, index) => (
         <div key={index} className="quest-tm">
           <div className="quest-left">
-            <p>{questItem.content}</p>
+            <p className="question">{questItem.content}</p>
             {questItem?.registered_date && (
-              <p style={{ display: "inline-block", marginRight: "5px" }}>
+              <p className="resister_date" style={{ display: "inline-block", marginRight: "5px" }}>
                 {questItem.registered_date.slice(0,10)}일 등록
               </p>
             )}
@@ -119,6 +124,7 @@ const QuestPage = () => {
             <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem.index)} />
           </div>
         </div>
+        
       ));
   };
 
@@ -147,6 +153,24 @@ const QuestPage = () => {
       });
   };
 
+  const renderPagination = () => {
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(questList.length / itemsPerPage);
+  
+    return (
+      <div className="pagination">
+        <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+          이전
+        </button>
+        <span>{`${currentPage} / ${totalPages}`}</span>
+        <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+          다음
+        </button>
+      </div>
+    );
+  };
+  
+
   return (
     <>
       <div className="quest-container">
@@ -169,36 +193,8 @@ const QuestPage = () => {
 
         <div className="quest-section">
           {inputQuest()}
-          {/* <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아??</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right">
-              <Icon icon="bi:bell" style={{ fontSize: '30px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px' }} />
-
-              </div>
-
-            </div>
-
-            <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아?나나나나나나나난나나나ㅏ나나나나난나나나나</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} />
-
-              </div>
-
-            </div> */}
         </div>
+        {renderPagination()}
       </div>
     </>
   );
