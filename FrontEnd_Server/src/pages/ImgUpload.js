@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 import styled from "styled-components";
-import axios from 'axios';
+import axios from "axios";
 
 const ImgPreview = styled.img`
   border-style: solid;
@@ -19,7 +19,7 @@ const UploadImage = styled.input`
   left: 50%;
   right: 30%;
   margin-top: 300px;
-`
+`;
 
 const ViewImage = styled.button`
   height: 30px;
@@ -30,33 +30,35 @@ const ViewImage = styled.button`
 `;
 
 export default function ImgUpload() {
-
-
-  const [img, setImg] = useState('')
+  const [img, setImg] = useState("");
 
   const formSubmit = (e) => {
     const img = e.target.files[0];
     const formData = new FormData();
-    formData.append('file', img);
+    formData.append("file", img);
 
-     axios.post("이미지 요청 주소", formData).then(res => {
-      setImg(res.data.location)
-      alert('성공')
-    }).catch(err => {
-      alert('실패')
-    })
-}
+    axios
+      .post("이미지 요청 주소", formData)
+      .then((res) => {
+        setImg(res.data.location);
+        alert("성공");
+      })
+      .catch((err) => {
+        alert("실패");
+      });
+  };
 
   return (
     <div>
-        <div className="img-preview">
-          <ImgPreview id="img-preview" src={img} />
-          <UploadImage type='file' 
-              accept='image/*' 
-              id='img' 
-              onChange={formSubmit}>
-          </UploadImage>
-        </div>
+      <div className="img-preview">
+        <ImgPreview id="img-preview" src={img} />
+        <UploadImage
+          type="file"
+          accept="image/*"
+          id="img"
+          onChange={formSubmit}
+        ></UploadImage>
+      </div>
     </div>
   );
 }
