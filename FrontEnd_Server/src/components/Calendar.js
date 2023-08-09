@@ -170,11 +170,6 @@ const Calender = () => {
         () => (waterLog.data ? waterLog.data.map(formatDate) : []),
         [waterLog]
       );
-      setWaterLog(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
     // RenderHeader, RenderDays, RenderCells를 렌더링한다.
     return (
