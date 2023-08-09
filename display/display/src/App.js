@@ -35,14 +35,14 @@ function Conversation() {
   const character_list = [beancharacter, lettucecharacter, tomatocharacter]
   const character_index = params.character_index
   // 센서값 관련해서 state 설정
-  const [sensor, sensor_update] = useState({'temperature':'', 'light': '', 'moisture':'', temperValue:0})
+  const [sensor, sensor_update] = useState({'temperature':'', 'light': '', 'moisture':'', 'temperValue':0, 'water':'not passed'})
   
   // 대화 컴포넌트 구조
   return (
     
     <div >
       <img src={board} className='board' />
-      <span className='information'>
+      <span className='information '>
         <h1>온도 : {sensor.temperature} {sensor.temperValue}도</h1>
         <h1>조도 : {sensor.light}</h1>
         <h1>수분 : {sensor.moisture}</h1>
@@ -96,7 +96,7 @@ function App() {
       <div className="App" style={backgroundStyles}>
         <Routes>
           <Route path="/verify" element={<Verify />} />
-          <Route path="/characterchoice" element={<CharacterChoice />} />
+          <Route path="/characterchoice/:serial_number" element={<CharacterChoice />} />
           <Route path="/conversation/:character_index/:serial_number" element={<Conversation />} />
         </Routes>
       </div>
