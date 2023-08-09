@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-// 시리얼넘버와 센서 업데이트 함수 props 로 받기
+import { useNavigate, useParams } from 'react-router-dom';
+
 function Verify() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [receivedMessage, setReceivedMessage] = useState('');
@@ -14,15 +14,24 @@ function Verify() {
     }
   
   function serialVerify (message) {
-    console.log(message)
+    
     const mes = JSON.parse(message)
-    console.log(mes)
-    if (mes.content === true){
-      alert('등록된 시리얼 번호입니다.')
-      navigate('/characterchoice')
-    }
-    else {
+    
+    if (mes.about === 'serialCheck'){
+
+      if (mes.content === 'success'){
+        alert('등록된 시리얼 번호입니다. 캐릭터 선택창으로 이동합니다.')
+        navigate(`/characterchoice/${startmessage.serial}`)
+      }
+      else if (mes.content === 'unregistered') {
         alert('등록되지 않은 번호입니다. pc에서 시리얼 번호를 등록해주세요.')
+      }
+      else if (mes.content === 'not exist') {
+        alert('존재하지 않은 번호입니다. 시리얼 번호를 다시 확인해주세요.')
+      }
+      else {
+        alert('에러 발생')
+      }
     }
   }
 
@@ -59,20 +68,28 @@ function Verify() {
   }, []); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행
 
   
-  // 굳이 메세지 보내는 기능은 필요 없지만 임시로 넣어 놓았습니다.
+  
   const sendSerial = () => {
     if (socket && startmessage) {
       socket.send(JSON.stringify(startmessage));
     }
 
   };
-
+  const buttonposition = {
+    position: 'fixed',
+    top: '35%', // 여기서 높이를 조절할 수 있습니다.
+    left: '35%',
+    fontFamily: 'iceSotong-Rg'
+  }
   
   return (
-    <div >
-      <div>
-        
-        <button onClick={sendSerial}>등록된 시리얼 번호 인증하기</button>
+    <div  >
+      <div style={buttonposition}>
+
+        <h1>이 기기의 시리얼 번호 : {startmessage.serial}</h1>
+        <button  className='btn btn-primary' onClick={sendSerial}>
+          등록된 시리얼 번호 인증하기
+        </button>
       </div>
       
     </div>
