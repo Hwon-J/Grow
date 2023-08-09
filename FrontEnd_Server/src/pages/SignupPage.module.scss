@@ -1,4 +1,4 @@
-.login_total {
+.signup_total {
     background-image: url("../assets/login1.png");
     background-size: cover;
     background-repeat: no-repeat;
@@ -6,12 +6,13 @@
     min-height: 100vh;
 }
 
-.loginbox {
+
+.signupbox {
   position: absolute;
   top: 50%;
   left: 65%;
   width: 30vw;
-  padding: 40px;
+  padding: 20px;
   transform: translate(-50%, -50%);
   @media (max-width: 1400px) {
     width: 35vw;  
@@ -37,12 +38,15 @@
   @media (max-width: 420px) {
     width: 80vw;  
   }
+  p{
+    margin-bottom: -10px;
+  }
   h2 {
   margin: 0 0 50px;
   padding: 0;
   color: #000000;
   text-align: center;
-  font-size: 50px;
+  font-size: 40px;
   }
   .userbox {
     position: relative;
@@ -50,7 +54,7 @@
     input {
     width: 100%;
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 15px;
     color: #000000;
     border: none;
     border-bottom: 1px solid #737373;
@@ -70,20 +74,34 @@
       transform: translateY(-50%);
     }
     input:focus ~ label,input:valid ~ label{
-      top: -10px;
+      top: -5px;
       left: 0;
       color: #000000;
       font-weight: bold;
       font-size: 18px;
 
     }
+    .confirmbtn {
+        position: absolute;
+        right: 0;
+        border:black 1px solid;
+        border-radius: 20px;
+        padding: 3px 7px;
+        font-size: 12px;
+        background-color: #fff;
+        &:hover {
+            background: black;
+            color: #fff;
+          }
+    }
   }
-  .loginbtnWrapper {
+  .signupbtnWrapper {
     text-align: right; /* 버튼을 오른쪽으로 정렬합니다 */
   }
-  .loginbtn {
+  .signupbtn {
     width: 120px;
     padding: 10px 30px;
+    margin-top: 10px;
     cursor: pointer;
     background: rgb(255, 255, 255);
     border:black 1px solid;
@@ -99,4 +117,5 @@
       color: #fff;
     }
   }
-}
+  }
+
