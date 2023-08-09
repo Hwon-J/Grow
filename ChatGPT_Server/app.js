@@ -3,6 +3,7 @@ const gpt = require("./util/call-gpt.js");
 const db = require("./util/db.js");
 const stringPurify = require("./util/string-purifier.js");
 const winston = require("./util/winston.js");
+const Queue = require("queue");
 require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: process.env.PORT });
@@ -36,6 +37,11 @@ wss.on("connection", (ws, req) => {
     Math.floor(
       Math.random() * (process.env.RANDOM_MAX - process.env.RANDOM_MIN)
     ) + process.env.RANDOM_MIN;
+
+  // 질문의 인덱스를 저장할 큐
+  const indexQueue = new Queue();
+  // 다음 질문은 질문에 대한 대답이라는 플래그
+  let qFlag = false;
 
   // 현재까지 해당 ip에서 나눈 대화기록
   let history = [];
@@ -184,6 +190,10 @@ wss.on("connection", (ws, req) => {
           if (result.charAt(result.length - 1) == "?") {
             count = count - 1;
           } else {
+            let question = await db.addRandomQuestion(msgJson.serial);
+            indexQueue.enqueue(question.index);
+            result = result + question.result;
+            qFlag = true;
           }
         }
         // 답변 DB에 저장
