@@ -76,10 +76,16 @@
  
 
  .text-title {
-  font-size: 2em;
+  font-size: 50px;
   font-weight: bold;
+  margin-bottom: 0;
  }
  
+.card-text-body{
+  font-size: 25px;
+  margin-top: -10px;
+}
+
  .plantcard:hover .plantcard-button {
   transform: translate(-50%, -200%);
   opacity: 1;

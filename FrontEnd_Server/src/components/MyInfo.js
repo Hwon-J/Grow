@@ -148,7 +148,7 @@ const MyInfo = () => {
         <Grid item xs={7} className="info_box_right">
           {myplant.complete !== 1 && (
             <div className="info_box_button" onClick={completePlant}>
-              Complete
+              완료
             </div>
           )}
           {myplant.complete === 1 && (
@@ -157,7 +157,7 @@ const MyInfo = () => {
             </PlantDeleteComponent>
           )}
 
-          {myplant && myplant.plant_name && <h3>{myplant.plant_name}</h3>}
+          {myplant && myplant.plant_name && <h3 style={{fontSize: "50px"}}>{myplant.plant_name}</h3>}
 
           {myplant && myplant.plant_info_index && (
             <h5>종: {checkspices[(myplant.plant_info_index - 1) % 10]}</h5>

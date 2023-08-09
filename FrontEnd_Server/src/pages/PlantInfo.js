@@ -170,7 +170,7 @@ const PlantInfo = () => {
         <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
       )}
       <div className="top_section">
-        <h1>식물 등록</h1>
+        <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
@@ -189,7 +189,7 @@ const PlantInfo = () => {
               >
                 <Col xs={10}>
                   <Stack gap={3} className="plantinfo-stack">
-                    <h2>식물 등록</h2>
+                    <h2 >식물 등록</h2>
 
                     <Form.Control
                       type="text"

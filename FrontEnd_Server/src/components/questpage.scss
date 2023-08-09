@@ -32,9 +32,9 @@
 }
 
   h1{
-    font-size: 40px;
+    font-size: 50px;
     font-weight: bold;
-    margin: 30px auto;
+    margin: 20px auto;
 
   }
 }
@@ -49,6 +49,7 @@
     padding-left: 15px;
     border-radius: 30px 0 0 30px;
     margin-bottom: 30px;
+    font-size: 24px;
 }
 .btnQ {
 	display: inline-block;
@@ -56,8 +57,9 @@
 	color: #fff;
   border: 0;
   height: 50px;
-  padding: 0 20px;
+  padding: 0 20px 0 18px;
   border-radius: 0 30px 30px 0; 
+  font-size: 24px;
 }
 
 .quest-tm {
@@ -84,7 +86,7 @@
   
   .question {
     width: 100%;
-    font-size: 20px;
+    font-size: 28px;
   }
   .resister_date {
     font-size: 15px;
@@ -104,4 +106,14 @@
     cursor: pointer;
   }
 }
-
+.center-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination {
+  font-size: 20px;
+  Icon {
+    margin: 0 10px;
+  }
+}

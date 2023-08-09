@@ -122,7 +122,7 @@ const Profile = () => {
     <>
       <NavTop />
       <div className="top_section">
-        <h1 style={{ fontSize : "100px" }}>식물 목록</h1>
+        <h1 style={{ fontSize : "100px" }}>나의 식물 목록</h1>
       </div>
       <div className="profilepage container">
         <div className="profile-row">
@@ -163,8 +163,8 @@ const Profile = () => {
                     <SwiperSlide>
                       <div className="plantcard_new">
                         <div className="new_register" onClick={createCard}>
-                          <h5>새 식물친구</h5>
-                          <h5>등록해주기</h5>
+                          <h5 style={{fontSize:"30px"}}>새 식물친구</h5>
+                          <h5 style={{fontSize:"30px"}}>등록해주기</h5>
                         </div>
 
                         {/* <div className="blob"></div>
