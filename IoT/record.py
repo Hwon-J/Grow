@@ -16,6 +16,9 @@ import pygame
 import time
 import json
 import logging
+import subprocess
+
+
 
 
 # 초음파 센서 설정
@@ -33,10 +36,7 @@ buffer = np.zeros((BUFFER_SIZE, CHANNELS), dtype='int16')
 write_ptr = 0
 recording = False
 save_data = False
-
-# 출력 설정
-pygame.init()
-pygame.mixer.init()
+playing=False
 
 # log 설정
 logging.basicConfig(
@@ -50,47 +50,58 @@ ws = None
 
 last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 
-def tts(message):
+def play(path):
+    global playing
+    playing=True
+    try:
+        subprocess.run(["aplay", path], check=True)
+        playing=False
+    except:
+        logging.warning("오디오 출력 에러")
 
+def tts(message):
+    logging.warning("tts 시작")
     client_id = "tzm493x2hf"
     client_secret = "KcnpCE2iHXwN7HLCKxoLLC12KM9TS6CZe7zNuzVF"
     encText = urllib.parse.quote(message)
-    data = "speaker=nara&volume=0&speed=0&pitch=0&format=wav&sampling-rate=48000&text=" + encText
+    data = "speaker=vdain&volume=5&speed=-2&pitch=0&emotion=2&emotion-strength=1&format=wav&sampling-rate=48000&text=" + encText
     url = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts"
     request = urllib.request.Request(url)
     request.add_header("X-NCP-APIGW-API-KEY-ID", client_id)
     request.add_header("X-NCP-APIGW-API-KEY", client_secret)
     response = urllib.request.urlopen(request, data=data.encode('utf-8'))
     rescode = response.getcode()
-    if (rescode == 200):
-        logging.info("TTS mp3저장")
-        response_body = response.read()
-        with open('tts.wav', 'wb') as f:
-            f.write(response_body)
+    try:
+        if (rescode == 200):
+            logging.info("TTS mp3저장")
+            response_body = response.read()
+            with open('tts.wav', 'wb') as f:
+                f.write(response_body)
+        else:
+            print("Error Code:" + rescode)
+            logging.error("TTS 에러발생")
+        logging.warning("TTS 종료")
+    except:
+        logging.warning("TTS 에러발생")
 
-        audio_file = "/home/jamfarm/SUNGMIN/S09P12C103/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요
-        pygame.mixer.init()
-        sound = pygame.mixer.Sound(audio_file)
-        sound.play()
-        logging.info("TTS 시작")
-        while pygame.mixer.get_busy():
-            time.sleep(0.1)
-        pygame.mixer.quit()
-    else:
-        print("Error Code:" + rescode)
-        logging.error("TTS 에러발생")
-    logging.info("TTS 종료")
+    path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요
+    play(path)
 
 
 # 웹소켓 서버 설정
 def on_message(ws, message):
-    data = json.loads(message)
-    message = data["content"]
-    print(f"Received message from client: {message}")
-    #logging.info(f"Received message from client: {message}")
-    tts(message)
-    # 클라이언트로부터 받은 메시지를 처리하는 로직을 여기에 추가
-    # 예: message를 분석하고 필요한 동작을 수행
+    try:
+        data = json.loads(message)
+        message = data["content"]
+        
+        print(f"Received message from client: {message}")
+        logging.info(f"Received message from client: {message}")
+        tts(message)
+
+        # 클라이언트로부터 받은 메시지를 처리하는 로직을 여기에 추가
+        # 예: message를 분석하고 필요한 동작을 수행
+    except:
+        logging.warning("not exist content")
 
 
 
@@ -110,6 +121,7 @@ def on_open(ws):
     ws.send(handshake_message)
     #print("WebSocket opened")
     logging.info("WebSocket opened")
+    
     # tts로 handshake시 읽어주기
     
 
@@ -125,7 +137,6 @@ def run_websocket_server():
                       on_close=on_close)
     ws.on_open = on_open
     ws.run_forever()
-
 
 def transcribe_file_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
@@ -164,11 +175,11 @@ def record_audio():
     global write_ptr
     global recording
     global save_data
+    global playing
     start_ptr = 0
     end_ptr = 0
-
     with sd.InputStream(samplerate=RATE, channels=CHANNELS, dtype='int16') as stream:
-        while True:
+        while True:      
             try:
                 data, _ = stream.read(RATE)
             except sd.PortAudioError as e:
@@ -190,11 +201,12 @@ def record_audio():
                 #print("File saved.")
                 response = transcribe_file_v2(
                     "recorded_audio.wav")  # 파일 저장 후 변환 함수 호출
-                logging.warning(type(response))
+                if(response==""):
+                    continue
                 print(response)
+                logging.info(response)
                 logging.info("stt 완료")
                 if ws:
-
                     message = json.dumps(
                         {"purpose": "gpt", "role": "raspi",  "content": response, "serial": "97745"})  # 수정된 부분
                     ws.send(message)
@@ -248,7 +260,6 @@ if __name__ == "__main__":
         record_thread = threading.Thread(target=record_audio)
         record_thread.daemon = True
         record_thread.start()
-
         websocket_thread = threading.Thread(target=run_websocket_server)
         websocket_thread.daemon = True
         websocket_thread.start()
@@ -280,6 +291,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Measurement stopped by user.")
         GPIO.cleanup()
+        logging.info("____________________________________________")
         exit()
 
 
