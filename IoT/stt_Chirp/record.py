@@ -37,8 +37,8 @@ def on_open(ws):
 
 def run_websocket_server():
     global ws
-    # ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
-    ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
+    ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
+    # ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
 
     ws = WebSocketApp(ws_url,
                       on_message=on_message,
