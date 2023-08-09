@@ -297,6 +297,36 @@ const getConditionGoodOrBad = async (serial) => {
   }
 };
 
+// 부모님의 랜덤질문과 랜덤 접속사 가져오기
+const addRandomQuestion = async (serial) => {
+  winston.info(`addRandomQuestion called. serial: ${serial}`);
+  try {
+    // 랜덤 접속사 가져오기
+    let sql = `SELECT * FROM conjunction
+    ORDER BY RAND()
+    LIMIT 1`;
+    let result = await queryPromise(sql, []);
+    let conjunction = result[0].content;
+
+    //랜덤 질문 가져오기
+    sql - `select question.content as content, question.index as \`index\` from 
+    pot join plant on pot.index = plant.pot_index 
+    join question on plant.index = question.plant_index
+    where pot.serial_number = ? and question.completed = 0
+    ORDER BY RAND() LIMIT 1`;
+    result = await queryPromise(sql, [serial]);
+    let question = result[0].content;
+    let index =  result[0].index;
+
+    winston.info(`addRandomQuestion returned. {"index":${index}, "result":"${conjunction}, ${question}"}`);
+    // 객체로 내보내기
+    return {"index":index, "result":`${conjunction}, ${question}`};
+  } catch (error) {
+    winston.error(error);
+    return {"index":-1, "result":"error"};
+  }
+};
+
 module.exports = {
   connection,
   checkSerial,
@@ -306,4 +336,5 @@ module.exports = {
   getWaterLog,
   getPlantInfoByIndex,
   getConditionGoodOrBad,
+  addRandomQuestion
 };
