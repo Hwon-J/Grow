@@ -7,6 +7,7 @@ function WebSocketComponent(props) {
   const [receivedMessage, setReceivedMessage] = useState('');
   
   const sensor_update = props.sensor_update
+  const set_talking = props.set_talking
   const [watering, setWatering] = useState(false)
   function getmessage (message) {
     console.log(message)
@@ -34,14 +35,17 @@ function WebSocketComponent(props) {
     else if (mes.about === 'gpt') {
       console.log('getgpt')
       const gpt_answer = mes.content
+      set_talking(true)
       setReceivedMessage(gpt_answer)
     }
     else if (mes.about === 'closer') {
       console.log('closer')
+      set_talking(true)
       setReceivedMessage('좀 더 가까이 와서 말해줘')
     }
     else if (mes.about === 'further') {
       console.log('further')
+      set_talking(true)
       setReceivedMessage('답변을 생각중이야')
     }
   }
