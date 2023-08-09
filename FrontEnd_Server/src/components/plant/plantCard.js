@@ -10,6 +10,7 @@ const PlantCard = (props) => {
   console.log(data)
   return (
     <div className="plantcard">
+      <div className="plantcard-md">
       <div className="bg">
         <div className="plantcard-details">
           {/* Added className="plantcard-details" */}
@@ -20,8 +21,9 @@ const PlantCard = (props) => {
       </div>
       <div className="blob"></div>
       <button className="button type1 plantcard-button" onClick={goDiary}>
-        <span className="btn-txt">상세보기</span>
+        상세보기
       </button>
+      </div>
     </div>
   );
 };

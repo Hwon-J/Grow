@@ -1,5 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config();
+const winston = require("./winston.js");
 
 async function callGpt(user_input) {
   const configuration = new Configuration({

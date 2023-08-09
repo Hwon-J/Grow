@@ -1,0 +1,79 @@
+.login_total {
+    background-image: url("../assets/login1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.loginbox {
+  position: absolute;
+  top: 50%;
+  left: 65%;
+  width: 30vw;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  
+  h2 {
+  margin: 0 0 80px;
+  padding: 0;
+  color: #000000;
+  text-align: center;
+  font-size: 50px;
+  }
+  .userbox {
+    position: relative;
+
+    input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #000000;
+    border: none;
+    border-bottom: 1px solid #737373;
+    outline: none;
+    background: transparent;
+    
+    }
+    
+    label {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      font-size: 16px;
+      color: #fff;
+      pointer-events: none;
+      transition: .5s;
+      transform: translateY(-50%);
+    }
+    input:focus ~ label,input:valid ~ label{
+      top: -10px;
+      left: 0;
+      color: #000000;
+      font-weight: bold;
+      font-size: 18px;
+
+    }
+  }
+  .loginbtnWrapper {
+    text-align: right; /* 버튼을 오른쪽으로 정렬합니다 */
+  }
+  .loginbtn {
+    width: 120px;
+    padding: 10px 30px;
+    cursor: pointer;
+    background: rgb(255, 255, 255);
+    border:black 1px solid;
+    outline: none;
+    border-radius: 30px;
+    color: #000000;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    transition: .5s;
+    &:hover {
+      background: black;
+      color: #fff;
+    }
+  }
+}

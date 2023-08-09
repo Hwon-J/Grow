@@ -1,3 +1,22 @@
+.home-main-container{
+  height: 100%;
+  // overflow: hidden;
+  position: relative;
+}
+.content-home {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.content-home > div{
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+ 
+}
+
 .home_container {
   // background-image: ;
   background-size: contain; /* 이미지를 비율을 유지하면서 요소에 꽉 차도록 설정 */
@@ -30,6 +49,8 @@
   }
 }
 
-.video-background nav ul li a, .video-background nav ul li p {
-  color : white !important;
+.video-background nav ul li a,
+.video-background nav ul li p {
+  color: white !important;
 }
+

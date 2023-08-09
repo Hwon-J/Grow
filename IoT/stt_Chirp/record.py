@@ -31,7 +31,7 @@ def on_close(ws):
 
 def on_open(ws):
     
-    handshake_message = json.dumps({"role": "handshake", "serial": "asdf"})
+    handshake_message = json.dumps({"purpose": "handshake" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
     ws.send(handshake_message)
     print("WebSocket opened")
 
@@ -127,7 +127,7 @@ def record_audio():
                 print(response)
                 if ws:
                     
-                    message = json.dumps({"role": "gpt", "message": response, "serial": "qwer"}) # 수정된 부분
+                    message = json.dumps({"purpose": "gpt" ,"role": "raspi",  "content": response, "serial": "97745"}) # 수정된 부분
                     ws.send(message)
 
                 save_data = False
@@ -191,13 +191,13 @@ if __name__ == "__main__":
 
             if distance < 15 and not recording: # 거리가 10cm 미만일 때 녹음 시작
                 print("Recording started...")
-                message = json.dumps({"role": "closer", "serial": "qwer"}) # 수정된 부분
+                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
                 ws.send(message)
                 recording = True
 
             elif distance >= 15 and recording: # 거리가 10cm 이상일 때 녹음 종료
                 print("Recording stopped...")
-                message = json.dumps({"role": "further", "serial": "qwer"}) # 수정된 부분
+                message = json.dumps({"purpose": "further" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
                 ws.send(message)
                 recording = False
                 save_data = True

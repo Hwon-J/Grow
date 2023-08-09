@@ -121,14 +121,15 @@ const Profile = () => {
   const [showInProgress, setShowInProgress] = useState(true);
 
   return (
-    <div className="profile-total">
+    <>
       <NavTop />
+      <div className="top_section">
+        <h1>Profile</h1>
+      </div>
       <div className="profilepage container">
         <div className="profile-row">
           <div className="container profile row">
-            <div className="col-12">
-              <h1 className="profile_title">PROFILE</h1>
-            </div>
+
             <div className="button-container">
               <div className="btn-left">
               <div
@@ -153,7 +154,6 @@ const Profile = () => {
             <div className="container plant">
               {showInProgress && (
                 <div className="plant-ing">
-                  <div>
                     <Swiper
                       slidesPerView={slidesPerView}
                       spaceBetween={30}
@@ -166,28 +166,29 @@ const Profile = () => {
                     >
                       {NotcompleteCardSet()}
                       <SwiperSlide>
-                        <div className="plantcard">
-                          <div className="bg">
-                            <div className="plantcard-details">
-                              <h5>
-                                새 식물친구
-                                <br />
-                                등록해주기
-                              </h5>
-                            </div>
+                        <div className="plantcard_new">
+                          <div className="new_register" onClick={createCard}>
+                            <h5>
+                            새 식물친구
+                            </h5>
+                            <h5>
+                            등록해주기
+                            </h5>
                           </div>
-                          <div className="blob"></div>
+                         
+                          {/* <div className="blob"></div>
                           <button
                             className="button type1 plantcard-button"
                             onClick={createCard}
                           >
-                            <span className="btn-txt">+</span>
-                          </button>
+                            +
+                          </button> */}
+                          
                         </div>
                       </SwiperSlide>
                     </Swiper>
                   </div>
-                </div>
+
               )}
               {!showInProgress && (
                 <div className="plant-complete">
@@ -209,7 +210,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

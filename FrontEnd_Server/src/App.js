@@ -15,6 +15,9 @@ import {FailPage} from './pages/shop/Fail.tsx'
 import { SuccessPage } from './pages/shop/Success.tsx';
 import CheckToken from './utils/Users';
 
+
+import LoginPage from './pages/LoginPage';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 const App = () => {
@@ -22,7 +25,6 @@ const App = () => {
   return (
     <React.Fragment>
       <CheckToken />
-        <div>
         <Routes>
           <Route path="/" element={<Outlet />}>
             {/* NavTop과 Footer가 있는 라우트 */}
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/diary/:id" element={<PlantDiary />} />
             <Route path="/login" element={<Login />} />
+
+            <Route path="/loginpage" element={<LoginPage />} />
 
             <Route path="/signup" element={<SignUp />} />
             <Route path="/plantinfo" element={<PlantInfo />} />
@@ -44,7 +48,6 @@ const App = () => {
             <Route path="/*" element={<NotFound/>} />
           </Route>
         </Routes>
-      </div>
     </React.Fragment>
   );
 };

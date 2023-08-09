@@ -229,7 +229,7 @@ const SignUp = () => {
                   {confirmMessage}
                 </p>
                 <button className="mb-4 px-5 mx-5 w-100 auth-btn">
-                  SingUp
+                  SignUp
                 </button>
                 <p className="ms-5">
                   Do you have an account?{" "}
