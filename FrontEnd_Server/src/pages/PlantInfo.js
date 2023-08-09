@@ -204,24 +204,24 @@ const PlantInfo = () => {
                       </Offcanvas.Header>
                       <Offcanvas.Body>
                         {selectedInfo?.info && <p>설명: {selectedInfo.info}</p>}
-                        {selectedInfo?.temperature_upper && (
+                        {(selectedInfo?.temperature_upper || selectedInfo?.temperature_upper === 0) && (
                           <p>
-                            최고: {selectedInfo.temperature_upper}도
+                            최고온도: {selectedInfo.temperature_upper}도
                           </p>
                         )}
                         
-                        {selectedInfo?.temperature_lower && (
+                        {(selectedInfo?.temperature_lower || selectedInfo?.temperature_lower===0) && (
                           <p>
                             최저온도: {selectedInfo.temperature_lower}도
                           </p>
                         )}
-                        {selectedInfo?.moisture_upper&& (
+                        {(selectedInfo?.moisture_upper || selectedInfo?.moisture_upper===0) && (
                           <p>최고습도: {selectedInfo.moisture_upper}%</p> 
                         )}
-                        {selectedInfo?.moisture_lower && (
+                        {(selectedInfo?.moisture_lower || selectedInfo?.moisture_lower===0) && (
                           <p>최저습도: {selectedInfo.moisture_lower}%</p>
                         )}
-                        {selectedInfo?.max_water_period && (
+                        {(selectedInfo?.max_water_period|| selectedInfo?.max_water_period===0) && (
                           <p>
                             최대 물주기: {selectedInfo.max_water_period}일
                           </p>
