@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import "./service2.css";
 
@@ -12,7 +12,6 @@ const Service2 = () => {
             <br />
           </div>
           <h2 className="col2-h2">집에서도 외롭지 않게</h2>
-          <br />
           <div>
             <p className="col2-p2">마음을 나누는 똑똑한 친구 AI식물</p>
           </div>

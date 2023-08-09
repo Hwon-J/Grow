@@ -1,7 +1,7 @@
-import React from 'react';
-import homevideo2 from '../assets/homevideo2.mp4';
+import React from "react";
+import homevideo2 from "../assets/homevideo2.mp4";
 
-function HomeVideo2 () {
+function HomeVideo2() {
   return (
     <div>
       <video width="800" height="450" autoPlay loop muted>
@@ -9,6 +9,6 @@ function HomeVideo2 () {
       </video>
     </div>
   );
-};
+}
 
 export default HomeVideo2;

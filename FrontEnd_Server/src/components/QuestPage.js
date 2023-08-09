@@ -10,7 +10,6 @@ import { Icon } from "@iconify/react";
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
   const authToken = currentUser.token; // 토큰 저장
-  // const [showIcon, setShowIcon] = useState(true); // 아이콘이 보이게 할지 말지 정하는 변수
   const [focusedInputIndex, setFocusedInputIndex] = useState(null); // 어떤 input이 포커스 받는지 확인 변수
   const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
@@ -120,18 +119,20 @@ const QuestPage = () => {
             )}
           </div>
           <div className="quest-right">
-          {questItem?.audio_file_path && <Icon icon="bi:bell" onClick={listenAudio} />}
-            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem.index)} />
+            {questItem?.audio_file_path && (
+              <Icon icon="bi:bell" onClick={listenAudio} />
+            )}
+            <Icon
+              icon="bi:trash3"
+              onClick={() => deleteQuest(questItem.index)}
+            />
           </div>
         </div>
         
       ));
   };
 
-  const listenAudio = () => {
-    
-  }
-
+  const listenAudio = () => {};
 
   const deleteQuest = (questId) => {
     const config = {

@@ -42,7 +42,9 @@ function NavTop() {
           </div>
           {windowWidth <= 600 && (
             <div className="nav-mobile" onClick={toggleMobileMenu}>
-              <span className={`hamburger ${showMobileMenu ? "open" : ""}`}></span>
+              <span
+                className={`hamburger ${showMobileMenu ? "open" : ""}`}
+              ></span>
             </div>
           )}
           <nav>
@@ -64,11 +66,11 @@ function NavTop() {
                       plantinfo
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink to="/shop" style={{ textDecoration: "none" }}>
                       Shop
                     </NavLink>
-                  </li>
+                  </li> */}
                 </>
               ) : null}
               <li>

@@ -120,13 +120,11 @@ const MyInfo = () => {
   return (
     <>
       <div className="info_box">
-        <Grid
-          item
-          xs={5}
-          className="rounded-image"
-
-        >
-          <img className="myinfo-img" src={`/plantInfoimg/${myplant.plant_info_index}.png`} />
+        <Grid item xs={5} className="rounded-image">
+          <img
+            className="myinfo-img"
+            src={`/plantInfoimg/${myplant.plant_info_index}.png`}
+          />
         </Grid>
         <Grid item xs={7} className="info_box_right">
         {myplant.complete !== 1 && (

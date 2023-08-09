@@ -10,11 +10,11 @@ async function callGpt(user_input) {
 
   try {
     const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-16k",
       messages: user_input,
       temperature: 1,
-      max_tokens: 256,
-      top_p: 1,
+      max_tokens: 512,
+      top_p: 0.1,
       frequency_penalty: 0,
       presence_penalty: 0,
     });

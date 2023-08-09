@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import "./Home.scss";
 import NavTop from "../components/NavTop";
@@ -8,7 +8,7 @@ import Service2 from "../components/home/Service2";
 import Service3 from "../components/home/Service3";
 import "./MainVideoBackground.css";
 import homevideo1 from "../assets/homevideo1.mp4";
-import { ScrollToTopOnMount, SectionsContainer, Section } from 'react-fullpage';
+import { SectionsContainer, Section } from "react-fullpage";
 
 function HomeBackground() {
   return (
@@ -20,18 +20,23 @@ function HomeBackground() {
 
 const Home = () => {
   let options = {
-    anchors: ['sectionOne', 'sectionTwo', 'sectionThree', 'sectionFour',],
+    anchors: ["sectionOne", "sectionTwo", "sectionThree", "sectionFour"],
   };
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if there's a hash in the URL and scroll to the corresponding section
-    navigate('/home#sectionOne')
+    navigate("/home#sectionOne");
   }, []);
+
   return (
     <>
-      <SectionsContainer {...options}  className="home-main-container" >
-        <Section anchor="sectionOne" className={`video-background content-home `}>
+      <SectionsContainer {...options} className="home-main-container">
+        <Section
+          anchor="sectionOne"
+          className={`video-background content-home `}
+        >
           <HomeBackground />
           <NavTop className="homenav" />
           <div className="content">
