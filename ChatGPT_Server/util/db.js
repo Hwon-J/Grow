@@ -67,7 +67,28 @@ const checkSerial = async (serial) => {
 const getRecentChatLog = async (serial) => {
   winston.info(`getRecentChatLog called. serial: ${serial}`);
   try {
-    let sql = `select `
+    let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
+    let result = await queryPromise(sql, [serial]);
+    if (result.length === 0) {
+      winston.info(`something wrong happened... there is no plant that pot's serial number is ${serial}`);
+      return [];
+    }
+
+    sql = `select \`role\`, \`content\` from chat_log where plant_index = ? order by chatted_date desc limit 10`;
+    result = await queryPromise(sql, [result[0].pindex]);
+
+    // 만약 result가 홀수길이라면 하나 땜
+    if (result.length %2 === 1){
+      result.pop();
+    }
+
+    // result를 역순으로 바꾸면서 raw한 json 배열로 바꿈
+    let reversed = [];
+    for(let i = result.length-2; i>=0; i = i-2){
+      reversed.push({"role":result[i].role, "content":result[i].content});
+      reversed.push({"role":result[i+1].role, "content":result[i+1].content});
+    }
+    return reversed;
   } catch (error) {
     winston.error(error);
     return "error";

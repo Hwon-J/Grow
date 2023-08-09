@@ -1,4 +1,5 @@
 const maria = require("mysql");
+const winston = require("./winston.js");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -11,7 +12,7 @@ const connection = maria.createConnection({
 // MariaDB connection 실행
 connection.connect(error => {
     if (error) throw error;
-    console.log("Successfully connected to the database.");
+    winston.info("Successfully connected to the database.");
 })
 
 module.exports = connection;

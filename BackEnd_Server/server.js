@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const winston = require("./util/winston.js");
 require("dotenv").config();
 
 app.use(express.json());
@@ -29,5 +30,5 @@ const plantRoutes = require("./routes/plant-router");
 app.use("/api/plant", plantRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}(ver.1.0.6)`);
+  winston.info(`Server is running on port ${PORT}(ver.1.0.7)`);
 });
