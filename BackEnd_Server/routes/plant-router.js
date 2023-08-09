@@ -21,4 +21,6 @@ router.post("/quest/:index", verify, plantController.registQuestion);
 
 router.delete("/quest/:index", verify, plantController.deleteQuestion);
 
+router.delete("/myplant/:index", verify, plantController.deletePlantByIndex)
+
 module.exports = router;
