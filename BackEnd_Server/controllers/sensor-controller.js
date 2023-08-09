@@ -36,7 +36,7 @@ exports.updateSensorData = async (req, res, next) => {
 
     // 해당하는 식물 번호가 존재하면, 그 식물 번호에 해당하는 센서값 등록
     query =
-      "update `plant_condition` set temperature = ?, moisture = ?, light=? where plant_index=?";
+      "update `plant_condition` set temperature = ?, moisture = ?, light=?, measurement_date = now() where plant_index=?";
     try {
       await queryPromise(query, [
         temperature,
