@@ -10,6 +10,9 @@ const PlantDiary = () => {
   return (
     <div className="diary_total">
       <NavTop />
+      <div className="top_section">
+        <h1>Diary</h1>
+      </div>
       <Container className="centered-elements">
         {/* <h1 className='diary_title'>plant Diary</h1> */}
         <Grid container className="diary-container" spacing={2}>

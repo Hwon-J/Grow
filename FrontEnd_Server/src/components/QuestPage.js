@@ -15,6 +15,8 @@ const QuestPage = () => {
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  
   useEffect(() => {
     getQuest();
     inputQuest();
@@ -23,11 +25,19 @@ const QuestPage = () => {
   useEffect(() => {
     inputQuest();
   }, [questList]);
+
+  const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+    };
+
+
   const onChangeNewquest = (e) => {
     // 새로운 질문지 작성될떄마다 value값 변경
     setNewquest(e.target.value);
     console.log(e.target.value);
   };
+
+  
 
   const handleInputFocus = (index) => {
     setFocusedInputIndex(index);
@@ -89,16 +99,22 @@ const QuestPage = () => {
     // questList의 각각의 index의 값들을 빼내서 input으로 만들기
     // value는 해당 객체의 quest값
     console.log(questList);
+
+    const itemsPerPage = 5;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage; 
+
     return questList
       .slice()
       .reverse()
+      .slice(startIndex, endIndex)
       .map((questItem, index) => (
         <div key={index} className="quest-tm">
           <div className="quest-left">
-            <p>{questItem.content}</p>
+            <p className="question">{questItem.content}</p>
             {questItem?.registered_date && (
-              <p style={{ display: "inline-block", marginRight: "5px" }}>
-                {questItem.registered_date.slice(0, 10)}일 등록
+              <p className="resister_date" style={{ display: "inline-block", marginRight: "5px" }}>
+                {questItem.registered_date.slice(0,10)}일 등록
               </p>
             )}
           </div>
@@ -112,6 +128,7 @@ const QuestPage = () => {
             />
           </div>
         </div>
+        
       ));
   };
 
@@ -137,6 +154,24 @@ const QuestPage = () => {
       });
   };
 
+  const renderPagination = () => {
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(questList.length / itemsPerPage);
+  
+    return (
+      <div className="pagination">
+        <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+          이전
+        </button>
+        <span>{`${currentPage} / ${totalPages}`}</span>
+        <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+          다음
+        </button>
+      </div>
+    );
+  };
+  
+
   return (
     <>
       <div className="quest-container">
@@ -157,7 +192,10 @@ const QuestPage = () => {
           </button>
         </div>
 
-        <div className="quest-section">{inputQuest()}</div>
+        <div className="quest-section">
+          {inputQuest()}
+        </div>
+        {renderPagination()}
       </div>
     </>
   );
