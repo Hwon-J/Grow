@@ -5,12 +5,9 @@ function WebSocketComponent(props) {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [receivedMessage, setReceivedMessage] = useState('');
-  const startmessage = {
-    "role":"handshake",
-    "serial":""
-    }
-  console.log(props)
+  
   const sensor_update = props.sensor_update
+  const [watering, setWatering] = useState(false)
   function getmessage (message) {
     console.log(message)
     const mes = JSON.parse(message)
@@ -21,8 +18,17 @@ function WebSocketComponent(props) {
       const moisture = mes.content.moisture
       const temperature = mes.content.temperature
       const temperValue = mes.content.temperValue
-      const newData = {"light":light_value,"moisture":moisture,"temperature":temperature,"temperValue":temperValue}
-    sensor_update(newData);
+      const water = mes.content.water
+      const newData = {"light":light_value,"moisture":moisture,"temperature":temperature,"temperValue":temperValue, "water":water}
+      sensor_update(newData);
+      if (water === 'passed'){
+        setWatering(true)
+      }
+      else if (water === 'not passed'){
+        console.log('err')
+        setWatering(false)
+        console.log(watering)
+      }
 
     }
     else if (mes.about === 'gpt') {
@@ -42,7 +48,7 @@ function WebSocketComponent(props) {
 
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
-    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    const newSocket = new WebSocket('ws://192.168.100.37:30002');
     console.log(props.serial_number)
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
@@ -87,22 +93,7 @@ function WebSocketComponent(props) {
     }
   }, [socket]); // socket가 변경될 때마다 useEffect 호출
   
-  // 굳이 메세지 보내는 기능은 필요 없지만 임시로 넣어 놓았습니다.
-  const handleSendMessage = () => {
-    const newData = {'온도':'적당', '조도': '적당', '수분':'충분'}
-    sensor_update(newData);
-    console.log(socket)
-    setReceivedMessage('안녕 나는 씨앗이야, 오늘 학교에서 무슨 일이 있었니')
-    if (socket && message) {
-        const sendmessage = startmessage
-        sendmessage.serial = message
-        
-        console.log('send')
-      socket.send(JSON.stringify(sendmessage));
-      setMessage('');
-    }
-
-  };
+  
 
   // 표시할 메세지 박스의 스타일 설정
   const messagebox = {
@@ -110,18 +101,12 @@ function WebSocketComponent(props) {
     overflowY: 'auto',
     whiteSpace: 'normal',
     overflowWrap: 'break-word',
-    fontSize : '30px'
+    fontSize : '30px',
+    fontFamily: 'iceSotong-Rg'
   };
   return (
     <div >
-      <div>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={handleSendMessage}>Send</button>
-      </div>
+      
       <div style={messagebox}>
         <p>{receivedMessage}</p>
       </div>

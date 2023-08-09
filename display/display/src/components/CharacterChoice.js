@@ -6,12 +6,14 @@ import lettucecharacter from '../assets/lettucecharacter.png';
 import beancharacter from '../assets/beancharacter.png';
 import tomatocharacter from '../assets/tomatocharacter.png';
 import logo from '../assets/logo.png';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 export default function CharacterChoice() {
     // navigate와 dispatch를 사용하기 위해 기능 변수 설정
-    const navigate = useNavigate();
-    const base_serial_number = '97745'
+    const navigate = useNavigate()
+    const params = useParams()
+    const base_serial_number = params.serial_number
+    // console.log(base_serial_number)
     const character_list = [beancharacter, lettucecharacter, tomatocharacter]
     
     
