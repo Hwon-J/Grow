@@ -43,11 +43,16 @@
     right: 10px;
   }
   .info_box_button{
-    padding: 5px 10px;
+    padding: 3px 10px;
     border-radius: 5px; 
-    background-color: #4c9601;
+    border: #fff solid 1px;
     color: #fff;
     cursor: pointer;
+    font-size: 20px;
+    &:hover{
+      background-color: #fff;
+      color: #293e09;
+    }
   }
   }
  
