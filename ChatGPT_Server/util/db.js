@@ -74,7 +74,7 @@ const getRecentChatLog = async (serial) => {
       return [];
     }
 
-    sql = `select \`role\`, \`content\` from chat_log where plant_index = ? order by chatted_date desc limit 10`;
+    sql = `select \`role\`, \`content\` from chat_log where plant_index = ? order by chatted_date desc limit 16`;
     result = await queryPromise(sql, [result[0].pindex]);
 
     // 만약 result가 홀수길이라면 하나 땜
@@ -98,7 +98,6 @@ const getRecentChatLog = async (serial) => {
 // 사용자의 입력과 gpt의 대답을 기록하기
 const saveChatLog = async (log) => {
   winston.info(`saveChatLog called. serial: ${log.serial}, role: ${log.role}`);
-  winston.info(`content: ${log.content}`);
   try {
     let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
     let result = await queryPromise(sql, [log.serial]);
@@ -148,9 +147,9 @@ const getCondition = async (plantIndex) => {
 const getWaterLog = async (plantIndex) => {
   winston.info(`getWaterLog called. plantIndex: ${plantIndex}`);
   try {
-    let sql = "select * from `water_log` where plant_index = ?";
+    let sql = "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
     let result = await queryPromise(sql, [plantIndex]);
-    return result;
+    return result[0];
   } catch (error) {
     winston.error(error);
     return "error";
@@ -209,6 +208,7 @@ const getConditionGoodOrBad = async (serial) => {
     let lightMsg = null;
     let moistureMsg = null;
     let temperatureMsg = null;
+    let waterMsg = null;
 
     // 최신 센서 데이터 가져오기
     sql = `select * from plant_condition where plant_index = ?`;
@@ -262,14 +262,34 @@ const getConditionGoodOrBad = async (serial) => {
       temperatureMsg = "과다";
     }
 
+    // 물 주는 주기 확인
+    if (limitData.max_water_period === null) {
+      limitData.max_water_period = 3;
+    }
+    // 현재 날짜와 최근 물 준 날짜의 차이가 limitData.max_water_period보다 크면 passed 반환
+    let water = getWaterLog(limitData.pindex);
+    const currentDate = new Date();
+    const wateredDateTime = new Date(water.wateredDate);
+  
+    // milliseconds로 계산된 날짜 차이를 일(day) 단위로 변환
+    const differenceInDays = Math.floor((currentDate - wateredDateTime) / (1000 * 60 * 60 * 24));
+    const maxWaterInDays = Math.floor(new Date(limitData.max_water_period) / (1000 * 60 * 60 * 24));
+  
+    if (differenceInDays > maxWaterInDays) {
+      waterMsg = "passed";
+    } else {
+      waterMsg = "not passed";
+    }
+
     winston.info(
-      `getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}`
+      `getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}, ${waterMsg}`
     );
     return {
       light: lightMsg,
       moisture: moistureMsg,
       temperature: temperatureMsg,
       temperValue: temperature,
+      water: waterMsg
     };
   } catch (error) {
     winston.error(error);
