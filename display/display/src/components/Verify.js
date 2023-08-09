@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Swal from "sweetalert2";
+import register from '../assets/register.png';
 
 function Verify() {
+
   const navigate = useNavigate()
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
@@ -12,7 +15,17 @@ function Verify() {
     content: null,
     serial: '97745'
     }
-  
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-center',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    // didOpen: (toast) => {
+    //     toast.addEventListener('mouseenter', Swal.stopTimer)
+    //     toast.addEventListener('mouseleave', Swal.resumeTimer)
+    // }
+})
   function serialVerify (message) {
     
     const mes = JSON.parse(message)
@@ -20,17 +33,41 @@ function Verify() {
     if (mes.about === 'serialCheck'){
 
       if (mes.content === 'success'){
-        alert('등록된 시리얼 번호입니다. 캐릭터 선택창으로 이동합니다.')
-        navigate(`/characterchoice/${startmessage.serial}`)
+        Toast.fire({
+          icon: 'success',
+          title: '등록 인증 성공!'
+      })
+        .then(
+          navigate(`/characterchoice/${startmessage.serial}`)
+        )
       }
       else if (mes.content === 'unregistered') {
-        alert('등록되지 않은 번호입니다. pc에서 시리얼 번호를 등록해주세요.')
+        Swal.fire({
+          title: '등록되지 않은 번호입니다!',
+          text: '부모님께 PC의 해당 페이지에 등록을 요청해주세요.',
+          imageUrl: register,
+          imageWidth: 600,
+          imageHeight: 300,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+          
+        })
       }
       else if (mes.content === 'not exist') {
-        alert('존재하지 않은 번호입니다. 시리얼 번호를 다시 확인해주세요.')
+        Toast.fire({
+          icon: 'warning',
+          title: '존재하지 않는 번호에요. 다시 한 번 확인해주세요.'
+      })
       }
       else {
-        alert('에러 발생')
+        Toast.fire({
+          icon: 'error',
+          title: '알 수 없는 에러 발생'
+      })
       }
     }
   }
@@ -70,6 +107,15 @@ function Verify() {
   
   
   const sendSerial = () => {
+    Toast.fire({
+      icon: 'success',
+      title: '등록 인증 성공!'
+  })
+    .then(result => {
+      // 만약 Promise리턴을 받으면,
+      
+      navigate(`/characterchoice/${startmessage.serial}`)}
+    )
     if (socket && startmessage) {
       socket.send(JSON.stringify(startmessage));
     }
