@@ -160,13 +160,11 @@ const QuestPage = () => {
   
     return (
       <div className="pagination">
-        <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-          이전
-        </button>
+        {currentPage !== 1 && (
+        <Icon icon="bi:chevron-left"  style={{ marginRight: '10px', marginTop: '3px' }} onClick={() => handlePageChange(currentPage - 1)} />)}
         <span>{`${currentPage} / ${totalPages}`}</span>
-        <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-          다음
-        </button>
+        {currentPage !== totalPages && (
+        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px' }} onClick={() => handlePageChange(currentPage + 1)} />)}
       </div>
     );
   };
@@ -195,7 +193,7 @@ const QuestPage = () => {
         <div className="quest-section">
           {inputQuest()}
         </div>
-        {renderPagination()}
+        <div className="center-pagination" style={{ marginTop: '35px' }}>{renderPagination()}</div>
       </div>
     </>
   );

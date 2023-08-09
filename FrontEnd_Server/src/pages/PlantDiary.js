@@ -11,7 +11,7 @@ const PlantDiary = () => {
     <div className="diary_total">
       <NavTop />
       <div className="top_section">
-        <h1>Diary</h1>
+        <h1 style={{fontSize: "100px"}}>화분 일지</h1>
       </div>
       <Container className="centered-elements">
         {/* <h1 className='diary_title'>plant Diary</h1> */}
