@@ -7,7 +7,7 @@
 
 .service1-row {
   height: 90%;
-  background-color: #ede9e9ba;
+  background-color: #dcdbdbba;
   padding : 50px auto;
   border-radius: 10px;
   width: 100%;
@@ -23,16 +23,10 @@
 
 .col1-service img {
   width: 80%;
+  border-radius: 17px;
 }
 
-/* @keyframes slideLeft {
-  0% {
-    left: 20%; 
-  }
-  100% {
-    left: -20%;
-  }
-} */
+
 .service2-col{
   /* margin-top: 16% !important; */
   height: 100%;
@@ -51,6 +45,7 @@
   display: inline;
   border-radius: 5px;
   font-size: 30px;
+  padding: 0 15px 0 10px;
 
 }
 .col2-p2{
@@ -58,4 +53,24 @@
   font-weight: 700;
   background-color: #fff;
   display: inline;
+}
+.page2-col {
+  left: 30px;
+}
+.page2-col div p, .page2-col h2{
+  animation-duration: 7s;
+  /* animation-play-state: running; */
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  from {
+    margin-left: 80%;
+    width: 300%
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
 }
