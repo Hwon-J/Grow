@@ -1,6 +1,7 @@
 @font-face {
-  font-family: 'KCC-DodamdodamR';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2') format('woff2');
+  font-family: "KCC-DodamdodamR";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
@@ -16,8 +17,8 @@
 .profile-container {
   display: flex;
   align-items: flex-start;
-  position: relative; 
-  z-index: 1; 
+  position: relative;
+  z-index: 1;
   padding-bottom: 150px;
   overflow-x: hidden;
 }
@@ -25,18 +26,18 @@
 .profilepage {
   display: flex;
   justify-content: center;
-  font-family: 'KCC-DodamdodamR';
+  font-family: "KCC-DodamdodamR";
 }
 
 .profile-row {
   justify-content: center;
-  width : 90%;
+  width: 90%;
 }
 
 .profile {
   display: flex; /* Flex 컨테이너로 설정 */
   justify-content: center; /* 가로 중앙 정렬 */
-  padding-left: 0px; 
+  padding-left: 0px;
 }
 
 .mySwiper {
@@ -71,11 +72,10 @@
   cursor: pointer;
 }
 
-.plant{
-
+.plant {
   border-radius: 2ch;
   background-color: white;
-  padding-top : 25px;
+  padding-top: 25px;
   margin-bottom: 50px;
 }
 
@@ -84,11 +84,10 @@
   justify-content: space-between;
 }
 
-.btn-left{
+.btn-left {
   display: flex;
-  
 }
-.plant-btn{
+.plant-btn {
   font-size: 30px;
   display: inline-block;
   margin-right: 30px;
@@ -132,13 +131,13 @@
   background: #1c5222;
   color: #ffffff;
 }
-.plantcard_new:hover{
-  .new_register{
+.plantcard_new:hover {
+  .new_register {
     border: #ffffff solid 1px;
     padding: 10px 30px 0;
     border-radius: 50px;
   }
-  .new_register:hover{
+  .new_register:hover {
     background-color: #ffffff;
     color: #1c5222;
   }

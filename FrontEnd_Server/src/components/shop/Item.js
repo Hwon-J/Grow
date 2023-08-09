@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
 import './item.css';
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-  MDBCardText,
-  MDBCardImage,
-  MDBBtn,
-  MDBRipple
-} from 'mdb-react-ui-kit';
 import Figure from 'react-bootstrap/Figure';
 const Item = ({ item, handleClick }) => {
   const [showInfo, setShowInfo] = useState(false);

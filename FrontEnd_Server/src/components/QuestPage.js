@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BsPlusCircle } from "react-icons/bs";
 import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
@@ -11,12 +10,11 @@ import { Icon } from "@iconify/react";
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
   const authToken = currentUser.token; // 토큰 저장
-  // const [showIcon, setShowIcon] = useState(true); // 아이콘이 보이게 할지 말지 정하는 변수
   const [focusedInputIndex, setFocusedInputIndex] = useState(null); // 어떤 input이 포커스 받는지 확인 변수
   const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
-  
+
   useEffect(() => {
     getQuest();
     inputQuest();
@@ -39,16 +37,6 @@ const QuestPage = () => {
     // input의 focus를 잃었을때 발생
     setFocusedInputIndex(null); // 어떤 input도 focus상태가 아니다
   };
-
-  // const handleIconClick = () => {
-  //   // icon을 클릭했을때
-  //   setShowIcon(false); // 안보이게 하기
-  // };
-
-  // const handleOutsideClick = () => {
-  //   // icon이외의 것을 클릭하였을때 다시보이게 하기
-  //   setShowIcon(true);
-  // };
 
   const createQuest = () => {
     const config = {
@@ -110,22 +98,24 @@ const QuestPage = () => {
             <p>{questItem.content}</p>
             {questItem?.registered_date && (
               <p style={{ display: "inline-block", marginRight: "5px" }}>
-                {questItem.registered_date.slice(0,10)}일 등록
+                {questItem.registered_date.slice(0, 10)}일 등록
               </p>
             )}
           </div>
           <div className="quest-right">
-          {questItem?.audio_file_path && <Icon icon="bi:bell" onClick={listenAudio} />}
-            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem.index)} />
+            {questItem?.audio_file_path && (
+              <Icon icon="bi:bell" onClick={listenAudio} />
+            )}
+            <Icon
+              icon="bi:trash3"
+              onClick={() => deleteQuest(questItem.index)}
+            />
           </div>
         </div>
       ));
   };
 
-  const listenAudio = () => {
-    
-  }
-
+  const listenAudio = () => {};
 
   const deleteQuest = (questId) => {
     const config = {
@@ -167,38 +157,7 @@ const QuestPage = () => {
           </button>
         </div>
 
-        <div className="quest-section">
-          {inputQuest()}
-          {/* <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아??</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right">
-              <Icon icon="bi:bell" style={{ fontSize: '30px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px' }} />
-
-              </div>
-
-            </div>
-
-            <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아?나나나나나나나난나나나ㅏ나나나나난나나나나</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} />
-
-              </div>
-
-            </div> */}
-        </div>
+        <div className="quest-section">{inputQuest()}</div>
       </div>
     </>
   );
