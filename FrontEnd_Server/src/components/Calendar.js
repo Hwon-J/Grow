@@ -123,38 +123,52 @@ const RenderCells = ({ currentMonth, currentDate, formattedWaterLog }) => {
 
 // PlantDiary.js에서 사용할 Calender 컴포넌트
 const Calender = () => {
-  // useState(new Date())를 통해 현재 날짜와 시간을 초기값으로 저장한다.
-  // currentMonth, selectedDate, currentDate만든다.
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [waterLog, setWaterLog] = useState([]);
-  const { id } = useParams();
-  // console.log(id);
+    // useState(new Date())를 통해 현재 날짜와 시간을 초기값으로 저장한다.
+    // currentMonth, selectedDate, currentDate만든다.
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [waterLog, setWaterLog] = useState([]);
+    const { id } = useParams();
+    // console.log(id);
 
-  // prevMonth, nextMonth를 만들어 버튼 클릭시 원하는 달로 이동하도록 설정한다.
-  const prevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
-  };
-  const nextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
-  };
+    // prevMonth, nextMonth를 만들어 버튼 클릭시 원하는 달로 이동하도록 설정한다.
+    const prevMonth = () => {
+        setCurrentMonth(subMonths(currentMonth, 1));
+    };
+    const nextMonth = () => {
+        setCurrentMonth(addMonths(currentMonth, 1));
+    };
+    
+    // 유저의 토큰을 가져오기
+    const currentUser = useSelector((state) => state.currentUser);
+    const token = currentUser.token;
 
-  // 유저의 토큰을 가져오기
-  const currentUser = useSelector((state) => state.currentUser);
-  const token = currentUser.token;
+    const config = {
+        headers: {
+          Authorization: token, 
+        },
+      };
+    
+      
+    // 물 준 기록을 가져오는 함수
+    const getWaterLog = async () => {
+        try {
+        const response = await axios.get(`${BASE_URL}/api/plant/water/${id}`, config);
+            setWaterLog(response.data);
+        } catch (error) {
+        console.error(error);
+        }
+    };
 
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
+    // 시작하면 getWaterLog 실행
+    useEffect(() => {
+        getWaterLog();
+    }, []);
 
-  // 물 준 기록을 가져오는 함수
-  const getWaterLog = async () => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/plant/water/${id}`,
-        config
+    // waterLog.data가 있으면 형식을 변환하여 formattedWaterLog에 저장
+    const formattedWaterLog = useMemo(
+        () => (waterLog.data ? waterLog.data.map(formatDate) : []),
+        [waterLog]
       );
       setWaterLog(response.data);
     } catch (error) {
@@ -162,39 +176,26 @@ const Calender = () => {
     }
   };
 
-  // 시작하면 getWaterLog 실행
-  useEffect(() => {
-    getWaterLog();
-  }, []);
-
-  // waterLog.data가 있으면 형식을 변환하여 formattedWaterLog에 저장
-  const formattedWaterLog = useMemo(
-    () => (waterLog.data ? waterLog.data.map(formatDate) : []),
-    [waterLog]
-  );
-
-  // RenderHeader, RenderDays, RenderCells를 렌더링한다.
-  return (
-    <>
-      <div className="waterlog_title">
-        <h1>Water Log Calendar</h1>
-      </div>
-      <div className="calendar">
-        <RenderHeader
-          currentMonth={currentMonth}
-          prevMonth={prevMonth}
-          nextMonth={nextMonth}
-        />
-        <RenderDays />
-        <RenderCells
-          currentMonth={currentMonth}
-          currentDate={currentDate}
-          formattedWaterLog={formattedWaterLog}
-          // waterLog={waterLog}
-        />
-      </div>
-    </>
-  );
+    // RenderHeader, RenderDays, RenderCells를 렌더링한다.
+    return (
+        <>
+        <div className="calendar">
+            
+            <RenderHeader
+                currentMonth={currentMonth}
+                prevMonth={prevMonth}
+                nextMonth={nextMonth}
+            />
+            <RenderDays />
+            <RenderCells
+                currentMonth={currentMonth}
+                currentDate={currentDate}
+                formattedWaterLog={formattedWaterLog}
+            />
+            
+        </div>
+        </>
+    );
 };
 
 export default Calender;
