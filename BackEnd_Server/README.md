@@ -312,6 +312,19 @@
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
     - 서버 오류: { code: 500, message: "서버 오류" }
 
+### 특정 식물에 등록한 질문에 대한 답변음성 조회하기
+- 방식: GET
+- 서버IP: 기본URI/quest/:index/audio
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:현재는 뭐든지 다 같은 음성파일을 전송중이니 주의
+  - 성공
+    - 요청처리 성공:요청한 wav 파일을 전송함. status는 200이지만, 별도의 json은 전송되지 않으니 주의! 
+    - 유효하지 않은 id 또는 index: { code: 202, message: "유효하지 않은 id 또는 index"}
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 ### 특정 질문 삭제하기
 - 방식: DELETE
 - 서버IP: 기본URI/quest/:index
