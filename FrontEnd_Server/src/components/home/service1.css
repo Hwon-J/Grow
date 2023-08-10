@@ -3,11 +3,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 .service1-row {
   height: 90%;
-  background-color: #dcdbdbba;
+  background-color: #f2f2f2e7;
   padding : 50px auto;
   border-radius: 10px;
   width: 100%;
@@ -55,14 +56,14 @@
   display: inline;
 }
 .page2-col {
-  left: 30px;
+  left: 10px;
 }
 .page2-col div p, .page2-col h2{
-  animation-duration: 7s;
+  /* animation-duration: 7s; */
   /* animation-play-state: running; */
-  animation-name: slidein;
+  /* animation-name: slidein; */
 }
-
+/* 
 @keyframes slidein {
   from {
     margin-left: 80%;
@@ -73,4 +74,4 @@
     margin-left: 0%;
     width: 100%;
   }
-}
+} */

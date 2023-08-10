@@ -14,7 +14,7 @@ const Service1 = () => {
             <p className="col2-p">식물과 함께 성장</p>
             <br />
           </div>
-          <h2 className="col2-h2">집에서도 외롭지 않게</h2>
+          <h2 className="col2-h2">아이의 책임감과 성장<br />함께 걸어가는 길</h2>
           <br />
           <div>
             <p className="col2-p2">함께 성장하는 식물 친구와 함께</p>

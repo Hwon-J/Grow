@@ -1,0 +1,11 @@
+#root {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.down {
+
+}
