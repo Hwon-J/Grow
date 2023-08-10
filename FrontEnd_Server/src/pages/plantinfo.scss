@@ -26,7 +26,7 @@
 
 .plant-info-container {
   height: 100%;
-  margin-top: 50px;
+  margin-top: 40px;
   margin-bottom: 0px;
   padding-bottom: 0px !important;
   font-family: "KCC-DodamdodamR";
@@ -50,10 +50,6 @@
   }
 }
 
-.plant-info-col div div {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
 
 .plantinfo-stack h2 {
   text-align: center;
@@ -98,21 +94,22 @@
   border-radius: 4px;
   color: #fff; /* 버튼 글자색 */
   // background-color: #94b9e1; /* 버튼 배경색 */
-  background-color: #a6ca9f;
+  background: #1c5222;
   position: relative;
   font-weight: bold; /* 글자 굵기 */
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; /* 애니메이션 효과 */
   cursor: pointer;
+  font-size: 20px;
 }
 .create-btn {
   height: 50px;
   width: 100%;
 }
 .custom-button:hover {
-  background-color: #94b9e1; /* 버튼 배경색 변경 (마우스 호버 시) */
-  border-color: #94b9e1; /* 버튼 테두리색 변경 (마우스 호버 시) */
+  background-color: #29ce00; /* 버튼 배경색 변경 (마우스 호버 시) */
+  border-color: #29ce00; /* 버튼 테두리색 변경 (마우스 호버 시) */
 }
 
 .custom-button:active {

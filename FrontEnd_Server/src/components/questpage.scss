@@ -53,7 +53,7 @@
 }
 .btnQ {
 	display: inline-block;
-	background-color: #4f8034;
+	background: #1c5222;
 	color: #fff;
   border: 0;
   height: 50px;
@@ -65,7 +65,8 @@
 .quest-tm {
   width: 100%;
   min-height: 100px;
-  background-color: #efffdd;
+  background-color:  rgb(220, 233, 224);
+  // border: 3px solid #1c5222;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;

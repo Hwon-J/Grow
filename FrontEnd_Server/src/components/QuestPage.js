@@ -160,11 +160,25 @@ const QuestPage = () => {
   
     return (
       <div className="pagination">
-        {currentPage !== 1 && (
-        <Icon icon="bi:chevron-left"  style={{ marginRight: '10px', marginTop: '3px' }} onClick={() => handlePageChange(currentPage - 1)} />)}
+        {currentPage === 1 && (
+        <Icon icon="bi:chevron-left"  
+          style={{ marginRight: '10px', marginTop: '3px', color: 'white' }} 
+          onClick={() => handlePageChange(currentPage - 1)}  
+        />
+      )}
+      {currentPage !== 1 && (
+        <Icon icon="bi:chevron-left" style={{ marginRight: '10px', marginTop: '3px', color: 'black'}} 
+          onClick={() => handlePageChange(currentPage - 1)}  
+        />
+      )}
         <span>{`${currentPage} / ${totalPages}`}</span>
+        {currentPage === totalPages && (
+        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px', color: 'white' }} 
+        onClick={() => handlePageChange(currentPage + 1)} />)}
+
         {currentPage !== totalPages && (
-        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px' }} onClick={() => handlePageChange(currentPage + 1)} />)}
+        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px', color: 'black' }} 
+        onClick={() => handlePageChange(currentPage + 1)} />)}
       </div>
     );
   };
