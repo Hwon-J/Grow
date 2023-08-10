@@ -1,9 +1,9 @@
 const WebSocket = require("ws");
+const Queue = require("./util/queue.js");
 const gpt = require("./util/call-gpt.js");
 const db = require("./util/db.js");
 const stringPurify = require("./util/string-purifier.js");
 const winston = require("./util/winston.js");
-const Queue = require("queue");
 require("dotenv").config();
 
 const wss = new WebSocket.Server({ port: process.env.PORT });
@@ -92,14 +92,14 @@ wss.on("connection", (ws, req) => {
     if (msgJson.purpose == "handshake") {
       let result = await db.checkSerial(msgJson.serial);
 
-      if (result === "ok") {
+      if (typeof result === "number") {
         winston.info(
-          "success: Successfully connection to the server. (IP: " + ip + ")"
+          `success: Successfully connection to the server. (IP: ${ip})`
         );
         ws.send(
           JSON.stringify({
             about: "serialCheck",
-            content: "success",
+            content: result,
           })
         );
       } else {
@@ -107,9 +107,7 @@ wss.on("connection", (ws, req) => {
         // 등록되지 않은 시리얼인 경우
         if (result === "unregistered") {
           winston.info(
-            "fail: Unregistered serial number. Please check again. (IP: " +
-              ip +
-              ")"
+            `fail: Unregistered serial number. Please check again. (IP: ${ip})`
           );
           ws.send(
             JSON.stringify({
@@ -120,9 +118,7 @@ wss.on("connection", (ws, req) => {
           // 존재하지 않는 시리얼인 경우
         } else if (result === "not exist") {
           winston.info(
-            "fail: a non-existent serial number. Please check again. (IP: " +
-              ip +
-              ")"
+            `fail: a non-existent serial number. Please check again. (IP: ${ip})`
           );
           ws.send(
             JSON.stringify({
@@ -132,7 +128,7 @@ wss.on("connection", (ws, req) => {
           );
           // 그 이외의 에러처리
         } else {
-          winston.info("fail: Error occured in handshake. (IP: " + ip + ")");
+          winston.info(`fail: Error occured in handshake. (IP: ${ip}`);
           ws.send(
             JSON.stringify({
               about: "serialCheck",
@@ -169,7 +165,7 @@ wss.on("connection", (ws, req) => {
         })
       );
 
-      // 히스토리에 유저의 답변 저장
+      // 히스토리에 유저의 입력 저장
       history.push({
         role: "user",
         content: msgJson.content,
@@ -221,6 +217,8 @@ wss.on("connection", (ws, req) => {
           }
         });
       })();
+
+      // 사용자가 가까이 왔다는 메세지의 처리
     } else if (msgJson.purpose === "closer") {
       winston.info(`"closer" accepted from ${ws.serial}`);
       clients.forEach((client) => {
@@ -228,13 +226,15 @@ wss.on("connection", (ws, req) => {
           client.role === "display" &&
           client.serial === msgJson.serial &&
           client.readyState === WebSocket.OPEN
-        ) {
-          winston.info(`send "closer" to ${client.serial}, ${client.role}`);
-          client.send(JSON.stringify({ about: "closer" }));
-        }
-      });
-    } else if (msgJson.purpose === "further") {
-      winston.info(`"further" accepted from ${ws.serial}`);
+          ) {
+            winston.info(`send "closer" to ${client.serial}, ${client.role}`);
+            client.send(JSON.stringify({ about: "closer" }));
+          }
+        });
+
+        // 사용자가 떨어졌다는 메세지의 처리
+      } else if (msgJson.purpose === "further") {
+        winston.info(`"further" accepted from ${ws.serial}`);
       clients.forEach((client) => {
         if (
           client.role === "display" &&
@@ -245,6 +245,12 @@ wss.on("connection", (ws, req) => {
           client.send(JSON.stringify({ about: "further" }));
         }
       });
+
+      // 사용자가 캐릭터를 정했다는 메세지의 처리
+    } else if (msgJson.purpose === "character") {
+      db.setCnum(msgJson.serial, msgJson.content);
+      
+      // 그 이외는 에러처리
     } else {
       ws.send(
         JSON.stringify({

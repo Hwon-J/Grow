@@ -32,7 +32,7 @@ const queryPromise = (sql, params) => {
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
   winston.info(`checkSerial called. serial: ${serial}`);
-  let sql = "select * from `pot` where `serial_number`=?";
+  let sql = "select pot.member_index, character_number as cnum from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
     let result = await queryPromise(sql, [serial]);
@@ -42,7 +42,7 @@ const checkSerial = async (serial) => {
     } else if (result[0].member_index == null) {
       return "unregistered";
     }
-    return "ok";
+    return result[0].cnum;
   } catch (error) {
     winston.error(error);
     return "error";
@@ -62,6 +62,30 @@ const checkSerial = async (serial) => {
   //   return "ok";
   // });
 };
+
+const setCnum = async (serial, cnum) => {
+  winston.info(`setCnum called. serial: ${serial}, cnum: ${cnum}`);
+  let sql = "select plant.index as \`index\` from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+
+  try {
+    let result = await queryPromise(sql, [serial]);
+
+    if (result.length == undefined || result.length === 0) {
+      winston.info(`error occured in setCnum: not exist`);
+      return;
+    } else if (result[0].index == null) {
+      winston.info(`error occured in setCnum: unregistered`);
+      return;
+    }
+    let index = result[0].index;
+    sql = `update plant set character_number = ? where \`index\` = ?`
+    await queryPromise(sql, [cnum, index]);
+    winston.info(`update completed in setCnum`);
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+}
 
 // 최신 채팅로그를 가져오기
 const getRecentChatLog = async (serial) => {
@@ -330,6 +354,7 @@ const addRandomQuestion = async (serial) => {
 module.exports = {
   connection,
   checkSerial,
+  setCnum,
   getRecentChatLog,
   saveChatLog,
   getCondition,
