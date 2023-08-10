@@ -50,7 +50,7 @@ function NavTop() {
           <nav>
             <ul className={`nav-list ${showMobileMenu ? "mobile-show" : ""}`}>
               <li>
-                <NavLink to="/" style={{ textDecoration: "none" }}>
+                <NavLink to="/home" style={{ textDecoration: "none" }}>
                   Home
                 </NavLink>
               </li>
