@@ -21,13 +21,19 @@
   transform: translate(-50%, -50%);
   overflow: auto;
   box-shadow: 1px 1px 50px #252525;
-  /* @media (max-width: 2000px) {
-    height: 35%;
+  @media (max-width: 1300px) {
+    width: 60%;
+    min-height: 50%;
   }
-  @media (max-width: 1700px) {
-    height: 35%;
-    width: 35%;
-  } */
+
+  @media (max-width: 1080px) {
+    width: 65%;
+    min-height: 50%;
+  }
+  @media (max-width: 995px) {
+    width: 70%;
+    min-height: 50%;
+  }
 
   /* 모달창 디자인 */
   background-color: rgb(255, 255, 255);

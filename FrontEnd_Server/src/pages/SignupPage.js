@@ -21,6 +21,7 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmMessage, setConfirmMessage] = useState("");
   const [checkId, setCheckId] = useState("");
+
   // username, email, password, confirmPassword 를 비동기로 저장하기 위해 설정
   const onChangeUserid = (e) => {
     setUserid(e.target.value);
@@ -149,7 +150,6 @@ const SignupPage = () => {
   };
 
   // registerUserAction을 부르고 body변수를 props로 전달
-
   const idChecking = async () => {
     if (userid.length < 6) {
       Swal.fire({
