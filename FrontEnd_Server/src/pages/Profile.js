@@ -164,14 +164,6 @@ const Profile = () => {
                           <h5 style={{fontSize:"30px"}}>새 식물친구</h5>
                           <h5 style={{fontSize:"30px"}}>등록해주기</h5>
                         </div>
-
-                        {/* <div className="blob"></div>
-                          <button
-                            className="button type1 plantcard-button"
-                            onClick={createCard}
-                          >
-                            +
-                          </button> */}
                       </div>
                     </SwiperSlide>
                   </Swiper>

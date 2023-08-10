@@ -8,61 +8,68 @@ import { BASE_URL } from "../utils/Urls";
 import { Grid } from "@mui/material";
 import PlantDeleteComponent from "./plant/PlantDelete";
 
+
+// 날짜를 YYYYMMDD 형식으로 변환하는 함수
+// 현재 날짜가 string 형식과 object형식 두가지로 들어오므로 두가지 경우를 모두 고려한다.
 const formatDate = (dateString) => {
 
-  const date = new Date(dateString);
-  console.log(date);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  let year, month, day;
 
-  const formattedMonth = month < 10 ? `0${month}` : month;
-  const formattedDay = day < 10 ? `0${day}` : day;
-  
+  if (typeof dateString === 'string') {
+    // YYYY-MM-DDTHH:mm:ss.sssZ 형식인 경우
+    [year, month, day] = dateString.slice(0, 10).split('-');
+    return `${year}${month}${day}`;
+  } else {
+    // Thu Aug dd yyyy hh:mm:ss GMT+0900 형식인 경우
+    const date = new Date(dateString);
+    year = date.getFullYear();
+    month = date.getMonth() + 1;
+    day = date.getDate();
+    // 월과 일의 경우 한 자릿수일 경우 앞에 0을 붙인다.
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+     // 최종 형식으로 문자열을 반환한다.
   return `${year}${formattedMonth}${formattedDay}`;
-}
+  }
 
+ 
+};
 
 // 두 날짜 사이의 차이를 구하는 함수
 const calDay = (date1, date2) => {
   const [year1, month1, day1] = [date1.slice(0, 4), date1.slice(4, 6), date1.slice(6)];
   const [year2, month2, day2] = [date2.slice(0, 4), date2.slice(4, 6), date2.slice(6)];
 
-  // 두 개의 Date 객체를 생성합니다.
-  const firstDate = new Date(year1, month1 - 1, day1); // month는 0부터 시작합니다.
+  // 두 개의 Date 객체를 생성한다.
+  const firstDate = new Date(year1, month1 - 1, day1); // month는 0부터 시작
   const secondDate = new Date(year2, month2 - 1, day2);
 
-  // 두 날짜의 차이를 다루기 쉬운 형식으로 변환하고, 날짜 차이를 일 단위로 계산합니다.
+  // 두 날짜의 차이를 다루기 쉬운 형식으로 변환하고, 날짜 차이를 일 단위로 계산
   const differenceInTime = secondDate - firstDate;
   const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
 
   return differenceInDays;
 };
 
+
 // 해당 식물의 정보를 보여주는 컴포넌트
 const MyInfo = () => {
-  // 오늘 날짜와 식물을 키우기 시작한 날짜를 가져옴
+  // 가져온 식물 정보를 저장할 state
   const [myplant, setMyplant] = useState([]);
+  // 키우기 시작한 날짜와 오늘 날짜의 차이를 저장할 state
+  const [daysDifference, setDaysDifference] = useState([]);
+  // 오늘 날짜를 가져온다.(형식 변환 필요)
   const today = new Date();
-  console.log(today, typeof(today));
-
   const formattedToday = formatDate(today);
-  console.log(formattedToday);
-
-  const formattedStartDay = formatDate(myplant.start_date);
-  console.log(myplant.start_date, typeof(myplant.start_date) );
-  console.log(formattedStartDay);
+  
   const [spices, setSpices] = useState();
+
   // params로 식물 id를 가져옴
   const { id } = useParams();
-  const navigate = useNavigate();
   // 현재 로그인한 유저의 토큰을 가져옴
   const currentUser = useSelector((state) => state.currentUser);
   const token = currentUser.token;
 
-  // 식물을 키운 기간을 구함
-  const daysDifference = calDay(formattedStartDay, formattedToday) + 1;
-  console.log(daysDifference);
 
 
   const checkspices = [
@@ -82,7 +89,6 @@ const MyInfo = () => {
 
   // 해당 식물의 정보를 가져오는 함수
   const getPlantInfo = async () => {
-
     
     const config = {
       headers: {
@@ -96,11 +102,11 @@ const MyInfo = () => {
         config
       );
       setMyplant(response.data.data[0]);
-      console.log(myplant);
-      console.log(response.data.data[0].start_date);
-      const formattedStartDay = formatDate(myplant.start_date);
-      console.log(formattedStartDay);
-      
+      // 키우기 시작한 날짜를 가져와 형식을 변환한다.
+      const formattedStartDay = formatDate(response.data.data[0].start_date);
+      // 키우기 시작한 날짜와 오늘 날짜의 차이를 구한다.
+      const difference = calDay(formattedStartDay, formattedToday) + 1;
+      setDaysDifference(difference);
     } catch (error) {
       console.error(error);
     }
@@ -123,14 +129,10 @@ const MyInfo = () => {
       config
     );
     window.location.href = "/profile";
-    console.log(response.data);
-    console.log("성공");
   } catch (error) {
     console.error(error);
   }
 };
-
-
 
 
   // 해당 식물 삭제
@@ -157,12 +159,8 @@ const MyInfo = () => {
     getPlantInfo();
   }, []);
 
-  // myplant가 없으면 로딩중
-  if (!myplant) {
-    return <div>Loading...</div>;
-  }
-
-  
+  // 식물 키우기 완료가 아니면 완료 버튼을 보여준다.
+  // 식물의 애칭, 종, 아이의 이름, 시작날짜와 오늘이 식물을 키운지 몇일째인지 보여준다.
   return (
     <>
       <div className="info_box">

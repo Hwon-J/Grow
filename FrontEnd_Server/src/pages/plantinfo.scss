@@ -31,8 +31,8 @@
   padding-bottom: 0px !important;
   font-family: "KCC-DodamdodamR";
 }
-.plant-colo {
-}
+
+
 .plant-info-col {
   background-color: white;
   border-radius: 4px;
@@ -47,9 +47,8 @@
   }
   ::-webkit-scrollbar {
     display: none;
-  }
+  } 
 }
-
 
 .plantinfo-stack h2 {
   text-align: center;
@@ -82,6 +81,9 @@
 
 .plant-img-card img {
   cursor: pointer;
+  &:hover {
+    background-color:rgb(220, 233, 224);
+  }
 }
 
 .offcanvas-body p {

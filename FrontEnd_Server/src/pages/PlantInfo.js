@@ -157,6 +157,10 @@ const PlantInfo = () => {
                     selectedInfo?.index === info.index
                       ? "0.1rem solid rgb(56, 181, 203)"
                       : "none",
+                  background:
+                    selectedInfo?.index === info.index
+                      ? "rgb(220, 233, 224)"
+                      : "none",
                   width: "100%",
                   height: "100%",
                 }}
@@ -214,7 +218,7 @@ const PlantInfo = () => {
       </div>
       <Container className="plant-info-container">
         <Row>
-          <Col sm={12} md={5} className="plant-info-col">
+          <Col sm={12} md={5} className="plant-info-col" style={{ paddingBottom : "10px"}}>
             {imgPlantInfo()}
           </Col>
 
@@ -255,7 +259,7 @@ const PlantInfo = () => {
                     />
                     <InputGroup>
                       <Form.Control
-                        style={{ fontSize: "20px" }}
+                        style={{ fontSize: "20px", paddingLeft: "12%" }}
                         type="text"
                         placeholder="시리얼 넘버"
                         value={serialNum}
@@ -276,7 +280,8 @@ const PlantInfo = () => {
                         color: "red",
                         display: "flex",
                         justifyContent: "center",
-                        marginTop: "-16px",
+                        marginTop: "-10px",
+                        marginBottom: "-8px",
                       }}
                     >
                       {checkNum ? checkNum : errormessage}
