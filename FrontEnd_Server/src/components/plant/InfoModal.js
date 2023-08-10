@@ -14,7 +14,7 @@ const InfoModal = ({ setModalOpen, selectedInfo }) => {
           X
         </button>
         <div className={styles.modal_left} style={{ width:"50%" }}>
-        <img src="/plantimg/22.png"/>
+        <img src={`./plantInfoimg/${selectedInfo.index}.png`} />
         </div>
         <div className={styles.modal_right} style={{ width:"50%" }}>
           {selectedInfo?.species && <h1 style={{ fontSize:"50px"}}>{selectedInfo.species}</h1>}

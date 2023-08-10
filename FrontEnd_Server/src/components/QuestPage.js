@@ -6,6 +6,7 @@ import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
+import ReactPlayer from 'react-player';
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
@@ -14,9 +15,9 @@ const QuestPage = () => {
   const [questList, setQuestList] = useState([]); // 질문지 리스트변수
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
-
   const [currentPage, setCurrentPage] = useState(1);
-  
+  const [audioData, setAudioData] = useState(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   useEffect(() => {
     getQuest();
     inputQuest();
@@ -120,19 +121,44 @@ const QuestPage = () => {
           </div>
           <div className="quest-right">
             {questItem?.audio_file_path && (
-              <Icon icon="bi:bell" onClick={listenAudio} />
+              <Icon icon="bi:bell" onClick={()=>listenAudio(questItem.index)} />
             )}
             <Icon
               icon="bi:trash3"
               onClick={() => deleteQuest(questItem.index)}
             />
+            
           </div>
+          
         </div>
         
       ));
   };
 
-  const listenAudio = () => {};
+  const listenAudio = (questId) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${authToken}`,
+      },
+      responseType: "arraybuffer", // Tell axios to treat response data as ArrayBuffer
+    };
+
+    axios
+      .get(`${BASE_URL}/api/plant/quest/${questId}/audio`, config)
+      .then((response) => {
+        const audioBlob = new Blob([response.data], { type: "audio/wav" });
+        setAudioData(audioBlob); // Store the audio data in state
+        setAudioPlaying(true); // Start playing audio
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
+  };
+
+  const stopAudio = () => {
+    setAudioPlaying(false);
+  };
 
   const deleteQuest = (questId) => {
     const config = {
@@ -154,24 +180,27 @@ const QuestPage = () => {
       });
   };
 
+  // 페이지네이션 함수
   const renderPagination = () => {
+    // 페이지당 질문 5개
     const itemsPerPage = 5;
     const totalPages = Math.ceil(questList.length / itemsPerPage);
-  
+    
+    // 현재 페이지가 1이면 이전버튼 비활성화
+    // 현재 페이지가 마지막 페이지면 다음버튼 비활성화
     return (
       <div className="pagination">
         {currentPage === 1 && (
         <Icon icon="bi:chevron-left"  
           style={{ marginRight: '10px', marginTop: '3px', color: 'white' }} 
-          onClick={() => handlePageChange(currentPage - 1)}  
-        />
-      )}
+          onClick={() => handlePageChange(currentPage - 1)} />)}
+
       {currentPage !== 1 && (
         <Icon icon="bi:chevron-left" style={{ marginRight: '10px', marginTop: '3px', color: 'black'}} 
-          onClick={() => handlePageChange(currentPage - 1)}  
-        />
-      )}
+          onClick={() => handlePageChange(currentPage - 1)} />)}
+
         <span>{`${currentPage} / ${totalPages}`}</span>
+        
         {currentPage === totalPages && (
         <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px', color: 'white' }} 
         onClick={() => handlePageChange(currentPage + 1)} />)}
@@ -182,7 +211,6 @@ const QuestPage = () => {
       </div>
     );
   };
-  
 
   return (
     <>
@@ -203,10 +231,23 @@ const QuestPage = () => {
             등록
           </button>
         </div>
-
+        {audioData && (
+        <div>
+          <audio
+            controls
+            autoPlay={audioPlaying} // 자동 재생 여부
+            onEnded={stopAudio}
+          >
+            <source src={URL.createObjectURL(audioData)} type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      )}
+        
         <div className="quest-section">
           {inputQuest()}
         </div>
+
         <div className="center-pagination" style={{ marginTop: '35px' }}>{renderPagination()}</div>
       </div>
     </>

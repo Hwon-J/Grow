@@ -8,6 +8,9 @@
   height: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
 .content-home > div{
@@ -54,3 +57,18 @@
   color: white !important;
 }
 
+.aligned-image {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 160px;
+}
+.aligned-image2 {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 160px;
+  z-index: 999;
+}

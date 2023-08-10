@@ -98,7 +98,11 @@ const getRecentChatLog = async (serial) => {
       return [];
     }
 
-    sql = `select \`role\`, \`content\` from chat_log where plant_index = ? order by chatted_date desc limit 16`;
+    sql = `SELECT \`role\`, \`content\`
+    FROM chat_log
+    WHERE plant_index = ? AND chatted_date >= NOW() - INTERVAL 3 HOUR
+    ORDER BY chatted_date DESC
+    LIMIT 16;`;
     result = await queryPromise(sql, [result[0].pindex]);
 
     // 만약 result가 홀수길이라면 하나 땜
@@ -126,21 +130,24 @@ const saveChatLog = async (log) => {
     let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
     let result = await queryPromise(sql, [log.serial]);
     if (result.length === 0) {
-      return `something wrong happened... there is no plant that pot's serial number is ${log.serial}`;
+      winston.info(`something wrong happened in saveChatLog... there is no plant that pot's serial number is ${log.serial}`);
+      return -1;
     }
 
     sql =
       "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)";
     result = await queryPromise(sql, [result[0].pindex, log.role, log.content]);
 
-    if (result === 0) {
-      return "something wrong happened... insert does not run normally";
+    if (result.affectedRows === 0) {
+      winston.info("something wrong happened in saveChatLog... insert does not run normally");
+      return -1;
     }
     
-    return "ok";
+    winston.info(`Successfully saveChatLog completed. insertId: ${result.insertId}`);
+    return result.insertId;
   } catch (error) {
     winston.error(error);
-    return "error";
+    return -1;
   }
 };
 
@@ -157,14 +164,6 @@ const getCondition = async (plantIndex) => {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [plantIndex], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 식물 물준 기록 받아오기
@@ -178,14 +177,6 @@ const getWaterLog = async (plantIndex) => {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [plantIndex], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 식물 종의 정보 받아오기
@@ -200,14 +191,6 @@ const getPlantInfoByIndex = async (index) => {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [index], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 1. 시리얼을 받는다.
@@ -333,7 +316,7 @@ const addRandomQuestion = async (serial) => {
     let conjunction = result[0].content;
 
     //랜덤 질문 가져오기
-    sql - `select question.content as content, question.index as \`index\` from 
+    sql = `select question.content as content, question.index as \`index\` from 
     pot join plant on pot.index = plant.pot_index 
     join question on plant.index = question.plant_index
     where pot.serial_number = ? and question.completed = 0
@@ -364,6 +347,34 @@ const getplantinfo = async (serial) => {
     return "error";
   }
 }
+
+// 1. 주어진 질문의 index를 기반으로 질문 테이블에 채팅로그 인덱스와 채팅한 시간을 업데이트 한다.
+// 2. 파일을 ec2 s3 서버에 저장한다. 파일이름은 "answer_[question의 인덱스]"으로 한다.
+// 3. 반환된 주소를 질문 테이블에 업데이트 한다.
+const saveChildAnswer = async(qindex, cindex) => {
+  winston.info(`saveChildAnswer called. qindex: ${qindex}, cindex: ${cindex}`);
+  let sql = `update question set chat_log_index = ?, completed_date = now() where \`index\` = ?`;
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+    // 업데이트 개시
+    await queryPromise(sql, [cindex, qindex]);
+    
+    // 파일 저장
+
+    // 질문 테이블 업데이트
+
+    // 트랜잭션을 커밋
+    await queryPromise("COMMIT");
+
+    winston.info(`Successfully saveChildAnswer completed.`);
+    return;
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+};
+
 module.exports = {
   connection,
   checkSerial,
@@ -375,5 +386,6 @@ module.exports = {
   getPlantInfoByIndex,
   getConditionGoodOrBad,
   addRandomQuestion,
-  getplantinfo
+  getplantinfo,
+  saveChildAnswer
 };

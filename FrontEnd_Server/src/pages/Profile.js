@@ -78,8 +78,6 @@ const Profile = () => {
       const complete = plantsList.filter((plant) => plant.complete === 1);
       setGrowinPlant(growing);
       setPlantComplete(complete);
-      console.log(growinPlant);
-      console.log(plantComplete);
     } catch (error) {
       console.log(error);
     }
@@ -89,7 +87,7 @@ const Profile = () => {
   }, []);
 
   const NotcompleteCardSet = () => {
-    console.log(growinPlant);
+
     return (
       <div className="cardContainer">
         {growinPlant.map((plant) => (
@@ -177,6 +175,7 @@ const Profile = () => {
                       </div>
                     </SwiperSlide>
                   </Swiper>
+
                 </div>
               )}
               {!showInProgress && (
