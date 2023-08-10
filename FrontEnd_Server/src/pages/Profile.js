@@ -133,7 +133,7 @@ const Profile = () => {
                   className={`plant-btn${showInProgress ? " selected" : ""}`}
                   onClick={() => setShowInProgress(true)}
                 >
-                  진행중인 식물
+                  관리중인 식물
                 </div>
 
                 <div
