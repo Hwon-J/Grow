@@ -150,8 +150,8 @@ wss.on("connection", (ws, req) => {
       msgJson.content !== ""
     ) {
       let condition = await db.getConditionGoodOrBad(msgJson.serial);
-      let dbplant = await db.getchildinfo(msgJson.serial);
-      let waterlog = await db.getWaterLog(dbplant.index);
+      let dbplant = await db.getplantinfo(msgJson.serial);
+      let waterlog = await db.getWaterLog(dbplant.pindex);
       let plantinfo = await db.getPlantInfoByIndex(dbplant.plant_info_index);
       let systemContent = {
         role: "system",
@@ -167,7 +167,7 @@ wss.on("connection", (ws, req) => {
       조도: ${condition.light}
       토양의 습도: ${condition.moisture}
       식물종: ${plantinfo.species}
-      식물의 물주는 주기: ${plantinfo.max_water_period}일////////////
+      식물의 물주는 주기: ${plantinfo.max_water_period}일
     ]
     {
     아이의 이름:  아이의 이름

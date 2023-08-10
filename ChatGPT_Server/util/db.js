@@ -351,11 +351,11 @@ const addRandomQuestion = async (serial) => {
   }
 };
 
-const getchildinfo = async (serial) => {
+const getplantinfo = async (serial) => {
   winston.info(`getkidsname called. serial: ${serial}`);
   try {
     let sql =
-      "select * from `plant` where `pot_index` = ?";
+      "select *, plant.index as pindex from `plant` join pot on plant.pot_index = pot.index where `pot_index` = ?";
 
     let result = await queryPromise(sql, [serial]);
     return result;
@@ -374,5 +374,6 @@ module.exports = {
   getWaterLog,
   getPlantInfoByIndex,
   getConditionGoodOrBad,
-  addRandomQuestion
+  addRandomQuestion,
+  getplantinfo
 };
