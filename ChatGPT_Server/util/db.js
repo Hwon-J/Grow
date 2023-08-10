@@ -334,6 +334,20 @@ const addRandomQuestion = async (serial) => {
   }
 };
 
+const getplantinfo = async (serial) => {
+  winston.info(`getkidsname called. serial: ${serial}`);
+  try {
+    let sql =
+      "select *, plant.index as pindex from `plant` join pot on plant.pot_index = pot.index where `pot_index` = ?";
+
+    let result = await queryPromise(sql, [serial]);
+    return result;
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+}
+
 // 1. 주어진 질문의 index를 기반으로 질문 테이블에 채팅로그 인덱스와 채팅한 시간을 업데이트 한다.
 // 2. 파일을 ec2 s3 서버에 저장한다. 파일이름은 "answer_[question의 인덱스]"으로 한다.
 // 3. 반환된 주소를 질문 테이블에 업데이트 한다.
@@ -372,5 +386,6 @@ module.exports = {
   getPlantInfoByIndex,
   getConditionGoodOrBad,
   addRandomQuestion,
+  getplantinfo,
   saveChildAnswer
 };
