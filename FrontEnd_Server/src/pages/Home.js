@@ -55,17 +55,25 @@ const Home = () => {
               </div>
             </div>
           </div>
+          <img src="./footer/down2.png" className="aligned-image" />
         </Section>
         <Section anchor="sectionTwo" className={`content-home `}>
+          {/* <img src="./footer/up.png" className="aligned-image2" /> */}
           <Service1 />
+          <img src="./footer/down2.png" className="aligned-image" />
         </Section>
         <Section anchor="sectionThree" className={`content-home `}>
+          {/* <img src="./footer/up.png" className="aligned-image2" /> */}
           <Service2 />
+          <img src="./footer/down2.png" className="aligned-image" />
         </Section>
         <Section anchor="sectionFour" className={`content-home `}>
+          {/* <img src="./footer/up.png" className="aligned-image2" /> */}
           <Service3 />
+          <img src="./footer/down2.png" className="aligned-image" />
         </Section>
         <Section anchor="sectionFive" className={`content-home `}>
+          {/* <img src="./footer/up.png" className="aligned-image2" /> */}
           <FooterHome />
         </Section>
       </SectionsContainer>

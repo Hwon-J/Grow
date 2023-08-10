@@ -175,6 +175,7 @@ const Profile = () => {
                       </div>
                     </SwiperSlide>
                   </Swiper>
+
                 </div>
               )}
               {!showInProgress && (
