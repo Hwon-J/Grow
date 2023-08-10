@@ -351,6 +351,19 @@ const addRandomQuestion = async (serial) => {
   }
 };
 
+const getchildinfo = async (serial) => {
+  winston.info(`getkidsname called. serial: ${serial}`);
+  try {
+    let sql =
+      "select * from `plant` where `pot_index` = ?";
+
+    let result = await queryPromise(sql, [serial]);
+    return result;
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+}
 module.exports = {
   connection,
   checkSerial,

@@ -50,10 +50,7 @@ wss.on("connection", (ws, req) => {
   //   role: "system",
   //   content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
   // });
-  let systemContent = {
-    role: "system",
-    content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
-  };
+  
 
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
@@ -152,6 +149,40 @@ wss.on("connection", (ws, req) => {
       msgJson.content !== null &&
       msgJson.content !== ""
     ) {
+      let condition = await db.getConditionGoodOrBad(msgJson.serial);
+      let dbplant = await db.getchildinfo(msgJson.serial);
+      let waterlog = await db.getWaterLog(dbplant.index);
+      let plantinfo = await db.getPlantInfoByIndex(dbplant.plant_info_index);
+      let systemContent = {
+        role: "system",
+        content: `지금부터 너는 어린 사람 아이가 키우고 있는 식물이다. 너는 이 아이의 친구가 되어 아이와 쉬운 언어로 대화를 나누어야 한다. 객관적인 정보 전달은 최대한 줄이고, 감성적인 언어를 사용해야 한다. 대답은 최대 30자까지만 해야 하며, [] 안의 정보와 {}로 구분된 각 정보에 대한 설명을 참고하여 대화하라. 너는 식물임에도 불구하고 [] 안의 정보들을 알고 있다. 대화에 []안의 정보들이 필요하다면 []안의 정보들을 잘 살펴보고 대화하라. 높임말은 쓰지 말고 반말로 대화하라
+    
+    [
+      아이의 이름: ${dbplant.child_name}
+      아이의 나이: ${dbplant.child_age}
+      현재시간: ${new Date().toISOString()}
+      식물이 심어진 날짜: ${dbplant.start_date}
+      마지막으로 물을 준 시간: ${waterlog.wateredDate}
+      온도: ${condition.temperature}
+      조도: ${condition.light}
+      토양의 습도: ${condition.moisture}
+      식물종: ${plantinfo.species}
+      식물의 물주는 주기: ${plantinfo.max_water_period}일////////////
+    ]
+    {
+    아이의 이름:  아이의 이름
+    아이의 생년월일: 아이가 태어난 날짜
+    현재시간: 현재 시간
+    식물이 심어진 날짜: 너가 심어진 날짜
+    마지막으로 물을 준 시간: 마지막 물을 준 시간
+    온도: 현재 온도
+    조도: 조도 (어두움, 보통, 밝음 중 하나). 낮에 어두우면 화분을 밝은 곳으로 옮기게 유도
+    토양의 습도: 토양의 습도 (건조함, 보통, 촉촉함 중 하나)
+    식물종: 너가 어떤 식물인지
+    식물의 물주는 주기: 물을 주어야 하는 주기
+    }
+    `,
+      };
       let history = [systemContent];
       let chatLog = await db.getRecentChatLog(msgJson.serial);
       history.push(...chatLog);
