@@ -8,15 +8,20 @@ import { BASE_URL } from "../utils/Urls";
 import { Grid } from "@mui/material";
 import PlantDeleteComponent from "./plant/PlantDelete";
 
+const formatDate = (dateString) => {
 
-// 가져오는 날짜 형식을 YYYYMMDD로 변환
-const formatDate = (isoDateString) => {
-  const date = new Date(isoDateString);
+  const date = new Date(dateString);
+  console.log(date);
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}${month}${day}`;
-};
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const formattedMonth = month < 10 ? `0${month}` : month;
+  const formattedDay = day < 10 ? `0${day}` : day;
+  
+  return `${year}${formattedMonth}${formattedDay}`;
+}
+
 
 // 두 날짜 사이의 차이를 구하는 함수
 const calDay = (date1, date2) => {
@@ -39,11 +44,13 @@ const MyInfo = () => {
   // 오늘 날짜와 식물을 키우기 시작한 날짜를 가져옴
   const [myplant, setMyplant] = useState([]);
   const today = new Date();
-  console.log(today);
-  console.log(today.toISOString());
-  const formattedToday = formatDate(today.toISOString());
+  console.log(today, typeof(today));
+
+  const formattedToday = formatDate(today);
   console.log(formattedToday);
+
   const formattedStartDay = formatDate(myplant.start_date);
+  console.log(myplant.start_date, typeof(myplant.start_date) );
   console.log(formattedStartDay);
   const [spices, setSpices] = useState();
   // params로 식물 id를 가져옴
