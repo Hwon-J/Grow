@@ -3,6 +3,7 @@
 import './App.css';
 // 캐릭터와 배경이미지 import
 import background from './assets/BackgroundPicture.gif';
+import background2 from './assets/BackgroundPicture2.gif';
 
 // Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ function App() {
   const navigate = useNavigate()
   // 배경화면 설정
   const backgroundStyles = {
-    backgroundImage: `url(${background})`,
+    backgroundImage: `url(${background2})`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
