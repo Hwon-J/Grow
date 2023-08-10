@@ -21,10 +21,7 @@ function Verify() {
     showConfirmButton: false,
     timer: 2000,
     timerProgressBar: true,
-    // didOpen: (toast) => {
-    //     toast.addEventListener('mouseenter', Swal.stopTimer)
-    //     toast.addEventListener('mouseleave', Swal.resumeTimer)
-    // }
+    
 })
   function serialVerify (message) {
     
@@ -32,15 +29,18 @@ function Verify() {
     
     if (mes.about === 'serialCheck'){
 
-      if (mes.content === 'success'){
+      if (mes.content === -1){
         Toast.fire({
           icon: 'success',
           title: '등록 인증 성공!'
       })
-        .then(
+        .then(res => {
           navigate(`/characterchoice/${startmessage.serial}`)
+
+        }
         )
       }
+      // else if (i)
       else if (mes.content === 'unregistered') {
         Swal.fire({
           title: '등록되지 않은 번호입니다!',
@@ -63,18 +63,30 @@ function Verify() {
           title: '존재하지 않는 번호에요. 다시 한 번 확인해주세요.'
       })
       }
-      else {
+      else if (mes.content === 'error'){
         Toast.fire({
           icon: 'error',
           title: '알 수 없는 에러 발생'
       })
+      }
+      else {
+        const character_index = mes.content
+        Toast.fire({
+          icon: 'success',
+          title: '등록 인증 성공!'
+        })
+        .then(res => {
+          navigate(`/conversation/${character_index}/${startmessage.serial}`)
+
+        })
       }
     }
   }
 
   useEffect(() => {
     // 웹소켓 연결을 설정하는 부분
-    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
@@ -107,15 +119,7 @@ function Verify() {
   
   
   const sendSerial = () => {
-    Toast.fire({
-      icon: 'success',
-      title: '등록 인증 성공!'
-  })
-    .then(result => {
-      // 만약 Promise리턴을 받으면,
-      
-      navigate(`/characterchoice/${startmessage.serial}`)}
-    )
+    
     if (socket && startmessage) {
       socket.send(JSON.stringify(startmessage));
     }
