@@ -6,10 +6,11 @@ import Footer from "../components/Footer";
 import Service1 from "../components/home/Service1";
 import Service2 from "../components/home/Service2";
 import Service3 from "../components/home/Service3";
+import FooterHome from "../components/home/FooterHome";
 import "./MainVideoBackground.css";
 import homevideo1 from "../assets/homevideo1.mp4";
 import { SectionsContainer, Section } from "react-fullpage";
-
+import styles from "./home.module.css";
 function HomeBackground() {
   return (
     <video autoPlay loop muted>
@@ -20,7 +21,13 @@ function HomeBackground() {
 
 const Home = () => {
   let options = {
-    anchors: ["sectionOne", "sectionTwo", "sectionThree", "sectionFour"],
+    anchors: [
+      "sectionOne",
+      "sectionTwo",
+      "sectionThree",
+      "sectionFour",
+      "sectionFive",
+    ],
   };
 
   const navigate = useNavigate();
@@ -57,6 +64,9 @@ const Home = () => {
         </Section>
         <Section anchor="sectionFour" className={`content-home `}>
           <Service3 />
+        </Section>
+        <Section anchor="sectionFive" className={`content-home `}>
+          <FooterHome />
         </Section>
       </SectionsContainer>
     </>
