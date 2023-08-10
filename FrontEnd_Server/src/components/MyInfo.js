@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/Urls";
 import { Grid } from "@mui/material";
 import PlantDeleteComponent from "./plant/PlantDelete";
+
+
 // 가져오는 날짜 형식을 YYYYMMDD로 변환
 const formatDate = (isoDateString) => {
   const date = new Date(isoDateString);
@@ -17,21 +19,19 @@ const formatDate = (isoDateString) => {
 };
 
 // 두 날짜 사이의 차이를 구하는 함수
-const calDay = (firstDate, secondDate) => {
-  const dateFirstDate = new Date(
-    firstDate.substring(0, 4),
-    firstDate.substring(4, 6) - 1,
-    firstDate.substring(6, 8)
-  );
-  const dateSecondDate = new Date(
-    secondDate.substring(0, 4),
-    secondDate.substring(4, 6) - 1,
-    secondDate.substring(6, 8)
-  );
-  const betweenTime = Math.abs(
-    dateSecondDate.getTime() - dateFirstDate.getTime()
-  );
-  return Math.floor(betweenTime / (1000 * 60 * 60 * 24));
+const calDay = (date1, date2) => {
+  const [year1, month1, day1] = [date1.slice(0, 4), date1.slice(4, 6), date1.slice(6)];
+  const [year2, month2, day2] = [date2.slice(0, 4), date2.slice(4, 6), date2.slice(6)];
+
+  // 두 개의 Date 객체를 생성합니다.
+  const firstDate = new Date(year1, month1 - 1, day1); // month는 0부터 시작합니다.
+  const secondDate = new Date(year2, month2 - 1, day2);
+
+  // 두 날짜의 차이를 다루기 쉬운 형식으로 변환하고, 날짜 차이를 일 단위로 계산합니다.
+  const differenceInTime = secondDate - firstDate;
+  const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
+
+  return differenceInDays;
 };
 
 // 해당 식물의 정보를 보여주는 컴포넌트
@@ -39,8 +39,12 @@ const MyInfo = () => {
   // 오늘 날짜와 식물을 키우기 시작한 날짜를 가져옴
   const [myplant, setMyplant] = useState([]);
   const today = new Date();
+  console.log(today);
+  console.log(today.toISOString());
   const formattedToday = formatDate(today.toISOString());
+  console.log(formattedToday);
   const formattedStartDay = formatDate(myplant.start_date);
+  console.log(formattedStartDay);
   const [spices, setSpices] = useState();
   // params로 식물 id를 가져옴
   const { id } = useParams();
@@ -51,6 +55,8 @@ const MyInfo = () => {
 
   // 식물을 키운 기간을 구함
   const daysDifference = calDay(formattedStartDay, formattedToday) + 1;
+  console.log(daysDifference);
+
 
   const checkspices = [
     "청경채",
@@ -65,31 +71,12 @@ const MyInfo = () => {
     "알로카시아",
   ];
 
-  // 식물 키우기 완료로 상태를 바꿔주는 함수
-  // PUT으로 수정
-  const completePlant = async () => {
-    console.log(token);
-    const config = {
-      headers: {
-        Authorization: token,
-      },
-    };
-    try {
-      const response = await axios.put(
-        `${BASE_URL}/api/plant/complete/${id}`,
-        "",
-        config
-      );
-      window.location.href = "/profile";
-      console.log(response.data);
-      console.log("성공");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
 
   // 해당 식물의 정보를 가져오는 함수
   const getPlantInfo = async () => {
+
+    
     const config = {
       headers: {
         Authorization: token,
@@ -102,11 +89,61 @@ const MyInfo = () => {
         config
       );
       setMyplant(response.data.data[0]);
-      console.log(JSON.stringify(response.data.data[0]));
+      console.log(myplant);
+      console.log(response.data.data[0].start_date);
+      const formattedStartDay = formatDate(myplant.start_date);
+      console.log(formattedStartDay);
+      
     } catch (error) {
       console.error(error);
     }
   };
+
+
+// 식물 키우기 완료로 상태를 바꿔주는 함수
+  // PUT으로 수정
+  const completePlant = async () => {
+  console.log(token);
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/plant/complete/${id}`,
+      "",
+      config
+    );
+    window.location.href = "/profile";
+    console.log(response.data);
+    console.log("성공");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+  // 해당 식물 삭제
+  const deletePlantData = async () => {
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/plant/myplant/${id}`,
+      config
+    );
+    window.location.href = "/profile";
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   // 시작하면 getPlantInfo 실행
   useEffect(() => {
@@ -118,24 +155,7 @@ const MyInfo = () => {
     return <div>Loading...</div>;
   }
 
-  // 해당 식물 삭제
-  const deletePlantData = async () => {
-    const config = {
-      headers: {
-        Authorization: token,
-      },
-    };
-
-    try {
-      const response = await axios.delete(
-        `${BASE_URL}/api/plant/myplant/${id}`,
-        config
-      );
-      window.location.href = "/profile";
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
   return (
     <>
       <div className="info_box">
@@ -167,7 +187,7 @@ const MyInfo = () => {
           )}
           {myplant && myplant.start_date && (
             <h5>
-              시작일: {myplant.start_date.slice(0, 10)}({daysDifference - 1}
+              시작일: {myplant.start_date.slice(0, 10)}({daysDifference}
               일차)
             </h5>
           )}
