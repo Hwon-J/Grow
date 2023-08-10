@@ -1,4 +1,3 @@
-//김태형
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -17,6 +16,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { reSwal } from "../utils/reSwal";
 
 const PlantInfo = () => {
   const [nickname, setNickname] = useState("");
@@ -35,10 +35,9 @@ const PlantInfo = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const handleShow = (info) => {
     setSelectedInfo(info);
-    console.log(info + "handleShow");
-    console.log(modalOpen);
     setModalOpen(true);
   };
+
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +60,6 @@ const PlantInfo = () => {
   const onChangeNickname = (e) => {
     setNickname(e.target.value);
   };
-
   const onChangeSerialNum = (e) => {
     setSerialNum(e.target.value);
   };
@@ -75,49 +73,30 @@ const PlantInfo = () => {
   const createPlant = async (e) => {
     e.preventDefault();
     if (checkedResult === false) {
-      Swal.fire({
-        icon: "warning",
-        text: `시리얼 넘버를 확인해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
-      return
+      reSwal("warning", `시리얼 넘버를 확인해주세요`);
+      return;
     }
-    if (nickname.length === 0 || nickname.length > 12){
-      Swal.fire({
-        icon: "warning",
-        text: `식물 애칭을 1글자 이상 12글자 이하로 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
-      return
+    if (nickname.length === 0 || nickname.length > 12) {
+      reSwal("warning", `식물 애칭을 1글자 이상 12글자 이하로 입력해주세요`);
+      return;
     }
-    if (childname.length === 0){
+    if (childname.length === 0) {
       Swal.fire({
         icon: "warning",
         text: `아이 이름을 입력해주세요`,
         showCancelButton: false,
         confirmButtonText: "확인",
       });
-      return
+      reSwal("warning", `아이 이름을 입력해주세요`);
+      return;
     }
-    if (childage.length === 0){
-      Swal.fire({
-        icon: "warning",
-        text: `나이를 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
-      return
+    if (childage.length === 0) {
+      reSwal("warning", `나이를 입력해주세요`);
+      return;
     }
-    if (!plantInfo.index){
-      Swal.fire({
-        icon: "warning",
-        text: `식물을 선택해 주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
-      return
+    if (!selectedInfo.index) {
+      reSwal("warning", `식물을 선택해 주세요`);
+      return;
     }
     const body = {
       plant_name: nickname,
