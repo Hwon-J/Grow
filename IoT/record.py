@@ -36,7 +36,6 @@ buffer = np.zeros((BUFFER_SIZE, CHANNELS), dtype='int16')
 write_ptr = 0
 recording = False
 save_data = False
-playing=False
 
 # log 설정
 logging.basicConfig(
@@ -51,16 +50,20 @@ ws = None
 last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 
 def play(path):
-    global playing
-    playing=True
+    global playing,recording
     try:
         subprocess.run(["aplay", path], check=True)
-        playing=False
     except:
         logging.warning("오디오 출력 에러")
+    playing = True
+    logging.warning("tts 종료")
+    print(f"tts 종료 record: {recording}    playing: {playing}")
+    if recording == True and playing == True:
+        recording=False
+    #recode풀기
 
 def tts(message):
-    logging.warning("tts 시작")
+    
     client_id = "tzm493x2hf"
     client_secret = "KcnpCE2iHXwN7HLCKxoLLC12KM9TS6CZe7zNuzVF"
     encText = urllib.parse.quote(message)
@@ -73,16 +76,15 @@ def tts(message):
     rescode = response.getcode()
     try:
         if (rescode == 200):
-            logging.info("TTS mp3저장")
+            logging.info("tts mp3저장")
             response_body = response.read()
             with open('tts.wav', 'wb') as f:
                 f.write(response_body)
         else:
             print("Error Code:" + rescode)
-            logging.error("TTS 에러발생")
-        logging.warning("TTS 종료")
+            logging.error("tts 에러발생")
     except:
-        logging.warning("TTS 에러발생")
+        logging.warning("tts 에러발생")
 
     path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요
     play(path)
@@ -91,9 +93,11 @@ def tts(message):
 # 웹소켓 서버 설정
 def on_message(ws, message):
     try:
+        print("tts 시작")
+        logging.warning("tts 시작")
         data = json.loads(message)
         message = data["content"]
-        
+        tts(message)
         print(f"Received message from client: {message}")
         logging.info(f"Received message from client: {message}")
         tts(message)
@@ -102,7 +106,6 @@ def on_message(ws, message):
         # 예: message를 분석하고 필요한 동작을 수행
     except:
         logging.warning("not exist content")
-
 
 
 def on_error(ws, error):
@@ -178,6 +181,9 @@ def record_audio():
     global playing
     start_ptr = 0
     end_ptr = 0
+    logging.warning("stt 전송 시작") 
+    print("stt전송 시작")
+
     with sd.InputStream(samplerate=RATE, channels=CHANNELS, dtype='int16') as stream:
         while True:      
             try:
@@ -204,13 +210,17 @@ def record_audio():
                 if(response==""):
                     continue
                 print(response)
-                logging.info(response)
-                logging.info("stt 완료")
+                logging.warning(response)
+                logging.warning("stt전송 완료")
+                print("stt전송 완료")
                 if ws:
                     message = json.dumps(
                         {"purpose": "gpt", "role": "raspi",  "content": response, "serial": "97745"})  # 수정된 부분
                     ws.send(message)
-                    logging.info("stt 전송 완료")
+                    playing=False
+                    while True:
+                        if playing:
+                            break
                 save_data = False
                 write_ptr = 0
 
@@ -253,6 +263,8 @@ def measure_distance():
 
 
 if __name__ == "__main__":
+    global playing
+    playing=False
     try:
         print("Distance measurement is starting...")
 
@@ -268,9 +280,9 @@ if __name__ == "__main__":
             distance = measure_distance()
             print(f"Distance: {distance} cm")
             logging.info(f"Distance: {distance} cm")
-
+            print(f"recoding: {recording}   playing: {playing}")
             if distance < 15 and not recording:  # 거리가 10cm 미만일 때 녹음 시작
-                #print("Recording started...")
+                print("Recording started...")
                 logging.info("Recording started")
                 message = json.dumps(
                     {"purpose": "closer", "role": "raspi", "serial": "97745"})  # 수정된 부분
@@ -278,7 +290,7 @@ if __name__ == "__main__":
                 recording = True
 
             elif distance >= 15 and recording:  # 거리가 10cm 이상일 때 녹음 종료
-                #print("Recording stopped...")
+                print("Recording stopped...")
                 logging.info("Recording stopped")
                 message = json.dumps(
                     {"purpose": "further", "role": "raspi", "serial": "97745"})  # 수정된 부분
