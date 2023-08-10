@@ -8,12 +8,15 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import { reSwal } from "../utils/reSwal";
 
 const SignupPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.currentUser);
+
+  // id, name, email, password, confirmpassword
+  // confirmMessage : 비밀번호 일치 불일치 확인 메세지
+  // checkId : id가 사용가능한지 확인
   const [userid, setUserid] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -42,8 +45,6 @@ const SignupPage = () => {
   };
   const onChangeConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
-    // console.log(password, confirmPassword)
-    // console.log(e.target.value)
     if (password === e.target.value) {
       setConfirmMessage("비밀번호가 일치합니다");
     } else {
@@ -51,68 +52,41 @@ const SignupPage = () => {
     }
   };
 
+
   //회원가입시
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(checkId + " 체크아이디");
     if (checkId !== "사용할 수 있는 아이디입니다") {
-      Swal.fire({
-        icon: "warning",
-        text: `아이디 중복확인을 해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", `아이디 중복확인을 해주세요`);
       return;
     }
     if (userid.length < 6) {
-      Swal.fire({
-        icon: "warning",
-        text: `아이디는 6글자 이상으로 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", `아이디는 6글자 이상으로 입력해주세요`);
       return;
     }
     if (password !== confirmPassword) {
       // 비밀번호 다르면 실패
-      Swal.fire({
-        icon: "warning",
-        text: `입력한 비밀번호가 다릅니다!`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", `입력한 비밀번호가 다릅니다!`);
       return;
     }
     // Add additional conditions here to check the validity of the registration information
     if (username.length < 3 || username.length > 10) {
-      Swal.fire({
-        icon: "warning",
-        text: `이름은 3자 이상, 10자 이하로 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", `이름은 3자 이상, 10자 이하로 입력해주세요`);
       return;
     }
 
     if (!email.includes("@") || !email.includes(".")) {
-      Swal.fire({
-        icon: "warning",
-        text: `유효한 이메일 주소를 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", "유효한 이메일 주소를 입력해주세요");
       return;
     }
 
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!password.match(passwordRegex)) {
-      Swal.fire({
-        icon: "warning",
-        text: `비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal(
+        "warning",
+        `비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다`
+      );
       return;
     }
 
@@ -125,25 +99,18 @@ const SignupPage = () => {
       email: usernamePart,
       emailDomain: domainPart,
     };
+
+    // redux 액션(body)값 보내고 실행
     dispatch(registerUserAction(body)).then((action) => {
-      console.log(currentUser);
-      console.log(action.payload.code);
       const signup_status = action.payload.code;
       if (signup_status === 201) {
-        Swal.fire({
-          icon: "success",
-          text: `회원가입 성공! 로그인 페이지로 이동합니다.`,
-          showCancelButton: false,
-          confirmButtonText: "확인",
-        });
+        reSwal("success", `회원가입 성공! 로그인 페이지로 이동합니다.`);
         navigate("/login");
       } else {
-        Swal.fire({
-          icon: "warning",
-          text: `이미 중복된 아이디이므로 다른 아이디로 가입해주세요.`,
-          showCancelButton: false,
-          confirmButtonText: "확인",
-        });
+        reSwal(
+          "warning",
+          `이미 중복된 아이디이므로 다른 아이디로 가입해주세요.`
+        );
         setUserid("");
       }
     });
@@ -152,19 +119,13 @@ const SignupPage = () => {
   // registerUserAction을 부르고 body변수를 props로 전달
   const idChecking = async () => {
     if (userid.length < 6) {
-      Swal.fire({
-        icon: "warning",
-        text: `아이디는 6글자 이상으로 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
+      reSwal("warning", `아이디는 6글자 이상으로 입력해주세요`);
       return;
     }
     try {
       const response = await axios.get(
         `${BASE_URL}/api/user/id-check/${userid}`
       );
-      console.log(response.data.message);
       setCheckId(response.data.message);
       return;
     } catch (error) {
