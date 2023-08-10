@@ -1,8 +1,8 @@
 // const Pot = require("../models/pot-model.js");
-const { error } = require("console");
 const connection = require("../util/connection.js");
 const winston = require("../util/winston");
 const util = require("util");
+const path = require("path");
 const queryPromise = util.promisify(connection.query).bind(connection);
 
 exports.getPlantInfos = async (req, res, next) => {
@@ -219,8 +219,8 @@ exports.getPlantByIndex = async (req, res) => {
         plant.plant_info_index as plant_info_index, plant.start_date as start_date, 
         plant.end_date as end_date, plant.plant_name as plant_name, 
         plant.child_name as child_name, plant.child_age as child_age, plant.complete as complete
-      from \`plant\` join \`member\` on plant.member_index = member.index 
-      where member.id = ? and plant.index = ?`;
+        from \`plant\` join \`member\` on plant.member_index = member.index 
+        where member.id = ? and plant.index = ?`;
 
     let result = await queryPromise(query, [id, index]);
     winston.info(
@@ -383,6 +383,51 @@ exports.registQuestion = async (req, res) => {
 };
 
 // 1. id와 질문의 index로 소유권을 확인한다.
+// 2. 소유권이 있다면 음성 파일을 전송한다.
+exports.getAnswerById = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController getAnswerById called. ID: ${id}, Question Index: ${index}`
+  );
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+
+    // 사용자, 사용자의 식물, 그 식물에 등록된 질문들을 조회
+    let query = `select * 
+    from \`member\` join \`plant\` on member.index = plant.member_index
+    join \`question\` on plant.index = question.plant_index
+    where \`member\`.id = ? and question.index = ?
+    `;
+    let result = await queryPromise(query, [id, index]);
+    if (result.length === 0) {
+      return res
+        .status(403)
+        .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
+    }
+
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    winston.info('전송');
+    const filename = "dummy.wav";
+    // 파일의 절대 경로를 얻습니다.
+    const filepath = path.join(__dirname, '..', "assets", filename);
+    // 파일을 클라이언트에게 전송합니다.
+    return res.status(200).sendFile(filepath);
+
+    winston.info(`plantController deleteQuestion successfully completed`);
+    return res
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+// 1. id와 질문의 index로 소유권을 확인한다.
 // 2. 소유권이 있다면 삭제를 진행한다.
 exports.deleteQuestion = async (req, res) => {
   const id = req.decoded.id;
@@ -436,29 +481,33 @@ exports.deletePlantByIndex = async (req, res) => {
     await queryPromise("START TRANSACTION");
 
     // 권한이 있는지 확인
-    let sql = `select *, plant.index as pindex from \`plant\` join \`member\` on plant.member_index = member.index where plant.index = ? and id = ?`
+    let sql = `select *, plant.index as pindex from \`plant\` join \`member\` on plant.member_index = member.index where plant.index = ? and id = ?`;
     let result = await queryPromise(sql, [index, id]);
 
     // 권한이 없으면 리턴
-    if (result.length === 0){
-      winston.info(`plantController deletePlantByIndex returned 400. Forbidden`);
-      return res.status(400).json({ code:400, message: "권한이 없거나 존재하지 않는 index"});
+    if (result.length === 0) {
+      winston.info(
+        `plantController deletePlantByIndex returned 400. Forbidden`
+      );
+      return res
+        .status(400)
+        .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
     }
 
     // 권한이 있으면 삭제 진행
-    sql = `delete from \`plant\` where \`index\` = ?`
+    sql = `delete from \`plant\` where \`index\` = ?`;
     result = await queryPromise(sql, [result[0].pindex]);
-    if (result.affectedRows === 0){
+    if (result.affectedRows === 0) {
       return res.status(202).json({ code: 202, message: "삭제된 데이터 없음" });
     }
 
     // 트랜잭션 커밋
     await queryPromise("COMMIT");
-    
+
     winston.info(`plantController deletePlantByIndex successfully completed`);
     return res
-    .status(201)
-    .json({ code: 201, message: "요청 처리 성공", data: result });
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
   } catch (error) {
     // 오류 발생 시 롤백
     await queryPromise("ROLLBACK");
