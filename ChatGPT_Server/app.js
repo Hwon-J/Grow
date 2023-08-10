@@ -11,6 +11,7 @@ const wss = new WebSocket.Server({ port: process.env.PORT });
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
 
+// 센서의 데이터를 디스플레이 클라이언트로 보내는 부분
 function sendSensorData() {
   clients.forEach(async (client) => {
     if (client.role === "display" && client.readyState === WebSocket.OPEN) {
@@ -25,7 +26,7 @@ function sendSensorData() {
   });
 }
 
-// 10초에 한번씩 센서의 데이터를 디스플레이 클라이언트로 보내는 부분
+// 위 함수를 10초에 한번씩 실행
 setInterval(sendSensorData, 10000);
 
 wss.on("connection", (ws, req) => {
@@ -38,18 +39,11 @@ wss.on("connection", (ws, req) => {
       Math.random() * (process.env.RANDOM_MAX - process.env.RANDOM_MIN)
     ) + process.env.RANDOM_MIN;
 
-  // 질문의 인덱스를 저장할 큐
+  // 부모님 질문이 포함된 대화의 인덱스를 저장할 큐
   const indexQueue = new Queue();
-  // 다음 질문은 질문에 대한 대답이라는 플래그
+  // 다음 사용자의 입력은 질문에 대한 대답이라는 플래그
   let qFlag = false;
 
-  // 현재까지 해당 ip에서 나눈 대화기록
-  let history = [];
-  // system 프롬프트 입력
-  // history.push({
-  //   role: "system",
-  //   content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
-  // });
   let systemContent = {
     role: "system",
     content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
@@ -57,14 +51,6 @@ wss.on("connection", (ws, req) => {
 
   // 1. 연결 클라이언트 IP 취득
   const ip = req.headers["x-forwarded"] || req.socket.remoteAddress;
-  // // 만약 이미 해당 IP의 클라이언트가 있다면
-  // if (clients.has(ip)) {
-  //   // 해당 IP의 웹소켓 배열에 새로운 웹소켓을 추가
-  //   clients.get(ip).push(ws);
-  // } else {
-  //   // 처음 보는 IP라면 새 배열을 만들고 그 배열에 웹소켓을 추가
-  //   clients.set(ip, [ws]);
-  // }
   winston.info(`new client[${ip}] connected`);
 
   // 2. 클라이언트에게 메세지 전송(현재는 생략됨)
@@ -74,14 +60,6 @@ wss.on("connection", (ws, req) => {
 
   // 3. 클라이언트로부터 메세지 수신 이벤트 처리
   ws.on("message", async (msg) => {
-    // 히스토리 없는 형태로 진행중
-    // history = [
-    //   {
-    //     role: "system",
-    //     content: `지금부터 너는 7살정도의 아이가 키우고 있는 화분속의 방울토마토 묘종이다. 너는 아이가 키우고 있는 식물의 입장에서 아이들과 대화를 하는 에이전트가 되어야 한다. 대화는 engaging해야 하며, 아이들도 이해할 수 있도록 쉬운 언어로 구성되어야 한다.  또한, 객관적인 정보의 전달은 최대한 억제하고, 감성적인 언어를 주로 사용하며, 대답의 길이는 최대 3줄까지만 하라. 내 입력은 아이가 너에게 하는 말이라고 생각하고 답변을 작성하라. 만약 내 입력 뒤에 괄호가 있다면, 그 내용은 아이의 말이 아니라 현재의 상황설명이다. 너의 답변에는 괄호가 있을 필요는 없다.`,
-    //   },
-    // ];
-
     let msgJson = JSON.parse(msg);
     winston.info(
       `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
@@ -92,6 +70,7 @@ wss.on("connection", (ws, req) => {
     if (msgJson.purpose == "handshake") {
       let result = await db.checkSerial(msgJson.serial);
 
+      // 성공시엔 숫자를 content로 보냄
       if (typeof result === "number") {
         winston.info(
           `success: Successfully connection to the server. (IP: ${ip})`
@@ -157,13 +136,16 @@ wss.on("connection", (ws, req) => {
       history.push(...chatLog);
 
       // DB에 유저의 입력 저장
-      winston.info(
-        await db.saveChatLog({
-          serial: msgJson.serial,
-          role: "user",
-          content: msgJson.content,
-        })
-      );
+      let insertIndex = await db.saveChatLog({
+        serial: msgJson.serial,
+        role: "user",
+        content: msgJson.content,
+      });
+      // 만약 qflag가 true라면 큐의 헤드에 있는 인덱스로 답변을 저장한다.
+      if (qFlag & insertIndex !== -1) {
+        await db.saveChildAnswer(indexQueue.dequeue(), insertIndex);
+        qFlag = false;
+      }
 
       // 히스토리에 유저의 입력 저장
       history.push({
@@ -182,8 +164,9 @@ wss.on("connection", (ws, req) => {
 
         // 부모님 질문 붙이기
         count = count + 1;
+        winston.info(`current count: ${count}.......`);
         if (count >= randomPoint) {
-          if (result.charAt(result.length - 1) == "?") {
+          if (result.includes("?")) {
             count = count - 1;
           } else {
             let question = await db.addRandomQuestion(msgJson.serial);
@@ -200,11 +183,6 @@ wss.on("connection", (ws, req) => {
             content: result,
           })
         );
-        // 답변 히스토리에 저장
-        // history.push({
-        //   role: "assistant",
-        //   content: result,
-        // });
 
         winston.info(`gpt answer: ${result}`);
         clients.forEach((client) => {
@@ -226,15 +204,15 @@ wss.on("connection", (ws, req) => {
           client.role === "display" &&
           client.serial === msgJson.serial &&
           client.readyState === WebSocket.OPEN
-          ) {
-            winston.info(`send "closer" to ${client.serial}, ${client.role}`);
-            client.send(JSON.stringify({ about: "closer" }));
-          }
-        });
+        ) {
+          winston.info(`send "closer" to ${client.serial}, ${client.role}`);
+          client.send(JSON.stringify({ about: "closer" }));
+        }
+      });
 
-        // 사용자가 떨어졌다는 메세지의 처리
-      } else if (msgJson.purpose === "further") {
-        winston.info(`"further" accepted from ${ws.serial}`);
+      // 사용자가 떨어졌다는 메세지의 처리
+    } else if (msgJson.purpose === "further") {
+      winston.info(`"further" accepted from ${ws.serial}`);
       clients.forEach((client) => {
         if (
           client.role === "display" &&
@@ -249,7 +227,7 @@ wss.on("connection", (ws, req) => {
       // 사용자가 캐릭터를 정했다는 메세지의 처리
     } else if (msgJson.purpose === "character") {
       db.setCnum(msgJson.serial, msgJson.content);
-      
+
       // 그 이외는 에러처리
     } else {
       ws.send(
