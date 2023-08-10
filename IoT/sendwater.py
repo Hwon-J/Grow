@@ -11,6 +11,16 @@ WINDOW_SIZE = 5  # The number of previous readings to use for the moving average
 THRESHOLD = 20  # The rate of change above which we consider the data to have changed
 DEBOUNCE_TIME = 30  # The number of seconds to ignore changes after a change has been detected
 SENSOR_POST_INTERVAL = 30  # The number of seconds between POST requests to /api/sensor
+def convert_to_percentage_m(value):
+    min_value = 703
+    max_value = 204
+    percentage = ((value - min_value) / (max_value - min_value)) * 100
+    return percentage
+def convert_to_percentage_p(value):
+    min_value = 688
+    max_value = 4
+    percentage = ((value - min_value) / (max_value - min_value)) * 100
+    return percentage
 
 class SerialReaderThread(threading.Thread):
     def __init__(self, ser):
@@ -57,28 +67,39 @@ if __name__ == '__main__':
             splitsens = serial_reader.get_latest_data()
 
             if serial_reader.is_data_changed():
-                url = os.environ['BaseURL'] +':'+ os.environ['BE_PORT']+'/api/sensor/water-log'
-                temp = {'serial_number':'testtesttest'}
+                url = os.environ['BaseURL'] +':'+ os.environ['BE_PORT'] + "/api/sensor"
+                temp = {'serial_number':'97745'}
+                print(url)
+
+                headers = {
+                    "Content-Type": "application/json"
+                }
+                data = json.dumps(temp)
+
+                response = requests.post(url, headers=headers, data=data)
             elif time.time() - last_sensor_post_time > SENSOR_POST_INTERVAL:
-                url = os.environ['BaseURL'] +':'+ os.environ['BE_PORT']+'/api/sensor'
+                url = os.environ['BaseURL'] +':'+ os.environ['BE_PORT'] + "/api/sensor"
+                # url = 'http://192.168.100.37' +':'+ os.environ['BE_PORT'] + "/api/sensor"
                 temp = {
-                    'serial_number':'testtesttest',
+                    'serial_number':'97745',
                     'temperature':float(splitsens[3]), 
-                    'moisture':float(splitsens[0]), 
-                    'light':float(splitsens[1])
+                    'moisture':convert_to_percentage_m(float(splitsens[0])), 
+                    'light':convert_to_percentage_p(float(splitsens[1]))
                 }
                 last_sensor_post_time = time.time()
+                print(url)
+                print(temp)
+
+                headers = {
+                    "Content-Type": "application/json"
+                }
+                data = json.dumps(temp)
+
+                response = requests.put(url, headers=headers, data=data)
             else:
                 continue
 
-            print(url)
-
-            headers = {
-                "Content-Type": "application/json"
-            }
-            data = json.dumps(temp)
-
-            response = requests.post(url, headers=headers, data=data)
+           
 
             print("response: ", response)
             print("response.text: ", response.text)
