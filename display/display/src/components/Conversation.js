@@ -21,15 +21,18 @@ function Conversation() {
     // 센서값 관련해서 state 설정
     const [sensor, sensor_update] = useState({'temperature':'', 'light': '', 'moisture':'', 'temperValue':0, 'water':'not passed'})
     const [talking, set_talking] = useState(false)
+    const temper_speech = {'과다': '앗! 뜨거워', '적당' : '아주 좋아', '부족': '너무 추워'}
+    const light_speech = {'과다': '너무 밝아, 눈 부셔!', '적당' : '적당해', '부족': '어두워, 빛 좀 비춰줘'}
+    const water_speech = {'과다': '물 너무 많이 먹었어', '적당' : '충분해', '부족': '목 말라 물 좀 주라!'}
     // 대화 컴포넌트 구조
     return (
       
       <div >
         
         <span className='information '>
-          <h1>온도 : {sensor.temperature} {sensor.temperValue}도</h1>
-          <h1>햇빛 : {sensor.light}</h1>
-          <h1>물 : {sensor.moisture}</h1>
+          <h1>온도 : {temper_speech[sensor.temperature]} {sensor.temperValue}도</h1>
+          <h1>햇빛 : {light_speech[sensor.light]}</h1>
+          <h1>물 : {water_speech[sensor.moisture]}</h1>
         </span>
         
         

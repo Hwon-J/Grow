@@ -81,27 +81,50 @@
 
 @media (prefers-reduced-motion: no-preference) {
     .character {
-      animation: App-logo-spin infinite 3s linear;
+      animation:character-think infinite 3s linear;
     }
   }
-  @keyframes App-logo-spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    25% {
-        transform : translate(50px, 50px);
-        transform: rotate(30deg);
-    }
-    50% {
-      transform: rotate(0deg);
-      transform: scale(1, 2);
-      
-    }
-    75% {
-        transform: rotate(-30deg);
-        transform : translate(-50px, -50px);
-    }
-    100% {
-        transform : rotate(0deg);
-    }
+
+@keyframes character-talk {
+  0% {
+    transform: rotate(0deg);
   }
+  25% {
+      /* transform : translate(50px, 50px);
+      transform: rotate(30deg); */
+  }
+  50% {
+    /* transform: rotate(0deg); */
+    transform: scale(1.1);
+    
+  }
+  75% {
+      /* transform: rotate(-30deg); */
+      /* transform : translate(-50px, -50px); */
+  }
+  100% {
+      transform : rotate(0deg);
+  }
+}
+
+@keyframes character-think {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+      /* transform : translate(50px, 50px); */
+      transform: rotate(30deg);
+  }
+  50% {
+    transform: rotate(0deg);
+    /* transform: scale(1.1); */
+    
+  }
+  75% {
+      transform: rotate(15deg);
+      /* transform : translate(-50px, -50px); */
+  }
+  100% {
+      transform : rotate(0deg);
+  }
+}
