@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
+
 //백앤드 기본 url 설정
 
 // const API_URL = 'http://192.168.100.37:30001';
