@@ -32,12 +32,12 @@ setInterval(sendSensorData, 10000);
 
 wss.on("connection", (ws, req) => {
   // AWS 테스트 부분
-  const date = new Date();
-  const timestamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}${String(date.getSeconds()).padStart(2, '0')}`;
+  // const date = new Date();
+  // const timestamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}${String(date.getSeconds()).padStart(2, '0')}`;
 
-  let name = `dummy_${timestamp}.wav`;
-  winston.info(`name: ${name}`);
-  aws.uploadFileToS3(name, `./assets/dummy.wav`);
+  // let name = `dummy_${timestamp}.wav`;
+  // winston.info(`name: ${name}`);
+  // aws.uploadFileToS3(name, `./assets/dummy.wav`);
 
   // 부모님이 설정한 대화를 나누기 위한 프리셋 부분
   // 대화를 나눈 횟수
@@ -53,7 +53,7 @@ wss.on("connection", (ws, req) => {
   // 다음 사용자의 입력은 질문에 대한 대답이라는 플래그
   let qFlag = false;
   let fileStream;
-  // 현재 상태: 0-대기, 1-가까워지는 중, 2-말할 수 있을만큼 가까움, 3-멀어짐
+  // 바로 이전 상태: 0-대기, 1-가까워지는 중, 2-말할 수 있을만큼 가까움, 3-멀어짐
   let status = 0;
 
   // 1. 연결 클라이언트 IP 취득
@@ -127,6 +127,7 @@ wss.on("connection", (ws, req) => {
             }
 
             ws.close();
+            break;
           }
 
           // clients에 시리얼 넘버와 디스플레이/라즈베리를 엮어서 저장
@@ -171,7 +172,7 @@ wss.on("connection", (ws, req) => {
             너는 이 아이의 친구가 되어 아이와 쉬운 언어로 대화를 나누어야 한다. 
             객관적인 정보 전달은 최대한 줄이고, 감성적인 언어를 사용하라. 
             너는 답변으로 최대 15단어까지 사용하고, 이하의 [] 안의 정보를 참고하여 대화하라. 
-            높임말은 쓰지 말고 반말로 대화하라. 너는 시각/후각/촉각이 없다고 생각해라. 
+            같은 나이의 친구와 대화하듯이 반말로 대화하라. 너는 시각/후각/촉각이 없다고 생각해라. 
     
     [
       아이의 이름: ${dbplant.child_name}
