@@ -6,7 +6,7 @@ import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
-import ReactPlayer from "react-player";
+import { reSwal } from "../utils/reSwal";
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
@@ -16,7 +16,7 @@ const QuestPage = () => {
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [checkComplete, setCheckComplete] = useState();
   useEffect(() => {
     getQuest();
     inputQuest();
@@ -44,48 +44,69 @@ const QuestPage = () => {
     // input의 focus를 잃었을때 발생
     setFocusedInputIndex(null); // 어떤 input도 focus상태가 아니다
   };
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${authToken}`,
+    },
+  };
 
   const createQuest = () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authToken}`,
-      },
-    };
     const body = {
       quest: newquest,
     };
-    if (newquest === "") {
-      alert("공백은 질문이 될 수 없습니다.");
+    if (checkComplete===0) {
+      if (newquest === "") {
+        reSwal("warning", "공백은 질문이 될 수 없습니다");
+        return
+      } else {
+        console.log("여기까지오나");
+        axios
+          .post(`${BASE_URL}/api/plant/quest/${id}`, body, config)
+          .then((response) => {
+            console.log("New question successfully saved:", response.data);
+            getQuest();
+            setNewquest("");
+          })
+          .catch((error) => {
+            console.error("Error while saving the new question:", error);
+          });
+      }
     } else {
-      console.log("여기까지오나");
-      axios
-        .post(`${BASE_URL}/api/plant/quest/${id}`, body, config)
-        .then((response) => {
-          console.log("New question successfully saved:", response.data);
-          getQuest();
-          setNewquest("");
-        })
-        .catch((error) => {
-          console.error("Error while saving the new question:", error);
-        });
+      reSwal("warning", "완료된 식물은 질문을 등록할 수 없습니다");
+    }
+  };
+
+  useEffect(() => {
+    getComplete();
+  }, []);
+
+  const getComplete = async () => {
+    const path = window.location.pathname;
+    const parts = path.split("/"); 
+    const number = parts[parts.length - 1]; 
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/plant/myplant/${number}`,
+        config
+      );
+      setCheckComplete(response.data.data[0].complete);
+      console.log(response.data.data[0]);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getQuest = async () => {
     // 처음시작했을떄 질문지리스트 받을예정
-    console.log("id : " + id);
     if (authToken) {
       // 로그인 되어있을때
       try {
-        const response = await axios.get(`${BASE_URL}/api/plant/quest/${id}`, {
-          headers: {
-            Authorization: `${authToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${BASE_URL}/api/plant/quest/${id}`,
+          config
+        );
         setQuestList(response.data.data);
-        console.log("질문받아오기");
-        console.log(questList);
       } catch (err) {
         console.log("에러가 발생", err);
       }
@@ -95,8 +116,6 @@ const QuestPage = () => {
   const inputQuest = () => {
     // questList의 각각의 index의 값들을 빼내서 input으로 만들기
     // value는 해당 객체의 quest값
-    console.log(questList);
-
     const itemsPerPage = 5;
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -138,13 +157,6 @@ const QuestPage = () => {
   const [audioData, setAudioData] = useState(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const listenAudio = (questId) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authToken}`,
-      },
-    };
-
     axios
       .get(`${BASE_URL}/api/plant/quest/${questId}/audio`, config)
       .then((response) => {
@@ -162,13 +174,6 @@ const QuestPage = () => {
   };
 
   const deleteQuest = (questId) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authToken}`,
-      },
-    };
-
     axios
       .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
       .then((response) => {
@@ -228,6 +233,12 @@ const QuestPage = () => {
     );
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      createQuest(); // 엔터 키를 눌렀을 때 createQuest 함수 호출
+    }
+  };
+
   return (
     <>
       <div className="quest-container">
@@ -240,9 +251,9 @@ const QuestPage = () => {
             onChange={onChangeNewquest}
             onFocus={() => handleInputFocus(questList.length)}
             onBlur={handleInputBlur}
-            placeholder="질문을 등록하세요"
+            placeholder="아이에게 말하듯 질문해주세요"
+            onKeyPress={handleKeyPress}
           />
-
           <button className="btnQ" onClick={createQuest}>
             등록
           </button>
