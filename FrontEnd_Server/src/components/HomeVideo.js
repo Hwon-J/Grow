@@ -4,7 +4,7 @@ import homevideo1 from "../assets/homevideo1.mp4";
 function HomeVideo() {
   return (
     <div>
-      <video width="800" height="450" autoPlay loop muted>
+      <video width="800" autoPlay loop muted>
         <source src={homevideo1} type="video/mp4" />
       </video>
     </div>
