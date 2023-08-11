@@ -36,7 +36,7 @@ function NavTop() {
       <section className="navigation">
         <div className="nav-container">
           <div className="brand">
-            <NavLink to="/home" style={{ textDecoration: "none" }}>
+            <NavLink to="/home#sectionOne" style={{ textDecoration: "none" }}>
               <img src={logo} alt="Home" />
             </NavLink>
           </div>
