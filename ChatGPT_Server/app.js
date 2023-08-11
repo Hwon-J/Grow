@@ -139,7 +139,7 @@ wss.on("connection", (ws, req) => {
       아이의 나이: ${dbplant.child_age}
       현재시간: ${new Date().toISOString()}
       식물이 심어진 날짜: ${dbplant.start_date}
-      마지막으로 물을 준 시간: ${waterlog.wateredDate}
+      마지막으로 물을 준 시간: ${waterlog.watered_date}
       온도: ${condition.temperature}
       조도: ${condition.light}
       토양의 습도: ${condition.moisture}
