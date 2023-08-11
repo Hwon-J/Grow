@@ -63,10 +63,10 @@ const userSlice = createSlice({
     logoutUser: (state) => {
       // 로그아웃 reducer의 logoutUser액션이 불려졌을때 초기값으로 만들어 주는 코드
       return {
-        name: "",
-        email: "",
-        emailDomain: "",
-        token: "",
+        name: null,
+        email: null,
+        emailDomain: null,
+        token: null,
         status: "",
         error: null,
         isAuth: false,
