@@ -177,7 +177,7 @@ const MyInfo = () => {
           )}
 
           {myplant && myplant.plant_name && (
-            <h3 style={{ fontSize: "50px" }}>{myplant.plant_name}</h3>
+            <h3 style={{ fontSize: "40px" , marginTop:"10px" }}>{myplant.plant_name}</h3>
           )}
 
           {myplant && myplant.plant_info_index && (

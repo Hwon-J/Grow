@@ -10,10 +10,14 @@
 
 }
 
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* 원래는 center였습니다 */
-  height: 100vh;
-  padding-left: 10%; /* 오른쪽 여백을 줍니다 */
+.content_title {
+  position: relative;
+}
+.content_title_text {
+  position: absolute;
+  top: 50%; /* 수직 중앙 정렬을 위해 50%로 설정 */
+  left: 20%; /* 수평 중앙 정렬을 위해 50%로 설정 */
+  transform: translate(-50%, -50%); /* 정렬을 위한 transform */
+  font-size: 36px; /* 원하는 폰트 크기로 조정 */
+  color: white;
 }
