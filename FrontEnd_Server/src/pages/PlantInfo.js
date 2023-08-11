@@ -186,12 +186,23 @@ const PlantInfo = () => {
     }
   };
 
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <>
       <NavTop />
+      
       {modalOpen && (
-        <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
-      )}
+  <>
+    <div className="modal-overlay" onClick={closeModal}></div>
+    <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
+  </>
+)}
+
+      
       <div className="top_section">
         <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
       </div>

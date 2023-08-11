@@ -37,8 +37,10 @@ export function NotcompleteCardSet(growinPlant, slidesPerView, createCard) {
           ))}
           <SwiperSlide>
             <div className="plantcard_new" onClick={createCard}>
+              <div className="new_register">
               <h5 style={{ fontSize: "30px" }}>새 식물친구</h5>
               <h5 style={{ fontSize: "30px" }}>등록해주기</h5>
+              </div>
             </div>
           </SwiperSlide>
         </div>
