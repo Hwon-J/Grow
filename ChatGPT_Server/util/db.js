@@ -338,10 +338,10 @@ const getplantinfo = async (serial) => {
   winston.info(`getkidsname called. serial: ${serial}`);
   try {
     let sql =
-      "select *, plant.index as pindex from `plant` join pot on plant.pot_index = pot.index where `pot_index` = ?";
+      "select *, plant.index as pindex from `plant` join pot on plant.pot_index = pot.index where `serial_number` = ?";
 
     let result = await queryPromise(sql, [serial]);
-    return result;
+    return result[0];
   } catch (error) {
     winston.error(error);
     return "error";
