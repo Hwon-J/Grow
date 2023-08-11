@@ -118,3 +118,11 @@
   background-color: #4c777b; /* 버튼 배경색 어두워짐 (마우스 클릭 시) */
   border-color: #4c777b; /* 버튼 테두리색 어두워짐 (마우스 클릭 시) */
 }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999; /* 모달보다 낮은 Z-index 값을 설정하여 모달 뒤로 숨김 */
+}
