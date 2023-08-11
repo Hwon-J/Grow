@@ -73,7 +73,7 @@ const Profile = () => {
     <>
       <NavTop />
       <div className="top_section">
-        <h1 style={{ fontSize: "100px" }}>나의 식물 목록</h1>
+        <h1 style={{ fontSize: "80px" }}>나의 식물 목록</h1>
       </div>
       <div className="profilepage container">
         <div className="profile-row">

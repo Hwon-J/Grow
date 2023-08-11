@@ -58,7 +58,7 @@ const LoginPage = () => {
     <div className={style.login_total}>
       <NavTop />
       <div className={style.loginbox}>
-        <h2>Sign in Account</h2>
+        <h2>Log In</h2>
         <form onSubmit={handleSubmit}>
           <div className={style.userbox} style={{ marginBottom: "40px" }}>
             <input
