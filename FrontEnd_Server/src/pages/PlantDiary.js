@@ -12,7 +12,7 @@ const PlantDiary = () => {
     <div className="diary_total">
       <NavTop />
       <div className="top_section">
-        <h1 style={{fontSize: "100px"}}>화분 일지</h1>
+        <h1 style={{fontSize: "80px"}}>화분 일지</h1>
       </div>
       <Container className="centered-elements">
         <Grid container className="diary-container" spacing={2}>

@@ -1,13 +1,5 @@
-@font-face {
-  font-family: 'KCC-DodamdodamR';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
 .container {
   /* 모달창 크기 */
-  font-family: 'KCC-DodamdodamR';
   position: fixed;
   width: 50%;
   min-height: 50%;

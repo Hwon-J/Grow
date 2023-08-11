@@ -138,7 +138,7 @@ const SignupPage = () => {
     <div className={style.signup_total}>
       <NavTop />
       <div className={style.signupbox}>
-        <h2>Create new Account</h2>
+        <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <div
             className={style.userbox}

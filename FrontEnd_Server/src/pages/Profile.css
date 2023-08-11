@@ -1,10 +1,3 @@
-@font-face {
-  font-family: "KCC-DodamdodamR";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
 
 .cardContainer {
   display: flex;
@@ -26,7 +19,6 @@
 .profilepage {
   display: flex;
   justify-content: center;
-  font-family: "KCC-DodamdodamR";
 }
 
 .profile-row {
@@ -104,11 +96,12 @@
 }
 
 .signout-btn {
-  font-size: 20px;
+  font-size: 16px;
   border: green solid 1px;
   border-radius: 30px;
   background-color: #ffffff;
   color: gray;
+  padding: 0 10px;
 }
 
 .signout-btn:hover {

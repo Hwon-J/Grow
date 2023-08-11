@@ -11,10 +11,11 @@ import "./MainVideoBackground.css";
 import homevideo1 from "../assets/homevideo1.mp4";
 import { SectionsContainer, Section } from "react-fullpage";
 import styles from "./home.module.css";
+import zIndex from "@mui/material/styles/zIndex";
 function HomeBackground() {
   return (
     <video autoPlay loop muted>
-      <source src={homevideo1} type="video/mp4" />
+      <source src={homevideo1} style={{ zIndex:"1"}} type="video/mp4" />
     </video>
   );
 }
@@ -49,9 +50,6 @@ const Home = () => {
           <div className="content">
             <div className="home_container " >
               <div className="home_title">
-                <h1>Find friend for your kids</h1>
-                <h4>This service makes plant friends for your children</h4>
-                <h4>so that they can develop emotionally.</h4>
               </div>
             </div>
           </div>
