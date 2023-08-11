@@ -47,10 +47,9 @@ const Home = () => {
         >
           <HomeBackground />
         <NavTop className="homenav" />
-          <div className="content">
-            <div className="home_container " >
-              <div className="home_title">
-              </div>
+          <div className={styles.content_title}>
+            <div className={styles.content_title_text}>
+            <h1>Find a friend for your child</h1>
             </div>
           </div>
           <img src="./footer/down2.png" className="aligned-image" />
