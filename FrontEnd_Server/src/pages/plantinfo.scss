@@ -1,12 +1,5 @@
 /* test1.css 파일 */
 /* 기존 CSS 코드에 추가 스타일을 적용하였습니다. */
-@font-face {
-  font-family: "KCC-DodamdodamR";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-DodamdodamR.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
 
 .top_section {
   height: 35vh;
@@ -20,7 +13,6 @@
     text-align: center;
     padding-top: 10vh;
   }
-  font-family: "KCC-DodamdodamR";
   margin-bottom: 30px;
 }
 
@@ -29,7 +21,6 @@
   margin-top: 40px;
   margin-bottom: 0px;
   padding-bottom: 0px !important;
-  font-family: "KCC-DodamdodamR";
 }
 
 

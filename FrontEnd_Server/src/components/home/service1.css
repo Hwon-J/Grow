@@ -1,14 +1,16 @@
+
+
 .service1-main-div {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  
+  background-color: #f2f2f2e7;
 }
 
 .service1-row {
   height: 90%;
-  background-color: #f2f2f2e7;
+  
   padding : 50px auto;
   border-radius: 10px;
   width: 100%;

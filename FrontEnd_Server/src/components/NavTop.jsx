@@ -61,11 +61,11 @@ function NavTop() {
                       Profile
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink to="/plantinfo" style={{ textDecoration: "none" }}>
                       plantinfo
                     </NavLink>
-                  </li>
+                  </li> */}
                   {/* <li>
                     <NavLink to="/shop" style={{ textDecoration: "none" }}>
                       Shop

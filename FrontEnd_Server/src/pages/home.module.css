@@ -9,3 +9,11 @@
 .down {
 
 }
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 원래는 center였습니다 */
+  height: 100vh;
+  padding-left: 10%; /* 오른쪽 여백을 줍니다 */
+}
