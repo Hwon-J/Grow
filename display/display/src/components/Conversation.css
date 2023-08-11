@@ -5,20 +5,23 @@
     font-style: normal;
   }
   
-
+  .water {
+    position : fixed;
+    left : 580px;
+  }
 
 
   .character-box {
     display : flex;
     position : fixed;
-    left : 420px;
-    top : 50px;
+    left : 250px;
+    top : 80px;
     
   }
   .character {
   
     margin-right: 50px;
-    height: 480px;
+    height: 450px;
   }
   
   
@@ -26,15 +29,16 @@
   .bubble
   {
   position: fixed;
-  width: 270px;
-  height: 500px;
+  width: 470px;
+  height: 600px;
   padding: 0px;
   background: #FFFFFF;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  left : 900px;
-  top : 120px;
+  left : 740px;
+  top : 80px;
+
   
   }
   
@@ -52,6 +56,12 @@
   top: 75px;
   }
   
+  .blackboard {
+    position : fixed;
+    left : -55px;
+    height: 250px;
+    width: 500px;;
+  }
 
   .information {
     display: flex;
@@ -59,14 +69,17 @@
     align-items:start;
     justify-items: left;
     position : fixed;
-    left : 80px;
+    left : 40px;
     top : 30px;
+    /* background-image: url('../assets/blackboard.png'); 
+    background-size :contain; */
   
   }
   
   .information h1 {
-    font-size: 80px;
+    font-size: 40px;
     font-family: 'iceSotong-Rg';
+    color : white;
     
     
   }
@@ -131,5 +144,34 @@
   }
   100% {
       transform : rotate(0deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .water-fairy {
+    animation:water-plant infinite 3s linear;
+  }
+}
+@keyframes water-plant {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+      transform : translate(-100px, 0px);
+      transform: rotate(-20deg);
+      /* transform: rotate(20deg); */
+  }
+  40% {
+    transform : translate(-100px, 0px);
+    
+    /* transform : translate(-50px, 0px); */
+    /* transform: scale(1.1); */
+    
+  }
+  70% {
+      
+      /* transform : translate(-50px, -50px); */
+  }
+  100% {
+    /* transform : translate(0px, 0px); */
   }
 }

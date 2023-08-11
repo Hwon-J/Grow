@@ -4,6 +4,8 @@ import './Conversation.css';
 import beancharacter from '../assets/beancharacter.png';
 import lettucecharacter from '../assets/lettucecharacter.png';
 import tomatocharacter from '../assets/tomatocharacter.png';
+import blackboard from '../assets/blackboard.png';
+import water from '../assets/water.png';
 
 // 웹소켓 컴포넌트와 연결
 import WebSocketComponent from './Websocket';
@@ -38,13 +40,14 @@ function Conversation() {
       
       <div >
         {/* 센서값 나타내는 부분 */}
+        <img className='blackboard' src={blackboard}/>
         <span className='information '>
           <h1>온도 : {temper_speech[sensor.temperature]} {sensor.temperValue}도</h1>
           <h1>햇빛 : {light_speech[sensor.light]}</h1>
           <h1>물 : {water_speech[sensor.moisture]}</h1>
         </span>
         
-        
+        <img src={water} className='water water-fairy' />
           
          {/* 캐릭터 나타내는 부분 */}
         <div className='character-box'>
@@ -52,7 +55,8 @@ function Conversation() {
            src={character_list[character_index]} alt="cancel"  />
           
         </div>
-        <div className={`bubble ${talking || thinking ? 'visible' : 'hidden'}`}>
+        <div className={`bubble`}>
+        {/* <div className={`bubble ${talking || thinking ? 'visible' : 'hidden'}`}> */}
         {/* 웹소켓 컴포넌트도 추가하여 이 컴포넌트가 렌더링될 때 한번 웹소켓 연결 
             현재 센서 업데이트 함수를 자식 컴포넌트로 넘겨주기 그러면 자식컴포넌트에서도 호출 가능 */}
           

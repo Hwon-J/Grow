@@ -100,8 +100,8 @@ function WebSocketComponent(props) {
 
   useEffect(() => {
     // 웹소켓 링크 설정
-    // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
-    const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    // const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
