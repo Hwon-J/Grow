@@ -1,6 +1,7 @@
 // const Pot = require("../models/pot-model.js");
 const connection = require("../util/connection.js");
 const winston = require("../util/winston");
+const s3 = require("../util/aws-s3.js");
 const util = require("util");
 const path = require("path");
 const queryPromise = util.promisify(connection.query).bind(connection);
@@ -410,17 +411,20 @@ exports.getAnswerById = async (req, res) => {
     // 트랜잭션 커밋
     await queryPromise("COMMIT");
 
-    winston.info('전송');
-    const filename = "dummy.wav";
-    // 파일의 절대 경로를 얻습니다.
-    const filepath = path.join(__dirname, '..', "assets", filename);
-    // 파일을 클라이언트에게 전송합니다.
-    return res.status(200).sendFile(filepath);
+    const params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: 'dummy.wav',   ///////////// 이 부분을 나중에 db에서 뽑아온 값으로 바꿀 것
+      Expires: 60 * 5
+    };
 
-    winston.info(`plantController deleteQuestion successfully completed`);
-    return res
-      .status(201)
-      .json({ code: 201, message: "요청 처리 성공", data: result });
+    s3.getSignedUrl('getObject', params, (err, url) => {
+      winston.info(`returned url: ${url}`);
+      if (err) {
+        winston.info('Failed to generate presigned URL');
+        return res.status(500).json({ error: 'Failed to generate presigned URL' });
+      }
+      return res.status(201).json({ code:200, message:"URL 생성성공", presignedUrl: url });
+    });
   } catch (error) {
     winston.error(error);
     return res.status(500).json({ code: 500, message: "서버 오류" });

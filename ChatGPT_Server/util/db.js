@@ -183,10 +183,10 @@ const getWaterLog = async (plantIndex) => {
 const getPlantInfoByIndex = async (index) => {
   winston.info(`getPlantInfoByIndex called. index: ${index}`);
   try {
-    let sql = "select * from `plant_info` where index = ?";
+    let sql = "select * from `plant_info` where `index` = ?";
 
     let result = await queryPromise(sql, [index]);
-    return result;
+    return result[0];
   } catch (error) {
     winston.error(error);
     return "error";
