@@ -100,8 +100,8 @@ function WebSocketComponent(props) {
 
   useEffect(() => {
     // 웹소켓 링크 설정
-    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
-    // const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
@@ -148,11 +148,11 @@ function WebSocketComponent(props) {
 
   // 표시할 메세지 박스의 스타일 설정
   const messagebox = {
-    width: '270px',
+    width: '470px',
     overflowY: 'auto',
     whiteSpace: 'normal',
     overflowWrap: 'break-word',
-    fontSize : '40px',
+    fontSize : '60px',
     fontFamily: 'iceSotong-Rg'
   };
 
