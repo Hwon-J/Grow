@@ -9,6 +9,7 @@ function WebSocketComponent(props) {
   const set_talking = props.set_talking
   // 캐릭터 생각하는 상태 바꾸는 함수
   const set_thinking = props.set_thinking
+  const setWatering = props.setWatering
   // 시리얼 번호 가져오기
   const serial_number = props.serial_number
   // 소켓 설정
@@ -17,15 +18,14 @@ function WebSocketComponent(props) {
   // 캐릭터 말풍선에 띄울 텍스트 설정
   const [receivedMessage, setReceivedMessage] = useState('');
   
-  // 물을 줘야하는 상태인지 구분하기 위해 변수 설정
-  const [watering, setWatering] = useState(false)
+  
 
   // 백에서 메세지를 받았을 때 실행하는 함수 설정
   function getmessage (message) {
     // JSON 해체
     const mes = JSON.parse(message)
     console.log(mes)
-
+    
     // 받은 메세지가 센서와 관련된 거라면
     if (mes.about === 'sensor'){
       console.log('getsensor')
@@ -78,7 +78,12 @@ function WebSocketComponent(props) {
         clearTimeout(displayTimeout);
       };
     }
-
+    else if (mes.about === 'hear') {
+      console.log('hear')
+      // 캐릭터 말하기 상태 on > 말풍선 켜짐
+      set_talking(true)
+      setReceivedMessage('지금 얘기 듣고 있어~')
+    }
     // 받은 메세지가 좀더 가까이 와달라는 메시지라면
     else if (mes.about === 'closer') {
       console.log('closer')
@@ -152,8 +157,8 @@ function WebSocketComponent(props) {
     overflowY: 'auto',
     whiteSpace: 'normal',
     overflowWrap: 'break-word',
-    fontSize : '60px',
-    fontFamily: 'iceSotong-Rg'
+    fontSize : '40px',
+    fontFamily: 'Pretendard-Regular'
   };
 
   // 웹소켓 컴포넌트 구조
