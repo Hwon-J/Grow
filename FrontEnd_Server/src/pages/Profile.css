@@ -143,3 +143,24 @@
     color: #1c5222;
   }
 }
+
+.swiper_total {
+  position: relative;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  font-size: 50px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.swiper-button-prev {
+  left: -60px; /* 왼쪽에 고정 */
+}
+
+.swiper-button-next {
+  right: -60px; /* 오른쪽에 고정 */
+}
