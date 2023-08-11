@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { logoutUser } from "../reducers/userSlice";
 import { useLocation } from "react-router";
 import Swal from "sweetalert2";
+import { reSwal } from "./reSwal.js";
 // 로그인 되어있는지 persist:currentUser에서 확인
 export const Islogin = () => {
   const persistedCurrentUser = localStorage.getItem("persist:currentUser");
@@ -67,6 +68,7 @@ const CheckToken = () => {
       const response = await axios.get(`${BASE_URL}/api/user/valid`, config);
       // 유효하다면 그냥 넘어가고
     } catch (error) {
+      reSwal("error", "토큰이 만료되었습니다 다시 로그인 해주세요")
       // 에러이면 useSlice의 로그아웃 액션 실행
       dispatch(logoutUser());
       console.log(error);
