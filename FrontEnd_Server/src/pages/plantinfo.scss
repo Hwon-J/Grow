@@ -39,7 +39,10 @@
     display: none;
   }
 }
-
+.plant-info-col form ::placeholder {
+  color: #c3c3c3;
+  opacity: 1;
+}
 .plantinfo-stack h2 {
   text-align: center;
   font-weight: bold;
@@ -116,3 +119,4 @@
   height: 100%;
   z-index: 999; /* 모달보다 낮은 Z-index 값을 설정하여 모달 뒤로 숨김 */
 }
+
