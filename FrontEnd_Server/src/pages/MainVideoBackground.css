@@ -17,7 +17,7 @@
 
 .content {
   position: relative;
-  z-index: 1; /* 비디오보다 앞으로 보내기 */
+  z-index: -1; 
   /* 필요한 스타일링 추가 */
   color: white;
 }

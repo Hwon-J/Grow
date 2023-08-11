@@ -6,7 +6,7 @@ import axios from "axios";
 import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
@@ -16,8 +16,7 @@ const QuestPage = () => {
   const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
   const { id } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [audioData, setAudioData] = useState(null);
-  const [audioPlaying, setAudioPlaying] = useState(false);
+
   useEffect(() => {
     getQuest();
     inputQuest();
@@ -28,17 +27,14 @@ const QuestPage = () => {
   }, [questList]);
 
   const handlePageChange = (newPage) => {
-      setCurrentPage(newPage);
-    };
-
+    setCurrentPage(newPage);
+  };
 
   const onChangeNewquest = (e) => {
     // 새로운 질문지 작성될떄마다 value값 변경
     setNewquest(e.target.value);
     console.log(e.target.value);
   };
-
-  
 
   const handleInputFocus = (index) => {
     setFocusedInputIndex(index);
@@ -103,7 +99,7 @@ const QuestPage = () => {
 
     const itemsPerPage = 5;
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage; 
+    const endIndex = startIndex + itemsPerPage;
 
     return questList
       .slice()
@@ -114,42 +110,46 @@ const QuestPage = () => {
           <div className="quest-left">
             <p className="question">{questItem.content}</p>
             {questItem?.registered_date && (
-              <p className="resister_date" style={{ display: "inline-block", marginRight: "5px" }}>
-                {questItem.registered_date.slice(0,10)}일 등록
+              <p
+                className="resister_date"
+                style={{ display: "inline-block", marginRight: "5px" }}
+              >
+                {questItem.registered_date.slice(0, 10)}일 등록
               </p>
             )}
           </div>
           <div className="quest-right">
-            {questItem?.audio_file_path && (
-              <Icon icon="bi:bell" onClick={()=>listenAudio(questItem.index)} />
+            {/* <Icon icon="bi:bell" onClick={() => listenAudio(28)} /> */}
+            {questItem.completed === 1 && (
+              <Icon
+                icon="bi:bell"
+                onClick={() => listenAudio(questItem.index)}
+              />
             )}
             <Icon
               icon="bi:trash3"
               onClick={() => deleteQuest(questItem.index)}
             />
-            
           </div>
-          
         </div>
-        
       ));
   };
 
+  const [audioData, setAudioData] = useState(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   const listenAudio = (questId) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${authToken}`,
       },
-      responseType: "arraybuffer", // Tell axios to treat response data as ArrayBuffer
     };
 
     axios
       .get(`${BASE_URL}/api/plant/quest/${questId}/audio`, config)
       .then((response) => {
-        const audioBlob = new Blob([response.data], { type: "audio/wav" });
-        setAudioData(audioBlob); // Store the audio data in state
-        setAudioPlaying(true); // Start playing audio
+        setAudioData(response.data.presignedUrl);
+        setAudioPlaying(true); // 음성 재생 상태를 true로 설정
       })
       .catch((error) => {
         console.error("Error", error);
@@ -157,7 +157,8 @@ const QuestPage = () => {
   };
 
   const stopAudio = () => {
-    setAudioPlaying(false);
+    setAudioData("");
+    setAudioPlaying(false); // 음성 재생 상태를 false로 설정
   };
 
   const deleteQuest = (questId) => {
@@ -185,29 +186,44 @@ const QuestPage = () => {
     // 페이지당 질문 5개
     const itemsPerPage = 5;
     const totalPages = Math.ceil(questList.length / itemsPerPage);
-    
+
     // 현재 페이지가 1이면 이전버튼 비활성화
     // 현재 페이지가 마지막 페이지면 다음버튼 비활성화
     return (
       <div className="pagination">
         {currentPage === 1 && (
-        <Icon icon="bi:chevron-left"  
-          style={{ marginRight: '10px', marginTop: '3px', color: 'white' }} 
-          onClick={() => handlePageChange(currentPage - 1)} />)}
+          <Icon
+            icon="bi:chevron-left"
+            style={{ marginRight: "10px", marginTop: "3px", color: "white" }}
+            onClick={() => handlePageChange(currentPage - 1)}
+          />
+        )}
 
-      {currentPage !== 1 && (
-        <Icon icon="bi:chevron-left" style={{ marginRight: '10px', marginTop: '3px', color: 'black'}} 
-          onClick={() => handlePageChange(currentPage - 1)} />)}
+        {currentPage !== 1 && (
+          <Icon
+            icon="bi:chevron-left"
+            style={{ marginRight: "10px", marginTop: "3px", color: "black" }}
+            onClick={() => handlePageChange(currentPage - 1)}
+          />
+        )}
 
         <span>{`${currentPage} / ${totalPages}`}</span>
-        
+
         {currentPage === totalPages && (
-        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px', color: 'white' }} 
-        onClick={() => handlePageChange(currentPage + 1)} />)}
+          <Icon
+            icon="bi:chevron-right"
+            style={{ marginLeft: "10px", marginTop: "3px", color: "white" }}
+            onClick={() => handlePageChange(currentPage + 1)}
+          />
+        )}
 
         {currentPage !== totalPages && (
-        <Icon icon="bi:chevron-right" style={{ marginLeft: '10px', marginTop: '3px', color: 'black' }} 
-        onClick={() => handlePageChange(currentPage + 1)} />)}
+          <Icon
+            icon="bi:chevron-right"
+            style={{ marginLeft: "10px", marginTop: "3px", color: "black" }}
+            onClick={() => handlePageChange(currentPage + 1)}
+          />
+        )}
       </div>
     );
   };
@@ -231,24 +247,28 @@ const QuestPage = () => {
             등록
           </button>
         </div>
-        {audioData && (
-        <div>
-          <audio
-            controls
-            autoPlay={audioPlaying} // 자동 재생 여부
-            onEnded={stopAudio}
-          >
-            <source src={URL.createObjectURL(audioData)} type="audio/wav" />
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-      )}
-        
-        <div className="quest-section">
-          {inputQuest()}
-        </div>
 
-        <div className="center-pagination" style={{ marginTop: '35px' }}>{renderPagination()}</div>
+        {audioData && (
+          <div className="audiodiv">
+            <audio controls onEnded={stopAudio}>
+              {" "}
+              {/* 오디오가 종료되면 재생 상태를 false로 설정 */}
+              <source src={audioData} type="audio/wav" />
+            </audio>
+            {audioPlaying && (
+              <button onClick={stopAudio} className="audioStop">
+                Stop
+              </button>
+            )}{" "}
+            {/* 음성 중지 버튼 */}
+          </div>
+        )}
+
+        <div className="quest-section">{inputQuest()}</div>
+
+        <div className="center-pagination" style={{ marginTop: "35px" }}>
+          {renderPagination()}
+        </div>
       </div>
     </>
   );
