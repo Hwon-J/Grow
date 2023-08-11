@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./footer.module.css";
 import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+
 const FooterHome = () => {
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.currentUser);
   const startgo = () => {
+    console.log(currentUser.name+"로그인확인")
+    if (currentUser.name !== null) {
+      navigate('/profile')
+      return
+    }
     navigate('/signup')
   }
+
   return (
     <Row className={styles.container}>
       <Col className={styles.col1} xs={5}>
