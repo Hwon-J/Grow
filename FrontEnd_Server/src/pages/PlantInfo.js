@@ -15,7 +15,6 @@ import {
   Card,
   InputGroup,
 } from "react-bootstrap";
-import Swal from "sweetalert2";
 import { reSwal } from "../utils/reSwal";
 
 const PlantInfo = () => {
@@ -46,7 +45,7 @@ const PlantInfo = () => {
   };
 
   useEffect(() => {
-    console.log(selectedInfo);
+    console.log(selectedInfo + "식물선택");
   }, [selectedInfo]);
 
   useEffect(() => {
@@ -81,12 +80,6 @@ const PlantInfo = () => {
       return;
     }
     if (childname.length === 0) {
-      Swal.fire({
-        icon: "warning",
-        text: `아이 이름을 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
       reSwal("warning", `아이 이름을 입력해주세요`);
       return;
     }
@@ -105,8 +98,6 @@ const PlantInfo = () => {
       child_name: childname,
       child_age: parseInt(childage),
     };
-    console.log(authToken);
-    console.log(body);
 
     try {
       const response = await axios.post(
@@ -151,6 +142,17 @@ const PlantInfo = () => {
     );
   };
 
+  const selectInput = () => {
+    return selectedInfo ? (
+      <Form.Control
+        style={{ fontSize: "20px" }}
+        type="text"
+        placeholder="식물을 선택해 주세요"
+        value={`선택된 식물: ${selectedInfo.species || ""}`}
+        readOnly 
+      />
+    ) : null;
+  };
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/plant/info`);
@@ -182,10 +184,9 @@ const PlantInfo = () => {
         setCheckedResult(false);
       }
     } else {
-      alert("시리얼 넘버를 입력해 주세요!");
+      reSwal("warning", "시리얼 넘버를 입력해 주세요!");
     }
   };
-
 
   const closeModal = () => {
     setModalOpen(false);
@@ -194,21 +195,25 @@ const PlantInfo = () => {
   return (
     <>
       <NavTop />
-      
-      {modalOpen && (
-  <>
-    <div className="modal-overlay" onClick={closeModal}></div>
-    <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
-  </>
-)}
 
-      
+      {modalOpen && (
+        <>
+          <div className="modal-overlay" onClick={closeModal}></div>
+          <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
+        </>
+      )}
+
       <div className="top_section">
         <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
-          <Col sm={12} md={5} className="plant-info-col" style={{ paddingBottom : "10px"}}>
+          <Col
+            sm={12}
+            md={5}
+            className="plant-info-col"
+            style={{ paddingBottom: "10px" }}
+          >
             {imgPlantInfo()}
           </Col>
 
@@ -233,6 +238,7 @@ const PlantInfo = () => {
                     >
                       아이의 친구가 될 식물을 등록해주세요
                     </p>
+                    {selectInput()}
                     <Form.Control
                       style={{ fontSize: "20px" }}
                       type="text"
@@ -282,6 +288,7 @@ const PlantInfo = () => {
                       placeholder="나이"
                       value={childage}
                       onChange={onChangeChildage}
+                      min="1"
                     />
                     <button type="submit" className="custom-button create-btn">
                       만들기
