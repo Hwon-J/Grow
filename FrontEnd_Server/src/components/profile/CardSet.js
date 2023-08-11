@@ -2,45 +2,73 @@ import PlantCard from "../plant/plantCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper/modules";
 import "../../pages/Profile.css";
+import { Icon } from '@iconify/react';
+
 export function NotcompleteCardSet(growinPlant, slidesPerView, createCard) {
-  // 진행중인 식물 컴포넌트
+  //관리중인 식물 보여줄 컴포넌트
+
+  // swiper slide를 움직일 버튼  
+  const slidePrev = () => {
+    const swiper = document.querySelector('.mySwiper').swiper;
+    swiper.slidePrev();
+  }
+
+  const slideNext = () => {
+    const swiper = document.querySelector('.mySwiper').swiper;
+    swiper.slideNext();
+  }
+
+  // 버튼 클릭을 통해 식물카드를 움직일 수 있다.
   return (
-    <Swiper
-      slidesPerView={slidesPerView} //페이지당 보여줄 slider개수
-      spaceBetween={30} // 간격
-      freeMode={true} // 슬라이드 간의 스무스한 이동을 가능
-      pagination={{
-        clickable: true, // 페이지 번호를 클릭해서 원하는 페이지로 이동 가능
-      }}
-      modules={[FreeMode, Pagination]} // 자유롭게 드래그, 슬라이더의 페이지 번호를 나타내는 역할
-      className="mySwiper"
-    >
-      <div className="cardContainer">
-        {growinPlant.map(
-          (
-            plant // 키우는 식물을 하나하나 뽑아서 PlantCard만들기
-          ) => (
+    <div className="swiper_total">
+      <div className="swiper-button-prev" onClick={slidePrev}>
+          <Icon icon="bi:chevron-left" />
+      </div>
+      <Swiper
+        slidesPerView={slidesPerView}
+        spaceBetween={30}
+        className="mySwiper"
+      >
+        <div className="cardContainer">
+          {growinPlant.map((plant) => (
             <SwiperSlide key={plant.index}>
               <PlantCard props={plant} />
             </SwiperSlide>
-          )
-        )}
-        <SwiperSlide>
-          <div className="plantcard_new">
-            <div className="new_register" onClick={createCard}>
+          ))}
+          <SwiperSlide>
+            <div className="plantcard_new" onClick={createCard}>
               <h5 style={{ fontSize: "30px" }}>새 식물친구</h5>
               <h5 style={{ fontSize: "30px" }}>등록해주기</h5>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        </div>
+      </Swiper>
+      <div className="swiper-button-next" onClick={slideNext}>
+        <Icon icon="bi:chevron-right" />
       </div>
-    </Swiper>
+    </div>
   );
 }
 
 export function completeCardSet(plantComplete, slidesPerView) {
   // 완료된 식물 보여줄 컴포넌트
+
+  // swiper slide를 움직일 버튼  
+  const slidePrev = () => {
+    const swiper = document.querySelector('.mySwiper').swiper;
+    swiper.slidePrev();
+  }
+
+  const slideNext = () => {
+    const swiper = document.querySelector('.mySwiper').swiper;
+    swiper.slideNext();
+  }
+
   return (
+    <div className="swiper_total">
+      <div className="swiper-button-prev" onClick={slidePrev}>
+          <Icon icon="bi:chevron-left" />
+      </div>
     <Swiper
       slidesPerView={slidesPerView}
       spaceBetween={20}
@@ -59,5 +87,9 @@ export function completeCardSet(plantComplete, slidesPerView) {
         ))}
       </div>
     </Swiper>
+    <div className="swiper-button-next" onClick={slideNext}>
+        <Icon icon="bi:chevron-right" />
+      </div>
+    </div>
   );
 }
