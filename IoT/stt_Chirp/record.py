@@ -8,14 +8,14 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from websocket import create_connection
 from websocket._app import WebSocketApp
-from statistics import mean, stdev
-
+from statistics import mean, stdev, median
+from gpiozero import DistanceSensor
 import json
 
 last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 # 웹소켓 서버 설정
 ws = None
-
+lock = threading.Lock()
 # 웹소켓 서버 설정
 def on_message(ws, message):
     print(f"Received message from client: {message}")
@@ -110,6 +110,7 @@ def record_audio():
                 data, _ = stream.read(RATE)
             except sounddevice.PortAudioError as e:
                 print(f"스트림에서 읽는 도중 오류 발생: {e}")
+            lock.acquire()
             if recording:
                 if write_ptr == 0:
                     start_ptr = 0
@@ -132,9 +133,11 @@ def record_audio():
 
                 save_data = False
                 write_ptr = 0
+            lock.release()
 
 def measure_distance():
-    global last_N_readings
+    global last_N_readings, ECHO, TRIG
+    # sensor = DistanceSensor(echo=ECHO, trigger=TRIG)
     GPIO.output(TRIG, False)
     time.sleep(0.1)
 
@@ -153,8 +156,10 @@ def measure_distance():
 
     elapsed_time = stop_time - start_time
     distance = (elapsed_time * 34300) / 2
-
+    # distance = sensor.distance * 100
+    # time.sleep(1)
     # 거리가 600 이상이면 무시하고 이전 측정값을 반환
+
     if distance >= 600:
         print("Ignoring outlier")
         if last_N_readings:
@@ -168,7 +173,8 @@ def measure_distance():
     last_N_readings.append(distance)
 
     
-    return distance
+    return median(last_N_readings)
+    # return distance
 
 if __name__ == "__main__":
 
@@ -188,19 +194,29 @@ if __name__ == "__main__":
         while True:
             distance = measure_distance()
             print(f"Distance: {distance} cm")
+            lock.acquire()
+
 
             if distance < 15 and not recording: # 거리가 10cm 미만일 때 녹음 시작
                 print("Recording started...")
-                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
+                message = json.dumps({"purpose": "hear" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
+                # ws.send(message)
                 recording = True
 
-            elif distance >= 15 and recording: # 거리가 10cm 이상일 때 녹음 종료
+            elif distance < 30:
+                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"})
+            
+            elif distance >= 30 and recording: # 거리가 10cm 이상일 때 녹음 종료
                 print("Recording stopped...")
                 message = json.dumps({"purpose": "further" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
+                # ws.send(message)
                 recording = False
                 save_data = True
+
+
+
+            
+            lock.release()
 
             time.sleep(0.1) # 0.1초 간격으로 거리 측정
 
