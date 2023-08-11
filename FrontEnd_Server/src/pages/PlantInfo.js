@@ -15,7 +15,6 @@ import {
   Card,
   InputGroup,
 } from "react-bootstrap";
-import Swal from "sweetalert2";
 import { reSwal } from "../utils/reSwal";
 
 const PlantInfo = () => {
@@ -81,12 +80,6 @@ const PlantInfo = () => {
       return;
     }
     if (childname.length === 0) {
-      Swal.fire({
-        icon: "warning",
-        text: `아이 이름을 입력해주세요`,
-        showCancelButton: false,
-        confirmButtonText: "확인",
-      });
       reSwal("warning", `아이 이름을 입력해주세요`);
       return;
     }
@@ -105,8 +98,6 @@ const PlantInfo = () => {
       child_name: childname,
       child_age: parseInt(childage),
     };
-    console.log(authToken);
-    console.log(body);
 
     try {
       const response = await axios.post(
@@ -182,10 +173,9 @@ const PlantInfo = () => {
         setCheckedResult(false);
       }
     } else {
-      alert("시리얼 넘버를 입력해 주세요!");
+      reSwal("warning", "시리얼 넘버를 입력해 주세요!")
     }
   };
-
 
   const closeModal = () => {
     setModalOpen(false);
@@ -194,21 +184,25 @@ const PlantInfo = () => {
   return (
     <>
       <NavTop />
-      
-      {modalOpen && (
-  <>
-    <div className="modal-overlay" onClick={closeModal}></div>
-    <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
-  </>
-)}
 
-      
+      {modalOpen && (
+        <>
+          <div className="modal-overlay" onClick={closeModal}></div>
+          <InfoModal selectedInfo={selectedInfo} setModalOpen={setModalOpen} />
+        </>
+      )}
+
       <div className="top_section">
         <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
-          <Col sm={12} md={5} className="plant-info-col" style={{ paddingBottom : "10px"}}>
+          <Col
+            sm={12}
+            md={5}
+            className="plant-info-col"
+            style={{ paddingBottom: "10px" }}
+          >
             {imgPlantInfo()}
           </Col>
 
@@ -282,6 +276,7 @@ const PlantInfo = () => {
                       placeholder="나이"
                       value={childage}
                       onChange={onChangeChildage}
+                      min="1"
                     />
                     <button type="submit" className="custom-button create-btn">
                       만들기

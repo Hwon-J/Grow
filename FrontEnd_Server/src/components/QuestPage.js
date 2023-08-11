@@ -7,7 +7,7 @@ import "./questpage.scss";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
 import { reSwal } from "../utils/reSwal";
-
+import Swal from "sweetalert2";
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
   const authToken = currentUser.token; // 토큰 저장
