@@ -188,7 +188,7 @@ const MyInfo = () => {
           )}
           {myplant && myplant.start_date && (
             <h5>
-              시작일: {myplant.start_date.slice(0, 10)}({daysDifference}
+              시작일: {myplant.start_date.slice(0, 10)}<br />({daysDifference}
               일차)
             </h5>
           )}

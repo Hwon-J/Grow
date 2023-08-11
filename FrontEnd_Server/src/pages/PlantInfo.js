@@ -45,7 +45,7 @@ const PlantInfo = () => {
   };
 
   useEffect(() => {
-    console.log(selectedInfo);
+    console.log(selectedInfo + "식물선택");
   }, [selectedInfo]);
 
   useEffect(() => {
@@ -142,6 +142,17 @@ const PlantInfo = () => {
     );
   };
 
+  const selectInput = () => {
+    return selectedInfo ? (
+      <Form.Control
+        style={{ fontSize: "20px" }}
+        type="text"
+        placeholder="식물을 선택해 주세요"
+        value={`선택된 식물: ${selectedInfo.species || ""}`}
+        readOnly 
+      />
+    ) : null;
+  };
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/plant/info`);
@@ -173,7 +184,7 @@ const PlantInfo = () => {
         setCheckedResult(false);
       }
     } else {
-      reSwal("warning", "시리얼 넘버를 입력해 주세요!")
+      reSwal("warning", "시리얼 넘버를 입력해 주세요!");
     }
   };
 
@@ -227,6 +238,7 @@ const PlantInfo = () => {
                     >
                       아이의 친구가 될 식물을 등록해주세요
                     </p>
+                    {selectInput()}
                     <Form.Control
                       style={{ fontSize: "20px" }}
                       type="text"

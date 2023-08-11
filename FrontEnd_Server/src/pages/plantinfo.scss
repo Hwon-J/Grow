@@ -32,7 +32,6 @@
   font-family: "KCC-DodamdodamR";
 }
 
-
 .plant-info-col {
   background-color: white;
   border-radius: 4px;
@@ -47,7 +46,7 @@
   }
   ::-webkit-scrollbar {
     display: none;
-  } 
+  }
 }
 
 .plantinfo-stack h2 {
@@ -82,7 +81,7 @@
 .plant-img-card img {
   cursor: pointer;
   &:hover {
-    background-color:rgb(220, 233, 224);
+    background-color: rgb(220, 233, 224);
   }
 }
 
