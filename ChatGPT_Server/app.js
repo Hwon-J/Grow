@@ -129,6 +129,10 @@ wss.on("connection", (ws, req) => {
       let condition = await db.getConditionGoodOrBad(msgJson.serial);
       let dbplant = await db.getplantinfo(msgJson.serial);
       let waterlog = await db.getWaterLog(dbplant.pindex);
+      console.log(waterlog);
+      if (waterlog === undefined || waterlog.watered_date === null || waterlog.watered_date === undefined){
+        waterlog = { watered_date: "아직 없음"};
+      }
       let plantinfo = await db.getPlantInfoByIndex(dbplant.plant_info_index);
       let systemContent = {
         role: "system",
