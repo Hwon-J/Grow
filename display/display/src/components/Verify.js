@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from "sweetalert2";
 import register from '../assets/register.png';
+import './Verify.css';
 
 function Verify() {
   const navigate = useNavigate()
@@ -148,9 +149,9 @@ function Verify() {
     <div  >
       <div style={buttonposition}>
 
-        <h1>이 기기의 시리얼 번호 : {startmessage.serial}</h1>
+        <h1 className='SerialNumber'>이 기기의 시리얼 번호 : {startmessage.serial}</h1>
         {/* 버튼 눌렀을 때 위 함수 실행  */}
-        <button  className='btn btn-primary' onClick={sendSerial}>
+        <button  className='btn btn-primary box-big' onClick={sendSerial}>
           등록된 시리얼 번호 인증하기
         </button>
       </div>
