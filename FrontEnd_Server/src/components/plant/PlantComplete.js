@@ -10,6 +10,8 @@ import {
   MDBModalFooter,
 } from "mdb-react-ui-kit";
 import './plantcomplete.css'
+
+
 const PlantCompleteComponent = ({ completePlant }) => {
   const [basicModal, setBasicModal] = useState(false);
   const toggleShow = () => setBasicModal(!basicModal);
