@@ -2,6 +2,7 @@
   height: 100vh;
   overflow: auto;
   position: relative;
+  background-color: #f2f2f2e7;
 }
 .content-home {
   width: 100%;
@@ -74,4 +75,14 @@
 }
 .content{
   height: 100%;
+}
+.home-main-text {
+  position: absolute;
+  top: 50%;
+  left: 35% !important;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  z-index: 999;
 }
