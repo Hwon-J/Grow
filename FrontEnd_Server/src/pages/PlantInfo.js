@@ -23,6 +23,7 @@ const PlantInfo = () => {
   const [checkedResult, setCheckedResult] = useState(false);
   const [plantInfo, setPlantInfo] = useState([]);
   const [errormessage, setErormessage] = useState("");
+  const [searchText, setSearchText] = useState("");
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const PlantInfo = () => {
   // 식물 종 데이터 확인할 모달 열지 말지 확인할 변수, 함수
   const [modalOpen, setModalOpen] = useState(false);
   const handleShow = (info) => {
+    console.log(info);
     setSelectedInfo(info);
     setModalOpen(true);
   };
@@ -57,6 +59,9 @@ const PlantInfo = () => {
   };
   const onChangeChildage = (e) => {
     setChildage(e.target.value);
+  };
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
   };
   // 식물 등록 메서드
   const createPlant = async (e) => {
@@ -155,7 +160,7 @@ const PlantInfo = () => {
       )}
 
       <div className="top_section">
-        <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
+        <h1 style={{ fontSize: "80px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
@@ -165,7 +170,7 @@ const PlantInfo = () => {
             className="plant-info-col"
             style={{ paddingBottom: "10px" }}
           >
-            {imgPlantInfo({ plantInfo, handleShow, selectedInfo })}
+            {imgPlantInfo({ plantInfo, handleShow, selectedInfo, searchText })}
             {/* 식물 이미지 나오게 만드는 컴포넌트*/}
           </Col>
 
@@ -179,17 +184,25 @@ const PlantInfo = () => {
               >
                 <Col xs={10}>
                   <Stack gap={3} className="plantinfo-stack">
-                    <h2 style={{ fontSize: "70px" }}>식물 등록</h2>
+                    <h2 style={{ fontSize: "65px" }}>식물 등록</h2>
                     <p
                       style={{
                         fontSize: "20px",
-                        marginTop: "-20px",
+                        marginTop: "-15px",
                         marginBottom: "0",
                         textAlign: "center",
                       }}
                     >
                       아이의 친구가 될 식물을 등록해주세요
                     </p>
+                    {/* {원하는 식물을 검색할 수 있는 검색창} */}
+                    <Form.Control
+                      style={{ fontSize: "20px" }}
+                      type="text"
+                      placeholder="검색어를 입력하세요"
+                      value={searchText}
+                      onChange={handleSearchChange}
+                    />
                     {/* 선택된 식물 종 확인 할 수 있는 컴포넌트 */}
                     {selectInput({ selectedInfo })}
                     <Form.Control

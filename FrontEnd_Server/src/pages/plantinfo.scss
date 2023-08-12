@@ -2,7 +2,7 @@
 /* 기존 CSS 코드에 추가 스타일을 적용하였습니다. */
 
 .top_section {
-  height: 35vh;
+  height: 30vh;
   // background-color: #245a18;
   background-image: url("../assets/top2.jpg");
   background-size: cover;
@@ -61,6 +61,7 @@
 .scroll-container {
   max-height: 100%; /* Adjust this value to fit your needs */
   overflow-y: auto;
+  position: relative;
 }
 
 .checkP {
@@ -74,9 +75,7 @@
 
 .plant-img-card img {
   cursor: pointer;
-  &:hover {
-    background-color: rgb(220, 233, 224);
-  }
+  
 }
 
 .offcanvas-body p {
@@ -103,8 +102,8 @@
   width: 100%;
 }
 .custom-button:hover {
-  background-color: #29ce00; /* 버튼 배경색 변경 (마우스 호버 시) */
-  border-color: #29ce00; /* 버튼 테두리색 변경 (마우스 호버 시) */
+  background-color: #72b362; /* 버튼 배경색 변경 (마우스 호버 시) */
+  border-color: #72b362; /* 버튼 테두리색 변경 (마우스 호버 시) */
 }
 
 .custom-button:active {
@@ -120,3 +119,40 @@
   z-index: 999; /* 모달보다 낮은 Z-index 값을 설정하여 모달 뒤로 숨김 */
 }
 
+.plant-img-card {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plant_overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #1c5222;
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  transition: 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.plant_overlay span {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  transition: 0.5s;
+  visibility: hidden;
+}
+
+.plant-img-card:hover .plant_overlay {
+  height: calc(100% / 4);
+}
+
+.plant-img-card:hover .plant_overlay span {
+  visibility: visible;
+}

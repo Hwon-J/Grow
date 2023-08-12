@@ -12,7 +12,7 @@ const ReadMore = ({ content, maxLength }) => {
   // maxLength보다 긴 글이면 maxLength까지만 보여주고 더보기를 누를 수 있도록 한다.
   const renderTruncated = () => {
     return (
-      <div style={{ fontSize:"25px", marginBottom:"30px"}}>
+      <div style={{ fontSize:"23px", marginBottom:"30px"}}>
         {content.substring(0, maxLength)}...
         <span onClick={toggleTruncated} style={{ color: "blue", cursor: "pointer" }}>
           더 보기
