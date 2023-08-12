@@ -1,5 +1,6 @@
 // 김태형
 import { Form, Row, Col, Card } from "react-bootstrap";
+import style from "./InfoImg.module.css";
 
 // 식물 종 데이터 컴포넌트
 export const imgPlantInfo = ({ plantInfo, handleShow, selectedInfo }) => {
@@ -8,7 +9,8 @@ export const imgPlantInfo = ({ plantInfo, handleShow, selectedInfo }) => {
       {plantInfo.map((info) => (   // 식물 종 데이터 하나하나 꺼내서 이미지로 만들기 
         <Col key={info.index} xs={4} md={6} style={{ marginTop: "10px" }}>
           <Card className="plant-img-card h-100">
-            <Card.Img
+            <Card.Img 
+              className={style.info_img}
               thumbnail="true"
               src={`./plantInfoimg/${info.index}.png`}
               // 클릭시 handleShow : 식물 선택 후 모달열기
@@ -26,6 +28,9 @@ export const imgPlantInfo = ({ plantInfo, handleShow, selectedInfo }) => {
                 height: "100%",
               }}
             />
+            <div className="plant_overlay" onClick={() => handleShow(info)}>
+              <span>{info.species}</span>
+            </div>
           </Card>
         </Col>
       ))}

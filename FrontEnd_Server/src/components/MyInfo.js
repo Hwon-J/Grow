@@ -153,18 +153,19 @@ const MyInfo = () => {
     getPlantInfo();
   }, []);
 
-  // 식물 키우기 완료가 아니면 완료 버튼을 보여준다.
-  // 식물의 애칭, 종, 아이의 이름, 시작날짜와 오늘이 식물을 키운지 몇일째인지 보여준다.
   return (
     <>
       <div className="info_box">
+        {/* {해당하는 식물의 이미지를 보여준다.} */}
         <Grid item xs={5} className="rounded-image">
           <img
             className="myinfo-img"
             src={`/plantInfoimg/${myplant.plant_info_index}.png`}
           />
         </Grid>
+        {/* {해당하는 식물의 데이터를 보여준다.} */}
         <Grid item xs={7} className="info_box_right">
+          {/* {현재 상태가 완료되었는지에 따라 완료 또는 삭제 버튼을 보여준다.} */}
           {myplant.complete !== 1 && (
             <PlantCompleteComponent  completePlant={completePlant}>
               완료

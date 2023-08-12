@@ -31,6 +31,7 @@ const PlantInfo = () => {
   // 식물 종 데이터 확인할 모달 열지 말지 확인할 변수, 함수
   const [modalOpen, setModalOpen] = useState(false);
   const handleShow = (info) => {
+    console.log(info);
     setSelectedInfo(info);
     setModalOpen(true);
   };
@@ -155,7 +156,7 @@ const PlantInfo = () => {
       )}
 
       <div className="top_section">
-        <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
+        <h1 style={{ fontSize: "80px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
