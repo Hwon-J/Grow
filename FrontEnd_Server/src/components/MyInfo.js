@@ -163,7 +163,6 @@ const MyInfo = () => {
             src={`/plantInfoimg/${myplant.plant_info_index}.png`}
           />
         </Grid>
-        {/* {해당하는 식물의 데이터를 보여준다.} */}
         <Grid item xs={7} className="info_box_right">
           {/* {현재 상태가 완료되었는지에 따라 완료 또는 삭제 버튼을 보여준다.} */}
           {myplant.complete !== 1 && (
@@ -173,10 +172,10 @@ const MyInfo = () => {
           )}
           {myplant.complete === 1 && (
             <PlantDeleteComponent deletePlantData={deletePlantData}>
-              회원탈퇴
+              식물삭제
             </PlantDeleteComponent>
           )}
-
+          {/* {해당하는 식물의 데이터를 보여준다.} */}
           {myplant && myplant.plant_name && (
             <h3 style={{ fontSize: "40px" , marginTop:"10px" }}>{myplant.plant_name}</h3>
           )}

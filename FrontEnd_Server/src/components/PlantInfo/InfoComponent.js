@@ -3,10 +3,15 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 import style from "./InfoImg.module.css";
 
 // 식물 종 데이터 컴포넌트
-export const imgPlantInfo = ({ plantInfo, handleShow, selectedInfo }) => {
+export const imgPlantInfo = ({ plantInfo, handleShow, selectedInfo, searchText }) => {
+  // plantInfo에서 searchText가 포함된 식물 종 데이터만 필터링
+  const filteredPlantInfo = plantInfo.filter((info) => {
+    return info.species.toLowerCase().includes(searchText.toLowerCase());
+  });
+
   return (
     <Row className="scroll-container">
-      {plantInfo.map((info) => (   // 식물 종 데이터 하나하나 꺼내서 이미지로 만들기 
+      {filteredPlantInfo.map((info) => (   // 필터링된 식물 종 데이터 하나하나 꺼내서 이미지로 만들기 
         <Col key={info.index} xs={4} md={6} style={{ marginTop: "10px" }}>
           <Card className="plant-img-card h-100">
             <Card.Img 
