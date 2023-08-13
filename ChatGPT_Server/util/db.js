@@ -351,8 +351,8 @@ const saveChildAnswer = async(qindex, cindex) => {
 };
 
 const updateFilePath = async(qindex, filePath) => {
-  winston.info(`updateFilePath called. qindex: ${qindex}, filePath: ${filePath}`);
-  let sql = `update question, set audio_file_path = ? where \`index\` = ?`;
+  winston.info(`update FilePath called. qindex: ${qindex}, filePath: ${filePath}`);
+  let sql = `update question set audio_file_path = ? where \`index\` = ?`;
   try {
     await queryPromise(sql, [filePath], qindex);
 
