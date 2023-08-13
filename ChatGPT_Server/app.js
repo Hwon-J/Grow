@@ -290,7 +290,7 @@ wss.on("connection", (ws, req) => {
             `"closer" accepted from ${ws.serial}, status: ${status}`
           );
           if (status === 1) {
-            winston.inf(`status is ${status}, so break occured`);
+            winston.info(`status is ${status}, so break occured`);
             break;
           }
           status = 1;
@@ -310,7 +310,7 @@ wss.on("connection", (ws, req) => {
         case "hear":
           winston.info(`"hear" accepted from ${ws.serial}, status: ${status}`);
           if (status === 2) {
-            winston.inf(`status is ${status}, so break occured`);
+            winston.info(`status is ${status}, so break occured`);
             break;
           }
           status = 2;
@@ -332,7 +332,7 @@ wss.on("connection", (ws, req) => {
             `"further" accepted from ${ws.serial}, status: ${status}`
           );
           if (status === 3) {
-            winston.inf(`status is ${status}, so break occured`);
+            winston.info(`status is ${status}, so break occured`);
             break;
           }
           clients.forEach((client) => {
