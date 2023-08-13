@@ -366,7 +366,9 @@ wss.on("connection", (ws, req) => {
         case "file":
           winston.info(`"file" accepted from ${ws.serial}`);
           if (!fileStream) {
+            winston.info("filestream started...");
             fileName = message.content; // content에서 파일명을 가져옵니다.
+            winston.info(`fileName: ${fileName}`);
             fileStream = fs.createWriteStream(`./assets/${fileName}`);
             winston.info(`Started writing to ./assets/${fileName}`);
           } else {
@@ -378,14 +380,18 @@ wss.on("connection", (ws, req) => {
 
         // 파일 전송 종료 알림
         case "file_end":
-          winston.info(`"file_end" accepted from ${ws.serial}, ${msgJson.content}`);
+          winston.info(
+            `"file_end" accepted from ${ws.serial}, ${msgJson.content}`
+          );
           if (fileStream) {
+            winston.info("filestream ended...");
             fileStream.end();
             winston.info("File saved. Start sending to AWS");
             // aws 부분 시작
             let newName = newFileName(fileName);
             aws.uploadFileToS3(newFileName(newName), `./assets/${fileName}`);
             db.updateFilePath(qindex, `./${newName}`);
+            winston.info(`aws completed`);
           }
           break;
 
