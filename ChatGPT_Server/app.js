@@ -1,4 +1,5 @@
 const WebSocket = require("ws");
+const fs = require("fs");
 const aws = require("./util/aws-s3.js");
 const Queue = require("./util/queue.js");
 const gpt = require("./util/call-gpt.js");
