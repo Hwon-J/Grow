@@ -339,23 +339,35 @@ wss.on("connection", (ws, req) => {
 
         // 캐릭터 골랐을 때의 부분
         case "character":
+          winston.info(
+          `"character" accepted from ${ws.serial}, ${content}`
+        );
           db.setCnum(msgJson.serial, msgJson.content);
           break;
 
         // 파일 전송 시작 알림
         case "file":
+          winston.info(
+            `"file" accepted from ${ws.serial}, ${content}`
+          );
           if (!fileStream) {
             const filename = message.content; // content에서 파일명을 가져옵니다.
             fileStream = fs.createWriteStream(`./assets/${filename}`);
-            console.log(`Started writing to ${filename}`);
+            winston.info(`Started writing to ./assets/${filename}`);
           } else {
             // 바이너리 데이터를 수신하면 파일에 쓴다.
+            winston.info(
+              `writing....... ${ws.serial}`
+            );
             fileStream.write(message.content);
           }
           break;
 
         // 파일 전송 종료 알림
         case "file_end":
+          winston.info(
+            `"file_end" accepted from ${ws.serial}, ${content}`
+          );
           if (fileStream) {
             fileStream.end();
             winston.info("File saved. Start sending to AWS");
