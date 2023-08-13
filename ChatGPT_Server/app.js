@@ -368,7 +368,7 @@ wss.on("connection", (ws, req) => {
           if (!fileStream) {
             winston.info("filestream started...");
             fileName = msgJson.content; // content에서 파일명을 가져옵니다.
-            winston.info(`fileName: ${fileName}`);
+            // winston.info(`fileName: ${fileName}`);
             fileStream = fs.createWriteStream(`./assets/${fileName}`);
             winston.info(`Started writing to ./assets/${fileName}`);
           } else {
