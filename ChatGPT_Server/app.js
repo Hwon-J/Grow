@@ -378,7 +378,8 @@ wss.on("connection", (ws, req) => {
           winston.info(`"file" accepted from ${ws.serial}`);
           // 바이너리 데이터를 수신하면 파일에 쓴다.
           winston.info(`writing....... ${ws.serial}`);
-          fileStream.write(msgJson.content);
+          const decodedData = Buffer.from(msgJson.content, 'base64');
+          fileStream.write(decodedData);
           break;
 
         // 파일 전송 종료 알림
