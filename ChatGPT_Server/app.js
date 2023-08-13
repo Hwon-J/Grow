@@ -396,7 +396,8 @@ wss.on("connection", (ws, req) => {
             let newName = newFileName(fileName);
             winston.info(`newName: ${newName}`);
             await aws.uploadFileToS3(newName, `./assets/${fileName}`);
-            db.updateFilePath(qindexQueue.dequeue(), `./${newName}`);
+            let qindex = qindexQueue2.dequeue()
+            await db.updateFilePath(qindex, `./${newName}`);
             winston.info(`aws completed`);
           }
           break;
