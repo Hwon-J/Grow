@@ -17,9 +17,10 @@ function WebSocketComponent(props) {
   
   // 캐릭터 말풍선에 띄울 텍스트 설정
   const [receivedMessage, setReceivedMessage] = useState('');
+  // gpt 답변인지 구별을 위한 변수 설정
+  const [isgpt, setIsgpt] = useState(null);
   
   
-
   // 백에서 메세지를 받았을 때 실행하는 함수 설정
   function getmessage (message) {
     // JSON 해체
@@ -42,7 +43,7 @@ function WebSocketComponent(props) {
 
       // 센서 객체 내 water의 value가 passed라면 물 줘야하는 날짜가 지났을 때
       // 물을 줘야 하는 경우
-      if (water === 'passed'){
+      if (water === 'passed' && moisture === '부족'){
         // 물 줘야 할 때 true로 변경
         setWatering(true)
       }
@@ -56,44 +57,46 @@ function WebSocketComponent(props) {
 
     // 받은 메세지가 gpt 답변이라면
     else if (mes.about === 'gpt') {
-      console.log('getgpt')
       // gpt 답변에 대해 새로운 변수 할당
       const gpt_answer = mes.content
-      // gpt 답변은 최소 5초동안은 보여줘야 하니 시간 지연 설정
-      const displayTimeout = setTimeout(() => {
-        // 5초가 지나면 띄울 메세지 초기화
-        setReceivedMessage('')
-        // 캐릭터 말하는 상태 off
-        set_talking(false)
-      }, 5000)
-
+      
+      console.log('위쪽')
+      console.log('위쪽', isgpt)
       // 캐릭터 생각 상태 off
       set_thinking(false)
       // 캐릭터 말하는 상태 on
       set_talking(true)
       // gpt 답변으로 받은(말풍선 안에 띄울) 메세지 변경
       setReceivedMessage(gpt_answer)
+      // gpt 답변이니 관련 변수 true
+      setIsgpt(true)
+      console.log(isgpt)
       // 5초 시간 지연 뒤 위에서 설정한 displayTimeout 함수 실행
-      return () => {
-        clearTimeout(displayTimeout);
-      };
+      // console.log('위 true로 바꾸고', isgpt)
+      setTimeout(function() {
+        console.log(isgpt)
+        setIsgpt(false)
+        console.log('5초뒤?')
+        console.log(isgpt)
+      }, 5000);
     }
-    else if (mes.about === 'hear') {
+    else if (mes.about === 'hear' && isgpt === false) {
       console.log('hear')
       // 캐릭터 말하기 상태 on > 말풍선 켜짐
       set_talking(true)
       setReceivedMessage('지금 얘기 듣고 있어~')
     }
     // 받은 메세지가 좀더 가까이 와달라는 메시지라면
-    else if (mes.about === 'closer') {
+    else if (mes.about === 'closer' && isgpt === false) {
       console.log('closer')
+      console.log('closer', isgpt)
       // 캐릭터 말하기 상태 on > 말풍선 켜짐
       set_talking(true)
       setReceivedMessage('좀 더 가까이 와서 말해줘')
     }
 
     // 받은 메세지가 아이가 멀어졌다고 생각해 답변이 끝난 경우라면
-    else if (mes.about === 'further') {
+    else if (mes.about === 'further' && isgpt === false ) {
       console.log('further')
       // 생각 중 상태 on
       set_thinking(true)
@@ -104,9 +107,11 @@ function WebSocketComponent(props) {
   }
 
   useEffect(() => {
+    // isGpt()
     // 웹소켓 링크 설정
     // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
-    const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    const newSocket = new WebSocket('ws://localhost:5000');
+    // const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
@@ -119,7 +124,7 @@ function WebSocketComponent(props) {
     // 웹소켓으로부터 메시지를 받았을 때의 이벤트 핸들러
     newSocket.onmessage = (event) => {
       // 메세지 받았을 때 함수 설정
-      console.log('getmessage')
+      // console.log('getmessage')
       getmessage(event.data)
     };
     
@@ -149,7 +154,32 @@ function WebSocketComponent(props) {
     }
   }, [socket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
   
-  
+//   useEffect(() => {
+//     console.log('useEffect 제일 윗줄')
+//     // gpt 답변이라면 시간설정
+    
+//     if (isgpt === true) {
+//       console.log('useEffect하자마자 true일때',isgpt)
+      
+//       const displayTimeout = setTimeout(() => {
+//         setReceivedMessage('');
+//         // gpt 답변이 끝났으니 다시 false로 설정
+//         // setIsgpt(false)
+//         console.log('5초뒤 메세지 지우고 setisgpt false로 바꾸고 난 직후',isgpt)
+//         // console.log('13579')
+//       }, 5000);
+
+//       return () => {
+//         // setIsgpt(true)
+//         console.log('useEffct에서 반환하는 곳 시간지연함수 직전', isgpt)
+//         clearTimeout(displayTimeout);
+
+//       };
+//     }
+//     else {
+//       console.log('useEffect실행은 됐지만 isgpt false일때',isgpt)
+//     }
+//  }, [isgpt, receivedMessage]);
 
   // 표시할 메세지 박스의 스타일 설정
   const messagebox = {
@@ -168,6 +198,7 @@ function WebSocketComponent(props) {
       
       <div style={messagebox}>
         <p>{receivedMessage}</p>
+        <h1>{isgpt}</h1>
       </div>
     </div>
   );

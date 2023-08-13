@@ -35,7 +35,7 @@ function Conversation() {
     // 답변 생각(gpt 답변 기다리는중) 상태인지 변수 설정
     const [thinking, set_thinking] = useState(false)
     // 물을 줘야하는 상태인지 구분하기 위해 변수 설정
-    const [watering, setWatering] = useState(false)
+    const [watering, setWatering] = useState(true)
     
     // 대화창 컴포넌트 구조
     return (
