@@ -74,9 +74,15 @@ wss.on("connection", (ws, req) => {
   ws.on("message", async (msg) => {
     try {
       let msgJson = JSON.parse(msg);
-      winston.info(
-        `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
-      );
+      if (msgJson.purpose !== "file"){
+        winston.info(
+          `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
+        );
+      } else {
+        winston.info(
+          `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.serial}`
+        );
+      }
 
       // purpose에 따라 분기하는 switch문
       switch (msgJson.purpose) {
