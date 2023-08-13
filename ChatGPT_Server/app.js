@@ -367,14 +367,14 @@ wss.on("connection", (ws, req) => {
           winston.info(`"file" accepted from ${ws.serial}`);
           if (!fileStream) {
             winston.info("filestream started...");
-            fileName = message.content; // content에서 파일명을 가져옵니다.
+            fileName = msgJson.content; // content에서 파일명을 가져옵니다.
             winston.info(`fileName: ${fileName}`);
             fileStream = fs.createWriteStream(`./assets/${fileName}`);
             winston.info(`Started writing to ./assets/${fileName}`);
           } else {
             // 바이너리 데이터를 수신하면 파일에 쓴다.
             winston.info(`writing....... ${ws.serial}`);
-            fileStream.write(message.content);
+            fileStream.write(msgJson.content);
           }
           break;
 
