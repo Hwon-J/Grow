@@ -53,7 +53,7 @@ wss.on("connection", (ws, req) => {
   // 부모님 질문이 포함된 대화의 인덱스를 저장할 큐
   const qindexQueue = new Queue();
   // 대답 채팅로그의 인덱스가 담긴 큐
-  const cindexQueue = new Queue();
+  const qindexQueue2 = new Queue();
   // 다음 사용자의 입력은 질문에 대한 대답이라는 플래그
   let qFlag = false;
   let insertIndex;
@@ -395,8 +395,8 @@ wss.on("connection", (ws, req) => {
             // aws 부분 시작
             let newName = newFileName(fileName);
             winston.info(`newName: ${newName}`);
-            aws.uploadFileToS3(newName, `./assets/${fileName}`);
-            db.updateFilePath(qindex, `./${newName}`);
+            await aws.uploadFileToS3(newName, `./assets/${fileName}`);
+            db.updateFilePath(qindexQueue.dequeue(), `./${newName}`);
             winston.info(`aws completed`);
           }
           break;
