@@ -261,10 +261,10 @@ wss.on("connection", (ws, req) => {
                 client.readyState === WebSocket.OPEN
               ) {
                 let answer = { about: "gpt", content: result };
-                if (qFlag) {
+                // if (qFlag) {
                   answer.isQuest = true;
-                  qFlag = false;
-                }
+                  // qFlag = false;
+                // }
                 client.send(JSON.stringify(answer));
               }
             });
@@ -276,7 +276,7 @@ wss.on("connection", (ws, req) => {
           winston.info(
             `"closer" accepted from ${ws.serial}, status: ${status}`
           );
-          if (status !== 0) {
+          if (status === 1) {
             winston.inf(`status is ${status}, so break occured`);
             break;
           }
@@ -296,7 +296,7 @@ wss.on("connection", (ws, req) => {
         // 사용자가 매우 가까이 있다는 메세지
         case "hear":
           winston.info(`"hear" accepted from ${ws.serial}, status: ${status}`);
-          if (status !== 1) {
+          if (status === 2) {
             winston.inf(`status is ${status}, so break occured`);
             break;
           }
@@ -318,7 +318,7 @@ wss.on("connection", (ws, req) => {
           winston.info(
             `"further" accepted from ${ws.serial}, status: ${status}`
           );
-          if (status !== 2) {
+          if (status === 3) {
             winston.inf(`status is ${status}, so break occured`);
             break;
           }
@@ -339,23 +339,35 @@ wss.on("connection", (ws, req) => {
 
         // 캐릭터 골랐을 때의 부분
         case "character":
+          winston.info(
+          `"character" accepted from ${ws.serial}, ${content}`
+        );
           db.setCnum(msgJson.serial, msgJson.content);
           break;
 
         // 파일 전송 시작 알림
         case "file":
+          winston.info(
+            `"file" accepted from ${ws.serial}, ${content}`
+          );
           if (!fileStream) {
             const filename = message.content; // content에서 파일명을 가져옵니다.
-            fileStream = fs.createWriteStream(`./${filename}`);
-            console.log(`Started writing to ${filename}`);
+            fileStream = fs.createWriteStream(`./assets/${filename}`);
+            winston.info(`Started writing to ./assets/${filename}`);
           } else {
             // 바이너리 데이터를 수신하면 파일에 쓴다.
+            winston.info(
+              `writing....... ${ws.serial}`
+            );
             fileStream.write(message.content);
           }
           break;
 
         // 파일 전송 종료 알림
         case "file_end":
+          winston.info(
+            `"file_end" accepted from ${ws.serial}, ${content}`
+          );
           if (fileStream) {
             fileStream.end();
             winston.info("File saved. Start sending to AWS");

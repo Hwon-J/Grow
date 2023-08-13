@@ -47,10 +47,10 @@ const Home = () => {
         >
           <HomeBackground />
         <NavTop className="homenav" />
-          <div className={styles.content_title}>
-            <div className={styles.content_title_text}>
-            <h1>Find a friend for your child</h1>
-            </div>
+          <div className="home-main-text">  
+            <h1 style={{fontSize:"60px", fontWeight:"bold"}}>Find friend for your kids</h1>
+            <h4 style={{fontSize:"30px"}}>This service makes plant friends for your children</h4>
+
           </div>
           <img src="./footer/down2.png" className="aligned-image" />
         </Section>

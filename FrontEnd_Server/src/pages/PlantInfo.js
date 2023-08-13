@@ -1,3 +1,4 @@
+//김태형
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -5,16 +6,12 @@ import { BASE_URL } from "../utils/Urls";
 import axios from "axios";
 import NavTop from "../components/NavTop";
 import InfoModal from "../components/plant/InfoModal";
-import "./plantinfo.scss";
 import {
-  Form,
-  Row,
-  Col,
-  Stack,
-  Container,
-  Card,
-  InputGroup,
-} from "react-bootstrap";
+  imgPlantInfo,
+  selectInput,
+} from "../components/PlantInfo/InfoComponent";
+import "./plantinfo.scss";
+import { Form, Row, Col, Stack, Container, InputGroup } from "react-bootstrap";
 import { reSwal } from "../utils/reSwal";
 
 const PlantInfo = () => {
@@ -26,35 +23,30 @@ const PlantInfo = () => {
   const [checkedResult, setCheckedResult] = useState(false);
   const [plantInfo, setPlantInfo] = useState([]);
   const [errormessage, setErormessage] = useState("");
+  const [searchText, setSearchText] = useState("");
   const currentUser = useSelector((state) => state.currentUser);
   const authToken = currentUser.token;
   const navigate = useNavigate();
   const [selectedInfo, setSelectedInfo] = useState(null);
 
+  // 식물 종 데이터 확인할 모달 열지 말지 확인할 변수, 함수
   const [modalOpen, setModalOpen] = useState(false);
   const handleShow = (info) => {
+    console.log(info);
     setSelectedInfo(info);
     setModalOpen(true);
   };
-
+  // 헤더 값
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `${authToken}`,
     },
   };
-
-  useEffect(() => {
-    console.log(selectedInfo + "식물선택");
-  }, [selectedInfo]);
-
+  // 화면 시작시 식물종 데이터 받아오게 만들기
   useEffect(() => {
     getPlantInfo();
   }, []);
-
-  useEffect(() => {
-    imgPlantInfo();
-  }, [plantInfo]);
 
   const onChangeNickname = (e) => {
     setNickname(e.target.value);
@@ -68,11 +60,15 @@ const PlantInfo = () => {
   const onChangeChildage = (e) => {
     setChildage(e.target.value);
   };
-
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+  // 식물 등록 메서드
   const createPlant = async (e) => {
     e.preventDefault();
+    // 등록되면 안되는 조건식 추가
     if (checkedResult === false) {
-      reSwal("warning", `시리얼 넘버를 확인해주세요`);
+      reSwal("warning", `시리얼 넘버를 확인해주세요`);  //Swal 재사용
       return;
     }
     if (nickname.length === 0 || nickname.length > 12) {
@@ -91,6 +87,7 @@ const PlantInfo = () => {
       reSwal("warning", `식물을 선택해 주세요`);
       return;
     }
+    // 식물정보 보낼 body
     const body = {
       plant_name: nickname,
       serial_number: serialNum,
@@ -105,74 +102,33 @@ const PlantInfo = () => {
         body,
         config
       );
-      navigate(`/profile`);
+      navigate(`/profile`); // 성공적으로 등록되면 프로필페이지로 이동
     } catch (error) {
       console.log(error.message);
     }
   };
-
-  const imgPlantInfo = () => {
-    console.log(plantInfo);
-    return (
-      <Row className="scroll-container">
-        {plantInfo.map((info) => (
-          <Col key={info.index} xs={4} md={6} style={{ marginTop: "10px" }}>
-            <Card className="plant-img-card h-100">
-              <Card.Img
-                thumbnail="true"
-                src={`./plantInfoimg/${info.index}.png`}
-                onClick={() => handleShow(info)}
-                style={{
-                  border:
-                    selectedInfo?.index === info.index
-                      ? "0.1rem solid rgb(56, 181, 203)"
-                      : "none",
-                  background:
-                    selectedInfo?.index === info.index
-                      ? "rgb(220, 233, 224)"
-                      : "none",
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    );
-  };
-
-  const selectInput = () => {
-    return selectedInfo ? (
-      <Form.Control
-        style={{ fontSize: "20px" }}
-        type="text"
-        placeholder="식물을 선택해 주세요"
-        value={`선택된 식물: ${selectedInfo.species || ""}`}
-        readOnly 
-      />
-    ) : null;
-  };
+  // 식물 종 데이터 받아오게 만드는 메서드
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/plant/info`);
-      setPlantInfo(response.data.info);
+      setPlantInfo(response.data.info); // 식물 종 데이터 변수에 받아온 데이터 넣기 
     } catch (error) {
       console.log(error);
     }
   };
-
+  // 시리얼 넘버 확인하는 메서드
   const checkSerial = async () => {
+    //시리얼 넘버가 있을때
     if (serialNum) {
       try {
         const response = await axios.get(`${BASE_URL}/api/pot/${serialNum}`);
         if (response.data.code === 202) {
-          // alert(response.data.message);
-          console.log(response.data.message);
+          // 202라면 유효한 시리얼넘버가 아니라고 생각하고 에러 메세지 변수에 메세지 저장
           setCheckedResult(false);
           setErormessage(response.data.message);
           setCheckNum("");
         }
+        // 성공이라면 성공 메세지 변수에 메세지 넣고 에러메세지 없애기
         if (response.data.code === 200) {
           setCheckNum(response.data.message);
           setErormessage("");
@@ -187,7 +143,7 @@ const PlantInfo = () => {
       reSwal("warning", "시리얼 넘버를 입력해 주세요!");
     }
   };
-
+  // 식물 모달 닫는 메서드
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -195,7 +151,7 @@ const PlantInfo = () => {
   return (
     <>
       <NavTop />
-
+      {/* modalOpen 데이터가 있을때 모달창 띄우기 */}
       {modalOpen && (
         <>
           <div className="modal-overlay" onClick={closeModal}></div>
@@ -204,7 +160,7 @@ const PlantInfo = () => {
       )}
 
       <div className="top_section">
-        <h1 style={{ fontSize: "100px" }}>식물 등록</h1>
+        <h1 style={{ fontSize: "80px" }}>식물 등록</h1>
       </div>
       <Container className="plant-info-container">
         <Row>
@@ -214,7 +170,8 @@ const PlantInfo = () => {
             className="plant-info-col"
             style={{ paddingBottom: "10px" }}
           >
-            {imgPlantInfo()}
+            {imgPlantInfo({ plantInfo, handleShow, selectedInfo, searchText })}
+            {/* 식물 이미지 나오게 만드는 컴포넌트*/}
           </Col>
 
           <Col sm={12} md={6} className="plant-info-col plant-colo">
@@ -227,18 +184,27 @@ const PlantInfo = () => {
               >
                 <Col xs={10}>
                   <Stack gap={3} className="plantinfo-stack">
-                    <h2 style={{ fontSize: "70px" }}>식물 등록</h2>
+                    <h2 style={{ fontSize: "65px" }}>식물 등록</h2>
                     <p
                       style={{
                         fontSize: "20px",
-                        marginTop: "-20px",
+                        marginTop: "-15px",
                         marginBottom: "0",
                         textAlign: "center",
                       }}
                     >
                       아이의 친구가 될 식물을 등록해주세요
                     </p>
-                    {selectInput()}
+                    {/* {원하는 식물을 검색할 수 있는 검색창} */}
+                    <Form.Control
+                      style={{ fontSize: "20px" }}
+                      type="text"
+                      placeholder="검색어를 입력하세요"
+                      value={searchText}
+                      onChange={handleSearchChange}
+                    />
+                    {/* 선택된 식물 종 확인 할 수 있는 컴포넌트 */}
+                    {selectInput({ selectedInfo })}
                     <Form.Control
                       style={{ fontSize: "20px" }}
                       type="text"

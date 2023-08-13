@@ -33,11 +33,11 @@ function NavTop() {
 
   return (
     <>
-      <section className="navigation">
+      <section className="navigation" style={{marginBottom:"0px"}}>
         <div className="nav-container">
           <div className="brand">
             <NavLink to="/home#sectionOne" style={{ textDecoration: "none" }}>
-              <img src={logo} alt="Home" />
+              <img style={{height:"50px"}} src={logo} alt="Home" />
             </NavLink>
           </div>
           {windowWidth <= 600 && (
@@ -61,16 +61,6 @@ function NavTop() {
                       Profile
                     </NavLink>
                   </li>
-                  {/* <li>
-                    <NavLink to="/plantinfo" style={{ textDecoration: "none" }}>
-                      plantinfo
-                    </NavLink>
-                  </li> */}
-                  {/* <li>
-                    <NavLink to="/shop" style={{ textDecoration: "none" }}>
-                      Shop
-                    </NavLink>
-                  </li> */}
                 </>
               ) : null}
               <li>

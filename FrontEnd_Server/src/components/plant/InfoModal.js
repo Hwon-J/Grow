@@ -11,7 +11,7 @@ const InfoModal = ({ setModalOpen, selectedInfo }) => {
     <>
       <div className={styles.container} >
         <button className={styles.close} onClick={closeModal}>
-          X
+          확인
         </button>
         <div className={styles.modal_left} style={{ width:"50%" }}>
         <img src={`./plantInfoimg/${selectedInfo.index}.png`} style={{ width:"100%", marginTop:"20%"}}/>
