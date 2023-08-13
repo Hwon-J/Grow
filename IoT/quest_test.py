@@ -17,10 +17,8 @@ import time
 import json
 import logging
 import subprocess
-import numpy as np
-import statistics
-from sklearn.linear_model import LinearRegression
-import datetime
+
+
 
 
 # 초음파 센서 설정
@@ -38,7 +36,6 @@ buffer = np.zeros((BUFFER_SIZE, CHANNELS), dtype='int16')
 write_ptr = 0
 recording = False
 save_data = False
-farable = True
 
 # log 설정
 logging.basicConfig(
@@ -49,24 +46,28 @@ logging.basicConfig(
 
 # 웹소켓 서버 설정
 ws = None
-last_N_readings = [50, 50, 50, 50, 50,50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
+
+last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 
 def play(path):
-    global recording
+    global playing,recording
     try:
         subprocess.run(["aplay", path], check=True)
     except:
         logging.warning("오디오 출력 에러")
+    playing = True
     logging.warning("tts 종료")
-    
+    print(f"tts 종료 record: {recording}    playing: {playing}")
+    if recording == True and playing == True:
+        recording=False
     #recode풀기
 
-def tts(recv_msg):
+def tts(message):
     
     client_id = "tzm493x2hf"
     client_secret = "KcnpCE2iHXwN7HLCKxoLLC12KM9TS6CZe7zNuzVF"
-    encText = urllib.parse.quote(recv_msg)
-    data = "speaker=vdain&volume=5&speed=-2&pitch=0&emotion=2&emotion-strength=1&format=mp3&sampling-rate=48000&text=" + encText
+    encText = urllib.parse.quote(message)
+    data = "speaker=vdain&volume=5&speed=-2&pitch=0&emotion=2&emotion-strength=1&format=wav&sampling-rate=48000&text=" + encText
     url = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts"
     request = urllib.request.Request(url)
     request.add_header("X-NCP-APIGW-API-KEY-ID", client_id)
@@ -85,22 +86,24 @@ def tts(recv_msg):
     except:
         logging.warning("tts 에러발생")
 
-    path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요'
+    path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요
     play(path)
 
-Quest=False
+
 # 웹소켓 서버 설정
 def on_message(ws, message):
-    global Quest
     try:
         print("tts 시작")
         logging.warning("tts 시작")
         data = json.loads(message)
-        recv_msg = data["content"]
-        Quest = data["isQuest"]
-        print(f"Received message from client: {recv_msg}")
-        logging.info(f"Received message from client: {recv_msg}")
-        tts(recv_msg)
+        message = data["content"]
+        quest=data["isQuest"]
+        if quest:
+            print(" 이것은  퀘스트이다.")
+        tts(message)
+        print(f"Received message from client: {message}")
+        logging.info(f"Received message from client: {message}")
+        tts(message)
 
         # 클라이언트로부터 받은 메시지를 처리하는 로직을 여기에 추가
         # 예: message를 분석하고 필요한 동작을 수행
@@ -127,12 +130,13 @@ def on_open(ws):
     
     # tts로 handshake시 읽어주기
     
+
+
 def run_websocket_server():
     global ws
-    # ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
-    ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
-    
-    
+    ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
+    # ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
+
     ws = WebSocketApp(ws_url,
                       on_message=on_message,
                       on_error=on_error,
@@ -140,33 +144,11 @@ def run_websocket_server():
     ws.on_open = on_open
     ws.run_forever()
 
-
-def send_mp3_files(ws):
-    chunk_size = 4096  # 전송할 데이터의 한 번에 보낼 크기 설정
-    folder_path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/send_mp3"
-
-    if os.path.exists(folder_path) and os.path.isdir(folder_path):
-        mp3_files = [f for f in os.listdir(folder_path) if f.endswith(".mp3")]
-
-        for mp3_file_name in mp3_files:
-            mp3_file_path = os.path.join(folder_path, mp3_file_name)
-            with open(mp3_file_path, "rb") as mp3_file:
-                while True:
-                    chunk = mp3_file.read(chunk_size)
-                    if not chunk:
-                        break
-                    ws.send(chunk)
-                    time.sleep(0.1)  # 너무 빠르게 전송하지 않도록 간격을 줍니다.
-            print(f"{mp3_file_name} 전송완료")
-            os.remove(mp3_file_path)  # 파일 전송 후 파일 삭제
-    else:
-        return False
-
 def transcribe_file_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
     client = SpeechClient()
 
-    # Reads a file as bytes/home/jamfarm/SUNGMI/home/jamfarm/SUNGMIN/S09P12C103/IoT/record.pyN/S09P12C103/IoT/record.py
+    # Reads a file as bytes
     with open(audio_file, "rb") as f:
         content = f.read()
 
@@ -199,7 +181,7 @@ def record_audio():
     global write_ptr
     global recording
     global save_data
-    global Quest
+    global playing
     start_ptr = 0
     end_ptr = 0
     logging.warning("stt 전송 시작") 
@@ -210,7 +192,7 @@ def record_audio():
             try:
                 data, _ = stream.read(RATE)
             except sd.PortAudioError as e:
-                logging.error(f"스트링 읽기 에러발생: {e}")
+                logging.error("스트링 읽기 에러발생")
             if recording:
                 if write_ptr == 0:
                     start_ptr = 0
@@ -223,29 +205,25 @@ def record_audio():
                 else:  # 순환 버퍼 처리
                     save_buffer = np.concatenate(
                         (buffer[start_ptr:], buffer[:end_ptr]))
-                
-                now = datetime.datetime.now()
-                time_string = now.strftime("%Y%m%d_%H%M%S")
-                file_name = f"record_{time_string}.mp3"  # 예: record_20230812_153025.mp3    
-                if Quest:
-                    file_path = os.path.join("/home/jamfarm/SUNGMIN/S09P12C103/IoT/send_mp3", file_name)
-                else:
-                    file_path = os.path.join("/home/jamfarm/SUNGMIN/S09P12C103/IoT/record_mp3", file_name)
-                wavio.write(file_path, save_buffer, RATE, sampwidth=2)
-                
-                response = transcribe_file_v2(file_path)  # 파일 저장 후 변환 함수 호출, mp3변환
-                if(response=="" or response == None or response == " "):
+                wavio.write("recorded_audio.wav",
+                            save_buffer, RATE, sampwidth=2)
+                #print("File saved.")
+                response = transcribe_file_v2(
+                    "recorded_audio.wav")  # 파일 저장 후 변환 함수 호출
+                if(response==""):
                     continue
-                
-                logging.warning(f"stt전송 완료{response}")
-                print(f"stt전송 완료{response}")
+                print(response)
+                logging.warning(response)
+                logging.warning("stt전송 완료")
+                print("stt전송 완료")
                 if ws:
-                    logging.critical(f"is quest: {Quest}")
-                    message = json.dumps({"purpose": "gpt", "role": "raspi",  "content": response, "serial": "97745"})  # 수정된 부분
+                    message = json.dumps(
+                        {"purpose": "gpt", "role": "raspi",  "content": response, "serial": "97745"})  # 수정된 부분
                     ws.send(message)
-                    print(f"quest: {Quest}")
-                    #if send_mp3_files(ws):
-                    #    pass
+                    playing=False
+                    while True:
+                        if playing:
+                            break
                 save_data = False
                 write_ptr = 0
 
@@ -253,7 +231,7 @@ def record_audio():
 def measure_distance():
     global last_N_readings
     GPIO.output(TRIG, False)
-    time.sleep(0.1) 
+    time.sleep(0.1)
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
@@ -280,79 +258,55 @@ def measure_distance():
             return 0  # 또는 적절한 기본값
 
     # 마지막 N개의 측정값을 업데이트
-    if len(last_N_readings) >= 10:  # N=5
+    if len(last_N_readings) >= 5:  # N=5
         last_N_readings.pop(0)
     last_N_readings.append(distance)
 
-    return statistics.median(last_N_readings)
-    #return distance
+    return distance
+
 
 if __name__ == "__main__":
-    checktime=0.1
+    global playing
+    playing=False
     try:
         print("Distance measurement is starting...")
 
-
-        websocket_thread = threading.Thread(target=run_websocket_server)
-        websocket_thread.daemon = True
-        websocket_thread.start()
-        time.sleep(0.1)
         # 녹음 스레드 시작
         record_thread = threading.Thread(target=record_audio)
         record_thread.daemon = True
         record_thread.start()
-        
+        websocket_thread = threading.Thread(target=run_websocket_server)
+        websocket_thread.daemon = True
+        websocket_thread.start()
+
         while True:
             distance = measure_distance()
             print(f"Distance: {distance} cm")
-            logging.info(f"Distance: {distance} cm")    
+            logging.info(f"Distance: {distance} cm")
+            print(f"recoding: {recording}   playing: {playing}")
+            if distance < 15 and not recording:  # 거리가 10cm 미만일 때 녹음 시작
+                print("Recording started...")
+                logging.info("Recording started")
+                message = json.dumps(
+                    {"purpose": "closer", "role": "raspi", "serial": "97745"})  # 수정된 부분
+                ws.send(message)
+                recording = True
 
-            y = np.array(last_N_readings)               # 주어진 1차원 배열
-            X = np.arange(1, len(y)+1).reshape(-1, 1)   # 변화량 계산을 위한 배열
-            model = LinearRegression().fit(X, y)
-            val=model.coef_[0]
-            print(val)
-                
-            if distance<20 and not recording:
-                message = json.dumps({"purpose": "hear" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
+            elif distance >= 15 and recording:  # 거리가 10cm 이상일 때 녹음 종료
+                print("Recording stopped...")
+                logging.info("Recording stopped")
+                message = json.dumps(
+                    {"purpose": "further", "role": "raspi", "serial": "97745"})  # 수정된 부분
                 ws.send(message)
-                print("hear")
-                recording=True
-                logging.critical("hear")
-                farable=False
-            # 들어오기
-            elif distance<30 and val<-0.2 and not recording:
-                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
-                print(f"closer come in {val}")
-                logging.critical("closer come in")
-                farable=True
-            # 나가기
-            elif distance<30 and val>1 and recording:
-                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
-                print(f"closer exit {val}")
-                logging.critical("closer exit")
                 recording = False
-                save_data=True
-                farable=True
+                save_data = True
 
-            elif distance>30 and farable:
-                message = json.dumps({"purpose": "further" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
-                print("further")
-                logging.critical("further")
-
-                # recording = False
-                # save_data=True
-            
-            time.sleep(checktime)  # 0.1초 간격으로 거리 측정
+            time.sleep(0.1)  # 0.1초 간격으로 거리 측정
 
     except KeyboardInterrupt:
         print("Measurement stopped by user.")
         GPIO.cleanup()
         logging.info("____________________________________________")
-        #os.system("clear")
         exit()
 
 
