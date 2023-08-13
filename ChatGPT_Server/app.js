@@ -4,6 +4,7 @@ const Queue = require("./util/queue.js");
 const gpt = require("./util/call-gpt.js");
 const db = require("./util/db.js");
 const stringPurify = require("./util/string-purifier.js");
+const newFileName = require("./util/new-file-name.js");
 const winston = require("./util/winston.js");
 require("dotenv").config();
 
@@ -49,9 +50,13 @@ wss.on("connection", (ws, req) => {
     ) + process.env.RANDOM_MIN;
 
   // 부모님 질문이 포함된 대화의 인덱스를 저장할 큐
-  const indexQueue = new Queue();
+  const qindexQueue = new Queue();
+  // 대답 채팅로그의 인덱스가 담긴 큐
+  const cindexQueue = new Queue();
   // 다음 사용자의 입력은 질문에 대한 대답이라는 플래그
   let qFlag = false;
+  let insertIndex;
+  let fileName;
   let fileStream;
   // 바로 이전 상태: 0-대기, 1-가까워지는 중, 2-말할 수 있을만큼 가까움, 3-멀어짐
   let status = 0;
@@ -205,14 +210,14 @@ wss.on("connection", (ws, req) => {
           history.push(...chatLog);
 
           // DB에 유저의 입력 저장
-          let insertIndex = await db.saveChatLog({
+          insertIndex = await db.saveChatLog({
             serial: msgJson.serial,
             role: "user",
             content: msgJson.content,
           });
           // 만약 qflag가 true라면 큐의 헤드에 있는 인덱스로 답변을 저장한다.
           if (qFlag & (insertIndex !== -1)) {
-            await db.saveChildAnswer(indexQueue.dequeue(), insertIndex);
+            await db.saveChildAnswer(qindexQueue.dequeue(), insertIndex);
             qFlag = false;
           }
 
@@ -240,7 +245,8 @@ wss.on("connection", (ws, req) => {
               } else {
                 // 카운트가 다 차면 부모님의 질문을 추가
                 let question = await db.addRandomQuestion(msgJson.serial);
-                indexQueue.enqueue(question.index);
+                qindexQueue.enqueue(question.index);
+                qindexQueue2.enqueue(question.index);
                 result = result + question.result;
                 qFlag = true;
               }
@@ -254,7 +260,6 @@ wss.on("connection", (ws, req) => {
               })
             );
 
-            winston.info(`gpt answer: ${result}`);
             clients.forEach((client) => {
               if (
                 client.serial === ws.serial &&
@@ -262,9 +267,10 @@ wss.on("connection", (ws, req) => {
               ) {
                 let answer = { about: "gpt", content: result };
                 // if (qFlag) {
-                  answer.isQuest = true;
-                  // qFlag = false;
+                answer.isQuest = true;
+                // qFlag = false;
                 // }
+                winston.info(`server sent : ${JSON.stringify(answer)}`);
                 client.send(JSON.stringify(answer));
               }
             });
@@ -322,56 +328,58 @@ wss.on("connection", (ws, req) => {
             winston.inf(`status is ${status}, so break occured`);
             break;
           }
-          status = 3;
           clients.forEach((client) => {
             if (
               client.role === "display" &&
               client.serial === msgJson.serial &&
               client.readyState === WebSocket.OPEN
             ) {
-              winston.info(
-                `send "further" to ${client.serial}, ${client.role}`
-              );
-              client.send(JSON.stringify({ about: "further" }));
+              if (status === 1) {
+                winston.info(
+                  `send "break" to ${client.serial}, ${client.role}`
+                );
+                client.send(JSON.stringify({ about: "break" }));
+              } else if (status === 2) {
+                winston.info(
+                  `send "further" to ${client.serial}, ${client.role}`
+                );
+                client.send(JSON.stringify({ about: "further" }));
+              }
             }
           });
+          status = 3;
           break;
 
         // 캐릭터 골랐을 때의 부분
         case "character":
-          winston.info(
-          `"character" accepted from ${ws.serial}, ${content}`
-        );
+          winston.info(`"character" accepted from ${ws.serial}, ${content}`);
           db.setCnum(msgJson.serial, msgJson.content);
           break;
 
         // 파일 전송 시작 알림
         case "file":
-          winston.info(
-            `"file" accepted from ${ws.serial}, ${content}`
-          );
+          winston.info(`"file" accepted from ${ws.serial}, ${content}`);
           if (!fileStream) {
-            const filename = message.content; // content에서 파일명을 가져옵니다.
-            fileStream = fs.createWriteStream(`./assets/${filename}`);
-            winston.info(`Started writing to ./assets/${filename}`);
+            fileName = message.content; // content에서 파일명을 가져옵니다.
+            fileStream = fs.createWriteStream(`./assets/${fileName}`);
+            winston.info(`Started writing to ./assets/${fileName}`);
           } else {
             // 바이너리 데이터를 수신하면 파일에 쓴다.
-            winston.info(
-              `writing....... ${ws.serial}`
-            );
+            winston.info(`writing....... ${ws.serial}`);
             fileStream.write(message.content);
           }
           break;
 
         // 파일 전송 종료 알림
         case "file_end":
-          winston.info(
-            `"file_end" accepted from ${ws.serial}, ${content}`
-          );
+          winston.info(`"file_end" accepted from ${ws.serial}, ${content}`);
           if (fileStream) {
             fileStream.end();
             winston.info("File saved. Start sending to AWS");
             // aws 부분 시작
+            let newName = newFileName(fileName)
+            aws.uploadFileToS3(newFileName(newName), `./assets/${fileName}`);
+            db.updateFilePath(qindex, `./${newName}`);
           }
           break;
 
