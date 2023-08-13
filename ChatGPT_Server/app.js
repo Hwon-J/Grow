@@ -254,17 +254,17 @@ wss.on("connection", (ws, req) => {
               })
             );
 
-            winston.info(`gpt answer: ${result}`);
             clients.forEach((client) => {
               if (
                 client.serial === ws.serial &&
                 client.readyState === WebSocket.OPEN
-              ) {
-                let answer = { about: "gpt", content: result };
-                // if (qFlag) {
-                  answer.isQuest = true;
-                  // qFlag = false;
-                // }
+                ) {
+                  let answer = { about: "gpt", content: result };
+                  // if (qFlag) {
+                    answer.isQuest = true;
+                    // qFlag = false;
+                    // }
+                    winston.info(`server sent : ${JSON.stringify(answer)}`);
                 client.send(JSON.stringify(answer));
               }
             });
