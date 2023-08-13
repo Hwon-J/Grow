@@ -273,10 +273,10 @@ wss.on("connection", (ws, req) => {
                 client.readyState === WebSocket.OPEN
               ) {
                 let answer = { about: "gpt", content: result };
-                // if (qFlag) {
-                answer.isQuest = true;
-                // qFlag = false;
-                // }
+                if (qFlag) {
+                  answer.isQuest = true;
+                  qFlag = false;
+                }
                 winston.info(`server sent : ${JSON.stringify(answer)}`);
                 client.send(JSON.stringify(answer));
               }
@@ -396,7 +396,7 @@ wss.on("connection", (ws, req) => {
             let newName = newFileName(fileName);
             winston.info(`newName: ${newName}`);
             await aws.uploadFileToS3(newName, `./assets/${fileName}`);
-            let qindex = qindexQueue2.dequeue()
+            let qindex = qindexQueue2.dequeue();
             await db.updateFilePath(qindex, `./${newName}`);
             winston.info(`aws completed`);
           }
