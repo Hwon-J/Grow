@@ -1,7 +1,7 @@
 const maria = require("mysql");
 const winston = require("./winston.js");
 const util = require("util");
-const newFileName = require("./util/new-file-name.js");
+// const newFileName = require("./new-file-name.js");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
