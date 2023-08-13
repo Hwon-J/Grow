@@ -364,7 +364,7 @@ wss.on("connection", (ws, req) => {
 
         // 파일 전송 시작 알림
         case "file":
-          winston.info(`"file" accepted from ${ws.serial}, ${msgJson.content}`);
+          winston.info(`"file" accepted from ${ws.serial}`);
           if (!fileStream) {
             fileName = message.content; // content에서 파일명을 가져옵니다.
             fileStream = fs.createWriteStream(`./assets/${fileName}`);
