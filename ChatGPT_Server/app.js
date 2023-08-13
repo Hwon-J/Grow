@@ -379,7 +379,7 @@ wss.on("connection", (ws, req) => {
           winston.info(`"file" accepted from ${ws.serial}`);
           // 바이너리 데이터를 수신하면 파일에 쓴다.
           winston.info(`writing....... ${ws.serial}`);
-          const decodedData = Buffer.from(msgJson.content, 'base64');
+          const decodedData = Buffer.from(msgJson.content, "base64");
           fileStream.write(decodedData);
           break;
 
@@ -394,7 +394,8 @@ wss.on("connection", (ws, req) => {
             winston.info("File saved. Start sending to AWS");
             // aws 부분 시작
             let newName = newFileName(fileName);
-            aws.uploadFileToS3(newFileName(newName), `./assets/${fileName}`);
+            winston.info(`newName: ${newName}`);
+            aws.uploadFileToS3(newName, `./assets/${fileName}`);
             db.updateFilePath(qindex, `./${newName}`);
             winston.info(`aws completed`);
           }
@@ -410,12 +411,7 @@ wss.on("connection", (ws, req) => {
           );
       }
     } catch (error) {
-      // data가 바이너리 또는 JSON이 아닌 경우 처리합니다.
-      if (fileStream) {
-        fileStream.write(data);
-      } else {
-        winston.error(error);
-      }
+      winston.error(error);
     }
   });
 
