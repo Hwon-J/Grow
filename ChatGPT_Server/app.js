@@ -390,6 +390,7 @@ wss.on("connection", (ws, req) => {
           break;
 
         default:
+          winston.info("error: purpose needed or purpose gpt need content");
           ws.send(
             JSON.stringify({
               about: "error",
