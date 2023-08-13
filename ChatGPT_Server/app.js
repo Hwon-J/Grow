@@ -363,19 +363,22 @@ wss.on("connection", (ws, req) => {
           break;
 
         // 파일 전송 시작 알림
+        case "file_start":
+          winston.info(
+            `"file_start" accepted from ${ws.serial}, content: ${msgJson.content}`
+          );
+          winston.info("filestream started...");
+          fileName = msgJson.content; // content에서 파일명을 가져옵니다.
+          winston.info(`fileName: ${fileName}`);
+          fileStream = fs.createWriteStream(`./assets/${fileName}`);
+          winston.info(`Started writing to ./assets/${fileName}`);
+          break;
+
         case "file":
           winston.info(`"file" accepted from ${ws.serial}`);
-          if (!fileStream) {
-            winston.info("filestream started...");
-            fileName = msgJson.content; // content에서 파일명을 가져옵니다.
-            // winston.info(`fileName: ${fileName}`);
-            fileStream = fs.createWriteStream(`./assets/${fileName}`);
-            winston.info(`Started writing to ./assets/${fileName}`);
-          } else {
-            // 바이너리 데이터를 수신하면 파일에 쓴다.
-            winston.info(`writing....... ${ws.serial}`);
-            fileStream.write(msgJson.content);
-          }
+          // 바이너리 데이터를 수신하면 파일에 쓴다.
+          winston.info(`writing....... ${ws.serial}`);
+          fileStream.write(msgJson.content);
           break;
 
         // 파일 전송 종료 알림
