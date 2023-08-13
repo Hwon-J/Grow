@@ -74,7 +74,7 @@ wss.on("connection", (ws, req) => {
   ws.on("message", async (msg) => {
     try {
       let msgJson = JSON.parse(msg);
-      if (msgJson.purpose !== "file"){
+      if (msgJson.purpose !== "file") {
         winston.info(
           `message from client[${ip}]:${msgJson.purpose}, ${msgJson.role}, ${msgJson.content}, ${msgJson.serial}`
         );
@@ -358,13 +358,13 @@ wss.on("connection", (ws, req) => {
 
         // 캐릭터 골랐을 때의 부분
         case "character":
-          winston.info(`"character" accepted from ${ws.serial}, ${content}`);
+          winston.info(`"character" accepted from ${ws.serial}`);
           db.setCnum(msgJson.serial, msgJson.content);
           break;
 
         // 파일 전송 시작 알림
         case "file":
-          winston.info(`"file" accepted from ${ws.serial}, ${content}`);
+          winston.info(`"file" accepted from ${ws.serial}, ${msgJson.content}`);
           if (!fileStream) {
             fileName = message.content; // content에서 파일명을 가져옵니다.
             fileStream = fs.createWriteStream(`./assets/${fileName}`);
@@ -378,12 +378,12 @@ wss.on("connection", (ws, req) => {
 
         // 파일 전송 종료 알림
         case "file_end":
-          winston.info(`"file_end" accepted from ${ws.serial}, ${content}`);
+          winston.info(`"file_end" accepted from ${ws.serial}, ${msgJson.content}`);
           if (fileStream) {
             fileStream.end();
             winston.info("File saved. Start sending to AWS");
             // aws 부분 시작
-            let newName = newFileName(fileName)
+            let newName = newFileName(fileName);
             aws.uploadFileToS3(newFileName(newName), `./assets/${fileName}`);
             db.updateFilePath(qindex, `./${newName}`);
           }
@@ -402,6 +402,8 @@ wss.on("connection", (ws, req) => {
       // data가 바이너리 또는 JSON이 아닌 경우 처리합니다.
       if (fileStream) {
         fileStream.write(data);
+      } else {
+        winston.error(error);
       }
     }
   });
