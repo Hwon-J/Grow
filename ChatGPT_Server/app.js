@@ -276,6 +276,8 @@ wss.on("connection", (ws, req) => {
                 if (qFlag) {
                   answer.isQuest = true;
                   qFlag = false;
+                } else {
+                  answer.isQuest = false;
                 }
                 winston.info(`server sent : ${JSON.stringify(answer)}`);
                 client.send(JSON.stringify(answer));
