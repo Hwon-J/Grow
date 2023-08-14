@@ -62,7 +62,7 @@ function WebSocketComponent(props) {
 
         
     }
-    else if (mes.about === 'hear' && isgpt === false) {
+    else if (mes.about === 'hear') {
       
       console.log('hear')
       setEffect(mes)
@@ -70,16 +70,22 @@ function WebSocketComponent(props) {
       
     }
     // 받은 메세지가 좀더 가까이 와달라는 메시지라면
-    else if (mes.about === 'closer' && isgpt === false) {
-      console.log('closer들어올때 isgpt가 false일때 isgpt', isgpt)
+    else if (mes.about === 'closer') {
+      console.log('closer')
       setEffect(mes)
 
       
     }
 
     // 받은 메세지가 아이가 멀어졌다고 생각해 답변이 끝난 경우라면
-    else if (mes.about === 'further' && isgpt === false ) {
+    else if (mes.about === 'further') {
       console.log('further')
+      // 생각 중 상태 on
+      setEffect(mes)
+    }
+
+    else if (mes.about === 'break') {
+      console.log('break')
       // 생각 중 상태 on
       setEffect(mes)
     }
@@ -151,16 +157,16 @@ function WebSocketComponent(props) {
       // gpt 답변으로 받은(말풍선 안에 띄울) 메세지 변경
       setReceivedMessage(gpt_answer)
       // gpt 답변이니 관련 변수 true
-      setIsgpt(true)
+      // setIsgpt(true)
       console.log(isgpt)
       const displayTimeout = setTimeout(() => {
-        console.log('3초 종료')
-        setIsgpt(false)
+        console.log('20초 종료')
+        // setIsgpt(false)
         setReceivedMessage('');
         // gpt 답변이 끝났으니 다시 false로 설정
         
         
-      }, 3000);
+      }, 20000);
 
       return () => {
         // setIsgpt(true)
@@ -171,13 +177,13 @@ function WebSocketComponent(props) {
 
       };
     }
-    else if (effect.about === 'closer' && isgpt === false)
+    else if (effect.about === 'closer')
     {
       console.log('useEffect실행은 됐지만 isgpt false일때',isgpt)
-      setReceivedMessage(effect.content)
+      setReceivedMessage('대화를 시작하려면 좀 더 가까이 와줘')
       set_talking(true)
     }
-    else if (effect.about === 'hear' && isgpt === false)
+    else if (effect.about === 'hear')
     {
       console.log('useEffect실행은 됐지만 isgpt false일때',isgpt)
       
@@ -185,9 +191,16 @@ function WebSocketComponent(props) {
       
       set_talking(true)
     }
-    else if (effect.about === 'further' && isgpt === false) {
+    else if (effect.about === 'further') {
       setReceivedMessage('답변을 생각중이야')
       set_thinking(true)
+      // 말하기 상태 off
+      set_talking(false)
+    }
+
+    else if (effect.about === 'break') {
+      setReceivedMessage('')
+      set_thinking(false)
       // 말하기 상태 off
       set_talking(false)
     }
@@ -209,9 +222,9 @@ function WebSocketComponent(props) {
     <div >
       
       <div style={messagebox}>
-        <p>{isgpt}</p>
+        
         <p>{receivedMessage}</p>
-        <h1>{isgpt}</h1>
+        
       </div>
     </div>
   );
