@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // 웹소켓 컴포넌트 정의
 // 시리얼넘버와 센서 업데이트 함수 props 로 받기
 function WebSocketComponent(props) {
@@ -94,9 +94,9 @@ function WebSocketComponent(props) {
   useEffect(() => {
     
     // 웹소켓 링크 설정
-    // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
     // const newSocket = new WebSocket('ws://localhost:5000');
-    const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    // const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
@@ -209,6 +209,7 @@ function WebSocketComponent(props) {
   // 표시할 메세지 박스의 스타일 설정
   const messagebox = {
     width: '470px',
+    height: '600px',
     overflowY: 'auto',
     whiteSpace: 'normal',
     overflowWrap: 'break-word',
@@ -216,14 +217,44 @@ function WebSocketComponent(props) {
     fontFamily: 'Pretendard-Regular'
   };
 
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollableDivRef = useRef(null);
+  const paragraphRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(true);
+  // const stopScrollPosition = 500;
+
+  useEffect(() => {
+    if (receivedMessage !== '' && isScrolling) {
+    console.log(scrollableDivRef.current.clientHeight, paragraphRef.current.clientHeight)
+    // const paragraphHeight = scrollableDivRef.current.clientHeight - paragraphRef.current.clientHeight;
+    // setScrollPosition(paragraphHeight); // Set initial scroll position to paragraph height
+    scrollToBottom()}
+  }, [scrollPosition, receivedMessage]);
+
+  function scrollToBottom() {
+    console.log(scrollPosition)
+    console.log(paragraphRef.current.clientHeight)
+    if (scrollableDivRef.current && isScrolling && (paragraphRef.current.clientHeight > scrollableDivRef.current.clientHeight)) {
+      if (scrollPosition >= (paragraphRef.current.clientHeight - scrollableDivRef.current.clientHeight) && scrollPosition !== 0 && paragraphRef.current.clientHeight !== 0) {
+        setIsScrolling(false)
+        console.log('zzzzz')
+        setScrollPosition(0)
+        return
+      }
+      setScrollPosition(prevPosition => (prevPosition + 0.03) );
+      scrollableDivRef.current.scrollTop = scrollPosition;
+    }
+    setTimeout(scrollToBottom, 1000000);
+  }
   // 웹소켓 컴포넌트 구조
   // 그냥 메시지만 띄울 뿐
   return (
     <div >
       
-      <div style={messagebox}>
+      <div ref={scrollableDivRef} style={messagebox} >
         
-        <p>{receivedMessage}</p>
+        <p ref={paragraphRef}>{receivedMessage}</p>
         
       </div>
     </div>
