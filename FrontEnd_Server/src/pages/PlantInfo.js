@@ -16,6 +16,7 @@ import { reSwal } from "../utils/reSwal";
 
 const PlantInfo = () => {
   const [nickname, setNickname] = useState("");
+  const [name, setName] = useState("");
   const [childname, setChildname] = useState("");
   const [childage, setChildage] = useState("");
   const [serialNum, setSerialNum] = useState("");
@@ -57,6 +58,9 @@ const PlantInfo = () => {
   const onChangeChildname = (e) => {
     setChildname(e.target.value);
   };
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
   const onChangeChildage = (e) => {
     setChildage(e.target.value);
   };
@@ -68,7 +72,7 @@ const PlantInfo = () => {
     e.preventDefault();
     // 등록되면 안되는 조건식 추가
     if (checkedResult === false) {
-      reSwal("warning", `시리얼 넘버를 확인해주세요`);  //Swal 재사용
+      reSwal("warning", `시리얼 넘버를 확인해주세요`); //Swal 재사용
       return;
     }
     if (nickname.length === 0 || nickname.length > 12) {
@@ -111,7 +115,7 @@ const PlantInfo = () => {
   const getPlantInfo = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/plant/info`);
-      setPlantInfo(response.data.info); // 식물 종 데이터 변수에 받아온 데이터 넣기 
+      setPlantInfo(response.data.info); // 식물 종 데이터 변수에 받아온 데이터 넣기
     } catch (error) {
       console.log(error);
     }
@@ -212,13 +216,22 @@ const PlantInfo = () => {
                       value={nickname}
                       onChange={onChangeNickname}
                     />
-                    <Form.Control
-                      style={{ fontSize: "20px" }}
-                      type="text"
-                      placeholder="아이 이름"
-                      value={childname}
-                      onChange={onChangeChildname}
-                    />
+                    <div className="namediv">
+                      <Form.Control
+                        style={{ fontSize: "20px" }}
+                        type="text"
+                        placeholder="아이 성"
+                        value={name}
+                        onChange={onChangeName}
+                      />
+                      <Form.Control
+                        style={{ fontSize: "20px" }}
+                        type="text"
+                        placeholder="아이 이름"
+                        value={childname}
+                        onChange={onChangeChildname}
+                      />
+                    </div>
                     <InputGroup>
                       <Form.Control
                         style={{ fontSize: "20px", paddingLeft: "12%" }}

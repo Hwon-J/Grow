@@ -16,7 +16,7 @@ const QuestItem = ({ questItem, handleListenAudio, deleteQuest }) => {
         )}
       </div>
       <div className="quest-right">
-        <Icon icon="bi:bell" onClick={() => handleListenAudio(28)} />
+        {/* <Icon icon="bi:bell" onClick={() => handleListenAudio(28)} /> */}
         {questItem.completed === 1 && (
           <Icon
             icon="bi:bell"
