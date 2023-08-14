@@ -2,7 +2,6 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // 로컬 스토리지 사용
 import { reducer as currentUser } from "../reducers/userSlice"; // userSlice.js에서 reducer를 명시적으로 가져옴
-import { reducer as cartList } from "../reducers/shop";
 
 const currentUserPersistConfig = {
   key: "currentUser",
@@ -19,7 +18,6 @@ const persistedCurrentUserReducer = persistReducer(
 const store = configureStore({
   reducer: {
     currentUser: persistedCurrentUserReducer,
-    cartList,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false, // 이 옵션을 사용하여 시리얼라이즈 체크를 비활성화

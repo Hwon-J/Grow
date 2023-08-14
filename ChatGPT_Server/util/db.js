@@ -1,6 +1,7 @@
 const maria = require("mysql");
 const winston = require("./winston.js");
 const util = require("util");
+// const newFileName = require("./new-file-name.js");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -47,20 +48,6 @@ const checkSerial = async (serial) => {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [serial], (error, result) => {
-  //   console.log(result);
-  //   console.log(error);
-  //   if (result.length == undefined || result.length === 0) {
-  //     return "not exist";
-  //   } else if (result[0].member_index == null) {
-  //     return "unregistered";
-  //   } else if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return "ok";
-  // });
 };
 
 const setCnum = async (serial, cnum) => {
@@ -348,24 +335,12 @@ const getplantinfo = async (serial) => {
   }
 }
 
-// 1. 주어진 질문의 index를 기반으로 질문 테이블에 채팅로그 인덱스와 채팅한 시간을 업데이트 한다.
-// 2. 파일을 ec2 s3 서버에 저장한다. 파일이름은 "answer_[question의 인덱스]"으로 한다.
-// 3. 반환된 주소를 질문 테이블에 업데이트 한다.
 const saveChildAnswer = async(qindex, cindex) => {
   winston.info(`saveChildAnswer called. qindex: ${qindex}, cindex: ${cindex}`);
-  let sql = `update question set chat_log_index = ?, completed_date = now() where \`index\` = ?`;
+  let sql = `update question set completed = 1, chat_log_index = ?, completed_date = now() where \`index\` = ?`;
   try {
-    // 트랜잭션 시작
-    await queryPromise("START TRANSACTION");
     // 업데이트 개시
     await queryPromise(sql, [cindex, qindex]);
-    
-    // 파일 저장
-
-    // 질문 테이블 업데이트
-
-    // 트랜잭션을 커밋
-    await queryPromise("COMMIT");
 
     winston.info(`Successfully saveChildAnswer completed.`);
     return;
@@ -374,6 +349,20 @@ const saveChildAnswer = async(qindex, cindex) => {
     return;
   }
 };
+
+const updateFilePath = async(qindex, filePath) => {
+  winston.info(`update FilePath called. qindex: ${qindex}, filePath: ${filePath}`);
+  let sql = `update question set audio_file_path = ? where \`index\` = ?`;
+  try {
+    await queryPromise(sql, [filePath, qindex]);
+
+    winston.info(`Successfully updateFilePath completed.`);
+    return;
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+}
 
 module.exports = {
   connection,
@@ -387,5 +376,6 @@ module.exports = {
   getConditionGoodOrBad,
   addRandomQuestion,
   getplantinfo,
-  saveChildAnswer
+  saveChildAnswer,
+  updateFilePath
 };

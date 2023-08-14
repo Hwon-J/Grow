@@ -15,6 +15,7 @@ import { listenAudio } from "../utils/audio";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
 import { reSwal } from "../utils/reSwal";
+import Swal from "sweetalert2";
 
 const QuestPage = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -94,14 +95,24 @@ const QuestPage = () => {
   };
   // 질문 삭제 메서드
   const deleteQuest = (questId) => {
-    axios
-      .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
-      .then((response) => {
-        window.location.reload(); // 화면 새로고침
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+    Swal.fire({
+      icon: "warning",
+      text: "질문지를 삭제하시겠습니까",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      confirmButtonText: "확인",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
+          .then((response) => {
+            window.location.reload(); // 화면 새로고침
+          })
+          .catch((error) => {
+            console.error("Error", error);
+          });
+      }
+    });
   };
 
   // 음성데이터 켜는 메서드 비동기
