@@ -399,21 +399,26 @@ exports.getAnswerById = async (req, res) => {
     let query = `select * 
     from \`member\` join \`plant\` on member.index = plant.member_index
     join \`question\` on plant.index = question.plant_index
+    join \`pot\` on pot.index = plant.pot_index
     where \`member\`.id = ? and question.index = ?
     `;
     let result = await queryPromise(query, [id, index]);
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
     if (result.length === 0) {
       return res
         .status(403)
         .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
     }
 
-    // 트랜잭션 커밋
-    await queryPromise("COMMIT");
+    let keyPath = `./${result[0].serial_number}/${result[0].audio_file_path.slice(2)}`
+    console.log(keyPath);
 
     const params = {
       Bucket: process.env.AWS_BUCKET,
-      Key: 'dummy.wav',   ///////////// 이 부분을 나중에 db에서 뽑아온 값으로 바꿀 것
+      // Key: 'dummy.wav',   ///////////// 이 부분을 나중에 db에서 뽑아온 값으로 바꿀 것
+      Key: keyPath,
       Expires: 60 * 5
     };
 
@@ -452,6 +457,7 @@ exports.deleteQuestion = async (req, res) => {
 
     let result = await queryPromise(query, [id, index]);
     if (result.length === 0) {
+      await queryPromise("COMMIT");
       return res
         .status(403)
         .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
@@ -493,6 +499,7 @@ exports.deletePlantByIndex = async (req, res) => {
       winston.info(
         `plantController deletePlantByIndex returned 400. Forbidden`
       );
+      await queryPromise("COMMIT");
       return res
         .status(400)
         .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
@@ -501,13 +508,14 @@ exports.deletePlantByIndex = async (req, res) => {
     // 권한이 있으면 삭제 진행
     sql = `delete from \`plant\` where \`index\` = ?`;
     result = await queryPromise(sql, [result[0].pindex]);
-    if (result.affectedRows === 0) {
-      return res.status(202).json({ code: 202, message: "삭제된 데이터 없음" });
-    }
-
+    
     // 트랜잭션 커밋
     await queryPromise("COMMIT");
-
+    
+    if (result.affectedRows === 0) {
+      winston.info(`plantController deletePlantByIndex 0 row deleted`);
+      return res.status(202).json({ code: 202, message: "삭제된 데이터 없음" });
+    }
     winston.info(`plantController deletePlantByIndex successfully completed`);
     return res
       .status(201)

@@ -56,6 +56,7 @@ wss.on("connection", (ws, req) => {
   const qindexQueue2 = new Queue();
   // 다음 사용자의 입력은 질문에 대한 대답이라는 플래그
   let qFlag = false;
+  let isLocked = false;
   let insertIndex;
   let fileName;
   let fileStream;
@@ -223,7 +224,8 @@ wss.on("connection", (ws, req) => {
             content: msgJson.content,
           });
           // 만약 qflag가 true라면 큐의 헤드에 있는 인덱스로 답변을 저장한다.
-          if (qFlag & (insertIndex !== -1)) {
+          console.log(qFlag);
+          if (qFlag && (insertIndex !== -1)) {
             await db.saveChildAnswer(qindexQueue.dequeue(), insertIndex);
             qFlag = false;
           }
@@ -254,6 +256,11 @@ wss.on("connection", (ws, req) => {
                 let question = await db.addRandomQuestion(msgJson.serial);
                 qindexQueue.enqueue(question.index);
                 qindexQueue2.enqueue(question.index);
+
+                // 나중에 지울 것 ////////////////////////////////////////////////////////////////////////
+                console.log(qindexQueue.items);
+                console.log(qindexQueue2.items);
+
                 result = result + question.result;
                 qFlag = true;
               }
@@ -275,7 +282,6 @@ wss.on("connection", (ws, req) => {
                 let answer = { about: "gpt", content: result };
                 if (qFlag) {
                   answer.isQuest = true;
-                  qFlag = false;
                 } else {
                   answer.isQuest = false;
                 }
@@ -284,6 +290,11 @@ wss.on("connection", (ws, req) => {
               }
             });
           })();
+
+          setTimeout(() => {
+            isLocked = false;
+          }, 10000);
+
           break;
 
         // 사용자가 가까이 왔다는 메세지의 처리
@@ -293,6 +304,10 @@ wss.on("connection", (ws, req) => {
           );
           if (status === 1) {
             winston.info(`status is ${status}, so break occured`);
+            break;
+          }
+          if (isLocked) {
+            winston.info(`sending is Locked, so break occered`);
             break;
           }
           status = 1;
@@ -315,6 +330,10 @@ wss.on("connection", (ws, req) => {
             winston.info(`status is ${status}, so break occured`);
             break;
           }
+          if (isLocked) {
+            winston.info(`sending is Locked, so break occered`);
+            break;
+          }
           status = 2;
           clients.forEach((client) => {
             if (
@@ -335,6 +354,10 @@ wss.on("connection", (ws, req) => {
           );
           if (status === 3) {
             winston.info(`status is ${status}, so break occured`);
+            break;
+          }
+          if (isLocked) {
+            winston.info(`sending is Locked, so break occered`);
             break;
           }
           clients.forEach((client) => {
@@ -370,9 +393,8 @@ wss.on("connection", (ws, req) => {
           winston.info(
             `"file_start" accepted from ${ws.serial}, content: ${msgJson.content}`
           );
-          winston.info("filestream started...");
-          fileName = msgJson.content; // content에서 파일명을 가져옵니다.
-          winston.info(`fileName: ${fileName}`);
+          winston.info(`filestream started... fileName: ${fileName}`);
+          fileName = msgJson.content; // content에서 파일명을 가져옴
           fileStream = fs.createWriteStream(`./assets/${fileName}`);
           winston.info(`Started writing to ./assets/${fileName}`);
           break;
@@ -397,8 +419,12 @@ wss.on("connection", (ws, req) => {
             // aws 부분 시작
             let newName = newFileName(fileName);
             winston.info(`newName: ${newName}`);
-            await aws.uploadFileToS3(newName, `./assets/${fileName}`);
+            aws.uploadFileToS3(
+              `./${ws.serial}/${newName}`,
+              `./assets/${fileName}`
+            ).then;
             let qindex = qindexQueue2.dequeue();
+            winston.info(`qindex : ${qindex}`);
             await db.updateFilePath(qindex, `./${newName}`);
             winston.info(`aws completed`);
           }

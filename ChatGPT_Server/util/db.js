@@ -354,7 +354,7 @@ const updateFilePath = async(qindex, filePath) => {
   winston.info(`update FilePath called. qindex: ${qindex}, filePath: ${filePath}`);
   let sql = `update question set audio_file_path = ? where \`index\` = ?`;
   try {
-    await queryPromise(sql, [filePath], qindex);
+    await queryPromise(sql, [filePath, qindex]);
 
     winston.info(`Successfully updateFilePath completed.`);
     return;
