@@ -1,27 +1,48 @@
-// AudioComponent.js
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRef } from "react";
+const AudioComponent = ({ audioUrl, setAudioUrl }) => {
+  const [audio, setAudio] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioElementRef = useRef(null);
 
-const AudioComponent = ({ audioData, setAudioData, setAudioPlaying, audioPlaying }) => {
-  // 오디오 멈추게 만드zz는 메서드
-  const stopAudio = () => {
-    setAudioData("");
-    setAudioPlaying(false);
+  useEffect(() => {
+    if (audioUrl) {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
+      const newAudio = new Audio(audioUrl);
+      setAudio(newAudio);
+      setIsPlaying(true);
+    }
+  }, [audioUrl]);
+
+  useEffect(() => {
+    if (isPlaying && audioElementRef.current) {
+      audioElementRef.current.play();
+    }
+  }, [isPlaying]);
+
+  const closeAudio = () => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setAudioUrl("");
   };
-  // audio를 시용해서 음성파일 실행 , src에 listenAudio로 받아온 데이터를 넣어주기 
+
   return (
     <div className="audiodiv">
-      {audioData && (
+      {audioUrl && (
         <>
-          <audio controls>
-            <source src={audioData} type="audio/wav" />  
+          <audio ref={audioElementRef} controls key={audioUrl} autoPlay="autoplay">
+            <source src={audioUrl} type="audio/mpeg" />
           </audio>
-          {audioPlaying ? (
-            <button onClick={stopAudio} className="audioStop">
-              Stop
-            </button>
-          ) : (
-            <></>
-          )}
+          <button onClick={closeAudio} className="audioControl">
+            닫기
+          </button>
         </>
       )}
     </div>
