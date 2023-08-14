@@ -1,0 +1,8 @@
+.checkQuest{
+  background-color: rgb(64, 178, 114);
+  
+}
+
+.checkQuest > * {
+  color: white;
+}
