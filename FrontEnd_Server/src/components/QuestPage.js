@@ -26,7 +26,7 @@ const QuestPage = () => {
   const [checkComplete, setCheckComplete] = useState();
   const [audioData, setAudioData] = useState(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
-
+  const [audioQuest, setAudioQuest] = useState(null);
   // 헤더용 
   const config = {
     headers: {
@@ -106,11 +106,14 @@ const QuestPage = () => {
 
   // 음성데이터 켜는 메서드 비동기
   const handleListenAudio = async (questId) => {
+    console.log(questId+ '퀘스트 아이디')
     try {
       const url = await listenAudio(questId, BASE_URL, config); //올바르게 오면 음성데이터url오고 실패하면 null값이 옴
+      // console.log(url)
       if (url) {  // url이 온다면 오디오 데이터에 넣어주고 플레잉변수 true로 바꿔주기
         setAudioData(url);
         setAudioPlaying(true);
+        setAudioQuest(questId);
       }
     } catch (error) {
       console.error("Error while getting audio:", error);
@@ -134,12 +137,7 @@ const QuestPage = () => {
         </button>
       </div>
       {/* 오디오 컴포넌트에 필요한 데이터 넣어서 보내기 */}
-      <AudioComponent
-        audioData={audioData}
-        setAudioData={setAudioData}
-        setAudioPlaying={setAudioPlaying}
-        audioPlaying={audioPlaying}
-      />
+      <AudioComponent audioUrl={audioData} setAudioUrl={setAudioData}/>
       <div className="quest-section">
         {/* 질문리스트를 한페이지당 5개로 설정, 질문아이템 questList에서 모두 뽑아내 만들기 */}
         {questList
@@ -150,6 +148,7 @@ const QuestPage = () => {
               questItem={questItem}
               handleListenAudio={handleListenAudio}
               deleteQuest={deleteQuest}
+              audioQuest={audioQuest}
             />
           ))}
       </div>
