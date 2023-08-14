@@ -31,6 +31,7 @@ function NavTop() {
     };
   }, []);
 
+  // 로그인여부에 따라 navtop의 메뉴가 달라진다.
   return (
     <>
       <section className="navigation" style={{marginBottom:"0px"}}>

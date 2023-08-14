@@ -3,12 +3,9 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import ImgUpload from "./pages/ImgUpload";
 import PlantDiary from "./pages/PlantDiary";
 import PlantInfo from "./pages/PlantInfo";
-
 import CheckToken from "./utils/Users";
-
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 
@@ -25,15 +22,9 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/diary/:id" element={<PlantDiary />} />
-
           <Route path="/login" element={<LoginPage />} />
-
           <Route path="/signup" element={<SignupPage />} />
-
           <Route path="/plantinfo" element={<PlantInfo />} />
-          <Route path="/imgupload" element={<ImgUpload />} />
-
-
           <Route path="/*" element={<NotFound />} />
         </Route>
       </Routes>
