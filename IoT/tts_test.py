@@ -45,7 +45,7 @@ def tts(message):
     rescode = response.getcode()
     try:
         if (rescode == 200):
-            logging.info("tts mp3저장")
+            logging.info("tts wav저장")
             response_body = response.read()
             with open('tts.wav', 'wb') as f:
                 f.write(response_body)
@@ -58,4 +58,4 @@ def tts(message):
     path = "/home/jamfarm/SUNGMIN/S09P12C103/IoT/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요
     play(path)
 
-tts('string test')
+tts('mp3 문제')
