@@ -412,23 +412,27 @@ exports.getAnswerById = async (req, res) => {
         .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
     }
 
-    let keyPath = `./${result[0].serial_number}/${result[0].audio_file_path.slice(2)}`
-    console.log(keyPath);
+    // let keyPath = `${result[0].serial_number}/${result[0].audio_file_path.slice(2)}`
+    let keyPath = result[0].audio_file_path;
 
     const params = {
       Bucket: process.env.AWS_BUCKET,
-      // Key: 'dummy.wav',   ///////////// 이 부분을 나중에 db에서 뽑아온 값으로 바꿀 것
       Key: keyPath,
-      Expires: 60 * 5
+      Expires: 60 * 5,
     };
 
-    s3.getSignedUrl('getObject', params, (err, url) => {
+    s3.getSignedUrl("getObject", params, (err, url) => {
       winston.info(`returned url: ${url}`);
       if (err) {
-        winston.info('Failed to generate presigned URL');
-        return res.status(500).json({ error: 'Failed to generate presigned URL' });
+        winston.info("Failed to generate presigned URL");
+        return res
+          .status(500)
+          .json({ error: "Failed to generate presigned URL" });
       }
-      return res.status(201).json({ code:200, message:"URL 생성성공", presignedUrl: url });
+      res.setHeader('Content-Type', 'audio/mpeg');
+      return res
+        .status(201)
+        .json({ code: 200, message: "URL 생성성공", presignedUrl: url });
     });
   } catch (error) {
     winston.error(error);
@@ -508,10 +512,10 @@ exports.deletePlantByIndex = async (req, res) => {
     // 권한이 있으면 삭제 진행
     sql = `delete from \`plant\` where \`index\` = ?`;
     result = await queryPromise(sql, [result[0].pindex]);
-    
+
     // 트랜잭션 커밋
     await queryPromise("COMMIT");
-    
+
     if (result.affectedRows === 0) {
       winston.info(`plantController deletePlantByIndex 0 row deleted`);
       return res.status(202).json({ code: 202, message: "삭제된 데이터 없음" });

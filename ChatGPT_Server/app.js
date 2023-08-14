@@ -181,7 +181,7 @@ wss.on("connection", (ws, req) => {
             // 너는 식물임에도 불구하고 [] 안의 정보들을 알고 있다. 대화에 []안의 정보들이 필요하다면 []안의 정보들을 잘 살펴보고 대화하라.
             content: `프롬프트를 재설정하겠다. 지금부터 너는 어린 사람 아이가 키우고 있는 ${
               plantinfo.species
-            } 역할을 하는 agent를 연기해야 한다. 
+            }이고 이름은 ${dbplant.plant_name}다.
             너는 이 아이의 친구가 되어 아이와 쉬운 언어로 대화를 나누어야 한다. 
             객관적인 정보 전달은 최대한 줄이고, 감성적인 언어를 사용하라. 
             너는 답변으로 최대 15단어까지 사용하고, 이하의 [] 안의 정보를 참고하여 대화하라. 
@@ -197,7 +197,8 @@ wss.on("connection", (ws, req) => {
       조도: ${condition.light}
       토양의 습도: ${condition.moisture}
       식물의 물주는 주기: ${plantinfo.max_water_period}일
-    ]`,
+    ]
+    너의 답변은 반드시 2~3문장이어야 한다.`,
             // {
             // 아이의 이름:  아이의 이름
             // 아이의 생년월일: 아이가 태어난 날짜
@@ -224,8 +225,7 @@ wss.on("connection", (ws, req) => {
             content: msgJson.content,
           });
           // 만약 qflag가 true라면 큐의 헤드에 있는 인덱스로 답변을 저장한다.
-          console.log(qFlag);
-          if (qFlag && (insertIndex !== -1)) {
+          if (qFlag && insertIndex !== -1) {
             await db.saveChildAnswer(qindexQueue.dequeue(), insertIndex);
             qFlag = false;
           }
@@ -233,7 +233,7 @@ wss.on("connection", (ws, req) => {
           // 히스토리에 유저의 입력 저장
           history.push({
             role: "user",
-            content: msgJson.content,
+            content: msgJson.content+" 대답은 짧게",
           });
 
           // 1. gpt에게 답변을 받는다.
@@ -254,15 +254,15 @@ wss.on("connection", (ws, req) => {
               } else {
                 // 카운트가 다 차면 부모님의 질문을 추가
                 let question = await db.addRandomQuestion(msgJson.serial);
-                qindexQueue.enqueue(question.index);
-                qindexQueue2.enqueue(question.index);
-
-                // 나중에 지울 것 ////////////////////////////////////////////////////////////////////////
-                console.log(qindexQueue.items);
-                console.log(qindexQueue2.items);
-
-                result = result + question.result;
-                qFlag = true;
+                if (question === "") {
+                  count = 0;
+                } else {
+                  qindexQueue.enqueue(question.index);
+                  qindexQueue2.enqueue(question.index);
+  
+                  result = result + question.result;
+                  qFlag = true;
+                }
               }
             }
             // 답변 DB에 저장
@@ -417,15 +417,12 @@ wss.on("connection", (ws, req) => {
             fileStream.end();
             winston.info("File saved. Start sending to AWS");
             // aws 부분 시작
-            let newName = newFileName(fileName);
+            let newName = newFileName(fileName, ws.serial);
             winston.info(`newName: ${newName}`);
-            aws.uploadFileToS3(
-              `./${ws.serial}/${newName}`,
-              `./assets/${fileName}`
-            ).then;
+            aws.uploadFileToS3(newName, `./assets/${fileName}`).then;
             let qindex = qindexQueue2.dequeue();
             winston.info(`qindex : ${qindex}`);
-            await db.updateFilePath(qindex, `./${newName}`);
+            await db.updateFilePath(qindex, newName);
             winston.info(`aws completed`);
           }
           break;
