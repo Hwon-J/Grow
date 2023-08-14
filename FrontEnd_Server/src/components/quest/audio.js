@@ -2,7 +2,7 @@
 import React from "react";
 
 const AudioComponent = ({ audioData, setAudioData, setAudioPlaying, audioPlaying }) => {
-  // 오디오 멈추게 만드는 메서드
+  // 오디오 멈추게 만드zz는 메서드
   const stopAudio = () => {
     setAudioData("");
     setAudioPlaying(false);
