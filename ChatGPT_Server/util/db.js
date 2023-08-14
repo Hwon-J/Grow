@@ -33,7 +33,8 @@ const queryPromise = (sql, params) => {
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
   winston.info(`checkSerial called. serial: ${serial}`);
-  let sql = "select pot.member_index, character_number as cnum from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+  let sql =
+    "select pot.member_index, character_number as cnum from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
     let result = await queryPromise(sql, [serial]);
@@ -52,7 +53,8 @@ const checkSerial = async (serial) => {
 
 const setCnum = async (serial, cnum) => {
   winston.info(`setCnum called. serial: ${serial}, cnum: ${cnum}`);
-  let sql = "select plant.index as \`index\` from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+  let sql =
+    "select plant.index as `index` from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
     let result = await queryPromise(sql, [serial]);
@@ -65,14 +67,14 @@ const setCnum = async (serial, cnum) => {
       return;
     }
     let index = result[0].index;
-    sql = `update plant set character_number = ? where \`index\` = ?`
+    sql = `update plant set character_number = ? where \`index\` = ?`;
     await queryPromise(sql, [cnum, index]);
     winston.info(`update completed in setCnum`);
   } catch (error) {
     winston.error(error);
     return;
   }
-}
+};
 
 // 최신 채팅로그를 가져오기
 const getRecentChatLog = async (serial) => {
@@ -81,7 +83,9 @@ const getRecentChatLog = async (serial) => {
     let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
     let result = await queryPromise(sql, [serial]);
     if (result.length === 0) {
-      winston.info(`something wrong happened... there is no plant that pot's serial number is ${serial}`);
+      winston.info(
+        `something wrong happened... there is no plant that pot's serial number is ${serial}`
+      );
       return [];
     }
 
@@ -93,15 +97,18 @@ const getRecentChatLog = async (serial) => {
     result = await queryPromise(sql, [result[0].pindex]);
 
     // 만약 result가 홀수길이라면 하나 땜
-    if (result.length %2 === 1){
+    if (result.length % 2 === 1) {
       result.pop();
     }
 
     // result를 역순으로 바꾸면서 raw한 json 배열로 바꿈
     let reversed = [];
-    for(let i = result.length-2; i>=0; i = i-2){
-      reversed.push({"role":result[i].role, "content":result[i].content});
-      reversed.push({"role":result[i+1].role, "content":result[i+1].content});
+    for (let i = result.length - 2; i >= 0; i = i - 2) {
+      reversed.push({ role: result[i].role, content: result[i].content });
+      reversed.push({
+        role: result[i + 1].role,
+        content: result[i + 1].content,
+      });
     }
     return reversed;
   } catch (error) {
@@ -117,7 +124,9 @@ const saveChatLog = async (log) => {
     let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
     let result = await queryPromise(sql, [log.serial]);
     if (result.length === 0) {
-      winston.info(`something wrong happened in saveChatLog... there is no plant that pot's serial number is ${log.serial}`);
+      winston.info(
+        `something wrong happened in saveChatLog... there is no plant that pot's serial number is ${log.serial}`
+      );
       return -1;
     }
 
@@ -126,11 +135,15 @@ const saveChatLog = async (log) => {
     result = await queryPromise(sql, [result[0].pindex, log.role, log.content]);
 
     if (result.affectedRows === 0) {
-      winston.info("something wrong happened in saveChatLog... insert does not run normally");
+      winston.info(
+        "something wrong happened in saveChatLog... insert does not run normally"
+      );
       return -1;
     }
-    
-    winston.info(`Successfully saveChatLog completed. insertId: ${result.insertId}`);
+
+    winston.info(
+      `Successfully saveChatLog completed. insertId: ${result.insertId}`
+    );
     return result.insertId;
   } catch (error) {
     winston.error(error);
@@ -157,7 +170,8 @@ const getCondition = async (plantIndex) => {
 const getWaterLog = async (plantIndex) => {
   winston.info(`getWaterLog called. plantIndex: ${plantIndex}`);
   try {
-    let sql = "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
+    let sql =
+      "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
     let result = await queryPromise(sql, [plantIndex]);
     return result[0];
   } catch (error) {
@@ -264,11 +278,15 @@ const getConditionGoodOrBad = async (serial) => {
     let water = getWaterLog(limitData.pindex);
     const currentDate = new Date();
     const wateredDateTime = new Date(water.wateredDate);
-  
+
     // milliseconds로 계산된 날짜 차이를 일(day) 단위로 변환
-    const differenceInDays = Math.floor((currentDate - wateredDateTime) / (1000 * 60 * 60 * 24));
-    const maxWaterInDays = Math.floor(new Date(limitData.max_water_period) / (1000 * 60 * 60 * 24));
-  
+    const differenceInDays = Math.floor(
+      (currentDate - wateredDateTime) / (1000 * 60 * 60 * 24)
+    );
+    const maxWaterInDays = Math.floor(
+      new Date(limitData.max_water_period) / (1000 * 60 * 60 * 24)
+    );
+
     if (differenceInDays > maxWaterInDays) {
       waterMsg = "passed";
     } else {
@@ -283,7 +301,7 @@ const getConditionGoodOrBad = async (serial) => {
       moisture: moistureMsg,
       temperature: temperatureMsg,
       temperValue: temperature,
-      water: waterMsg
+      water: waterMsg,
     };
   } catch (error) {
     winston.error(error);
@@ -309,15 +327,20 @@ const addRandomQuestion = async (serial) => {
     where pot.serial_number = ? and question.completed = 0
     ORDER BY RAND() LIMIT 1`;
     result = await queryPromise(sql, [serial]);
+    if (result.length === 0){
+      return "";
+    }
     let question = result[0].content;
-    let index =  result[0].index;
+    let index = result[0].index;
 
-    winston.info(`addRandomQuestion returned. {"index":${index}, "result":"${conjunction}, ${question}"}`);
+    winston.info(
+      `addRandomQuestion returned. {"index":${index}, "result":"${conjunction}, ${question}"}`
+    );
     // 객체로 내보내기
-    return {"index":index, "result":`${conjunction}, ${question}`};
+    return { index: index, result: `${conjunction}, ${question}` };
   } catch (error) {
     winston.error(error);
-    return {"index":-1, "result":"error"};
+    return { index: -1, result: "" };
   }
 };
 
@@ -333,9 +356,9 @@ const getplantinfo = async (serial) => {
     winston.error(error);
     return "error";
   }
-}
+};
 
-const saveChildAnswer = async(qindex, cindex) => {
+const saveChildAnswer = async (qindex, cindex) => {
   winston.info(`saveChildAnswer called. qindex: ${qindex}, cindex: ${cindex}`);
   let sql = `update question set completed = 1, chat_log_index = ?, completed_date = now() where \`index\` = ?`;
   try {
@@ -350,8 +373,10 @@ const saveChildAnswer = async(qindex, cindex) => {
   }
 };
 
-const updateFilePath = async(qindex, filePath) => {
-  winston.info(`update FilePath called. qindex: ${qindex}, filePath: ${filePath}`);
+const updateFilePath = async (qindex, filePath) => {
+  winston.info(
+    `update FilePath called. qindex: ${qindex}, filePath: ${filePath}`
+  );
   let sql = `update question set audio_file_path = ? where \`index\` = ?`;
   try {
     await queryPromise(sql, [filePath, qindex]);
@@ -362,7 +387,7 @@ const updateFilePath = async(qindex, filePath) => {
     winston.error(error);
     return;
   }
-}
+};
 
 module.exports = {
   connection,
@@ -377,5 +402,5 @@ module.exports = {
   addRandomQuestion,
   getplantinfo,
   saveChildAnswer,
-  updateFilePath
+  updateFilePath,
 };
