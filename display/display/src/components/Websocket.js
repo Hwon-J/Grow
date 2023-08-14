@@ -88,9 +88,9 @@ function WebSocketComponent(props) {
   useEffect(() => {
     
     // 웹소켓 링크 설정
-    const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+    // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
     // const newSocket = new WebSocket('ws://localhost:5000');
-    // const newSocket = new WebSocket('ws://192.168.100.37:30002');
+    const newSocket = new WebSocket('ws://192.168.100.37:30002');
     
     // 웹소켓이 열렸을 때의 이벤트 핸들러
     newSocket.onopen = () => {
@@ -154,13 +154,13 @@ function WebSocketComponent(props) {
       setIsgpt(true)
       console.log(isgpt)
       const displayTimeout = setTimeout(() => {
-        console.log('5초 종료')
+        console.log('3초 종료')
         setIsgpt(false)
         setReceivedMessage('');
         // gpt 답변이 끝났으니 다시 false로 설정
         
         
-      }, 5000);
+      }, 3000);
 
       return () => {
         // setIsgpt(true)
