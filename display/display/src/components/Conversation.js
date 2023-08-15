@@ -6,6 +6,7 @@ import lettucecharacter from '../assets/lettucecharacter.png';
 import tomatocharacter from '../assets/tomatocharacter.png';
 import blackboard from '../assets/blackboard.png';
 import water from '../assets/water.png';
+import background2 from '../assets/BackgroundPicture2.gif';
 
 // 웹소켓 컴포넌트와 연결
 import WebSocketComponent from './Websocket';
@@ -35,12 +36,19 @@ function Conversation() {
     // 답변 생각(gpt 답변 기다리는중) 상태인지 변수 설정
     const [thinking, set_thinking] = useState(false)
     // 물을 줘야하는 상태인지 구분하기 위해 변수 설정
-    const [watering, setWatering] = useState(true)
-    
+    const [watering, setWatering] = useState(false)
+
+    const backgroundStyles3 = {
+      backgroundImage: `url(${background2})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      minHeight: '100vh', // 전체 화면 높이까지 배경이미지가 채워지도록 설정
+    }
     // 대화창 컴포넌트 구조
     return (
       
-      <div >
+      <div style={`${watering ? 'backgroundStyles3' : ''}`} >
         {/* 센서값 나타내는 부분 */}
         <img className='blackboard' src={blackboard}/>
         <span className='information '>
@@ -49,6 +57,7 @@ function Conversation() {
           <h1>물은 {water_speech[sensor.moisture]}</h1>
         </span>
         
+        {/* 물을 줄 때 요정이 뜨도록 설정 */}
         <img src={water} className={`water water-fairy ${watering ? 'visible' : 'hidden'}`} />
           
          {/* 캐릭터 나타내는 부분 */}
