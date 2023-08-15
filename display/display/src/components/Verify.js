@@ -20,7 +20,7 @@ function Verify() {
     toast: true,
     position: 'top-center',
     showConfirmButton: false,
-    timer: 2000,
+    timer: 1500,
     timerProgressBar: true,
     
     })  
@@ -96,7 +96,7 @@ function Verify() {
 
   //Verify 컴포넌트가 실행될 때 자동으로 한 번 실행
   useEffect(() => {
-    // 어디 웹소켓 링크로 설정하는 부분
+    // 어디 웹소켓 링크로 연결할지 설정하는 부분
     const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
     // const newSocket = new WebSocket('ws://192.168.100.37:30002');
     

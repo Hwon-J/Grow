@@ -19,6 +19,9 @@ function WebSocketComponent(props) {
   const [receivedMessage, setReceivedMessage] = useState('');
   // gpt 답변인지 구별을 위한 변수 설정
   const [isgpt, setIsgpt] = useState(false);
+
+  // 메세지들을 받는다면 그 관련 비동기 처리를 위해 임의의 변수 effect 설정
+  // effect가 변할 때 마다 관련 useEffect 처리
   const [effect, setEffect] = useState('')
   
   
@@ -32,13 +35,13 @@ function WebSocketComponent(props) {
     if (mes.about === 'sensor'){
       console.log('getsensor')
       // 각 센서에 대한 센서값을 새로운 변수에 설정하여
-      const light_value = mes.content.light
+      const light = mes.content.light
       const moisture = mes.content.moisture
       const temperature = mes.content.temperature
       const temperValue = mes.content.temperValue
       const water = mes.content.water
       // 새 객체에 담기
-      const newData = {"light":light_value,"moisture":moisture,"temperature":temperature,"temperValue":temperValue, "water":water}
+      const newData = {"light":light,"moisture":moisture,"temperature":temperature,"temperValue":temperValue, "water":water}
       // 새 객체로 센서값 업데이트하는 함수 실행
       sensor_update(newData);
 
@@ -60,33 +63,28 @@ function WebSocketComponent(props) {
     else if (mes.about === 'gpt') {
       setEffect(mes)
 
-        
     }
+
+    //받은 메세지가 hear라면 gpt가 듣고 있는 상태이다.
     else if (mes.about === 'hear') {
-      
-      console.log('hear')
-      setEffect(mes)
-      
-      
-    }
-    // 받은 메세지가 좀더 가까이 와달라는 메시지라면
-    else if (mes.about === 'closer') {
-      console.log('closer')
       setEffect(mes)
 
-      
+    }
+
+    // 받은 메세지가 좀더 가까이 와달라는 메시지라면
+    else if (mes.about === 'closer') {
+      setEffect(mes)
+
     }
 
     // 받은 메세지가 아이가 멀어졌다고 생각해 답변이 끝난 경우라면
     else if (mes.about === 'further') {
-      console.log('further')
-      // 생각 중 상태 on
       setEffect(mes)
-    }
 
+    }
+    // 받은 메세지가 break라면 아이가 근처에 왔지만 말하는 것을 취소했을 경우이기 때문에
+    // 말풍선 초기화
     else if (mes.about === 'break') {
-      console.log('break')
-      // 생각 중 상태 on
       setEffect(mes)
     }
   }
@@ -109,8 +107,8 @@ function WebSocketComponent(props) {
     // 웹소켓으로부터 메시지를 받았을 때의 이벤트 핸들러
     newSocket.onmessage = (event) => {
       // 메세지 받았을 때 함수 설정
-      
       getmessage(event.data)
+
     };
     
     // 웹소켓이 닫혔을 때의 이벤트 핸들러
@@ -142,10 +140,7 @@ function WebSocketComponent(props) {
 
 
   useEffect(() => {
-    console.log('effect 바뀔 때')
-    console.log('effet 바뀔때 isgpt', isgpt)
     // gpt 답변이라면 시간설정
-    
     if (effect.about === 'gpt') {
       console.log(effect)
       const gpt_answer = effect.content
@@ -157,8 +152,6 @@ function WebSocketComponent(props) {
       // gpt 답변으로 받은(말풍선 안에 띄울) 메세지 변경
       setReceivedMessage(gpt_answer)
       // gpt 답변이니 관련 변수 true
-      // setIsgpt(true)
-      console.log(isgpt)
       const displayTimeout = setTimeout(() => {
         console.log('20초 종료')
         // setIsgpt(false)
@@ -169,9 +162,9 @@ function WebSocketComponent(props) {
       }, 20000);
 
       return () => {
-        // setIsgpt(true)
+        
         setTimeout(()=> 
-        // console.log('이건 언제?', isgpt))
+      
         
         clearTimeout(displayTimeout))
 
@@ -179,13 +172,13 @@ function WebSocketComponent(props) {
     }
     else if (effect.about === 'closer')
     {
-      console.log('useEffect실행은 됐지만 isgpt false일때',isgpt)
+      
       setReceivedMessage('대화를 시작하려면 좀 더 가까이 와줘')
       set_talking(true)
     }
     else if (effect.about === 'hear')
     {
-      console.log('useEffect실행은 됐지만 isgpt false일때',isgpt)
+      
       
       setReceivedMessage('지금 얘기 듣고 있어~')
       
@@ -218,31 +211,41 @@ function WebSocketComponent(props) {
   };
 
 
+  // 자동 스크롤 내리기에 관련된 함수와 변수들
   const [scrollPosition, setScrollPosition] = useState(0);
+  // 말풍선 div 관련 정보
   const scrollableDivRef = useRef(null);
+  // 말풍선 내용에 해당하는 p태그 관련 정보
   const paragraphRef = useRef(null);
+  // 스크롤이 내려가거나 멈추도록 설정하는 변수
   const [isScrolling, setIsScrolling] = useState(true);
-  // const stopScrollPosition = 500;
+  
 
   useEffect(() => {
+    // scrollposition과 message가 바꼈을 때
+    // 메시지가 빈 값이 아니고, 스크롤이 가능할 때
     if (receivedMessage !== '' && isScrolling) {
     console.log(scrollableDivRef.current.clientHeight, paragraphRef.current.clientHeight)
-    // const paragraphHeight = scrollableDivRef.current.clientHeight - paragraphRef.current.clientHeight;
-    // setScrollPosition(paragraphHeight); // Set initial scroll position to paragraph height
+    // 스크롤을 밑으로 내리는 함수 호출
     scrollToBottom()}
   }, [scrollPosition, receivedMessage]);
 
+  // 스크롤 내리는 함수 선언
   function scrollToBottom() {
-    console.log(scrollPosition)
-    console.log(paragraphRef.current.clientHeight)
+    // 말풍선 div가 존재하고, 스크롤이 가능하고, 말풍선 내용 p가 말풍선 크기 div보다 클 때
     if (scrollableDivRef.current && isScrolling && (paragraphRef.current.clientHeight > scrollableDivRef.current.clientHeight)) {
+      // 0부터 시작하는 scroll위치가 div를 초과하는만큼의 p 크기에 도달하고 스크롤 포지션이 0이 아니고 p태그 높이도 0이 아닐 때
       if (scrollPosition >= (paragraphRef.current.clientHeight - scrollableDivRef.current.clientHeight) && scrollPosition !== 0 && paragraphRef.current.clientHeight !== 0) {
+        // 스크롤 가능 변수 false 설정 > 스크롤 그만
         setIsScrolling(false)
-        console.log('zzzzz')
+        // 스크롤 포지션 다시 0으로 리셋
         setScrollPosition(0)
+        // 함수 종료
         return
       }
-      setScrollPosition(prevPosition => (prevPosition + 0.03) );
+      // 스크롤 포지션 0.03씩 내리기
+      setScrollPosition(prevPosition => (prevPosition + 0.03) )
+      // 현재 말풍선 div의 스크롤 윗부분을 스크롤 포지션 변수값으로 할당하여 점점 내리기
       scrollableDivRef.current.scrollTop = scrollPosition;
     }
     setTimeout(scrollToBottom, 1000000);
