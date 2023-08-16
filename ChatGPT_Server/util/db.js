@@ -173,6 +173,7 @@ const getWaterLog = async (plantIndex) => {
     let sql =
       "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
     let result = await queryPromise(sql, [plantIndex]);
+    winston.info(`result: ${result[0].watered_date}`);
     return result[0];
   } catch (error) {
     winston.error(error);
@@ -272,6 +273,7 @@ const getConditionGoodOrBad = async (serial) => {
 
     // 물 주는 주기 확인
     if (limitData.max_water_period === null) {
+      winston.info("max_water_period is null, so it become 3...");
       limitData.max_water_period = 3;
     }
     // 현재 날짜와 최근 물 준 날짜의 차이가 limitData.max_water_period보다 크면 passed 반환
@@ -285,6 +287,9 @@ const getConditionGoodOrBad = async (serial) => {
     );
     const maxWaterInDays = limitData.max_water_period;
 
+    winston.info(
+      `differenceInDays: ${differenceInDays}, maxWaterInDays: ${maxWaterInDays}`
+    );
     if (differenceInDays > maxWaterInDays) {
       waterMsg = "passed";
     } else {
@@ -325,7 +330,7 @@ const addRandomQuestion = async (serial) => {
     where pot.serial_number = ? and question.completed = 0
     ORDER BY RAND() LIMIT 1`;
     result = await queryPromise(sql, [serial]);
-    if (result.length === 0){
+    if (result.length === 0) {
       return "";
     }
     let question = result[0].content;
