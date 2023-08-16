@@ -48,7 +48,9 @@ function Conversation() {
     // 대화창 컴포넌트 구조
     return (
       
-      <div style={`${watering ? 'backgroundStyles3' : ''}`} >
+      <div  >
+        <div className={`${watering ? 'thirsty' : ''}`}>
+        <h1 className={`${watering ? 'visible water-warning' : 'hidden'}`}>식물에게 물을 줄 때가 되었어요!</h1>
         {/* 센서값 나타내는 부분 */}
         <img className='blackboard' src={blackboard}/>
         <span className='information '>
@@ -74,6 +76,7 @@ function Conversation() {
           <WebSocketComponent serial_number={serial_number} sensor_update={sensor_update} set_talking={set_talking} set_thinking={set_thinking}  setWatering={setWatering} />
         </div>
           
+        </div>
         
         
       </div>
