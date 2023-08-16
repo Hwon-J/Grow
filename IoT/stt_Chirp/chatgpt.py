@@ -3,8 +3,9 @@ import json
 
 def run_websocket_client():
     # ws_url = "ws://192.168.100.102:30002"
-    ws_url = "ws://192.168.100.37:30002/" 
+    # ws_url = "ws://192.168.100.37:30002/" 
     # ws_url = "ws://localhost:30002/" 
+    ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
 
     ws = create_connection(ws_url)
 
