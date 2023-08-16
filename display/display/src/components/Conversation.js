@@ -24,6 +24,7 @@ function Conversation() {
     const serial_number = params.serial_number
     const character_index = params.character_index
     const character_list = [beancharacter, lettucecharacter, tomatocharacter,beancharacter2, lettucecharacter2, tomatocharacter2]
+    const character_list2 = [beancharacter2, lettucecharacter2, tomatocharacter2]
 
     // 백에서 받는 센서값 관련해서 state 설정
     const [sensor, sensor_update] = useState({'temperature':'', 'light': '', 'moisture':'', 'temperValue':0, 'water':'not passed'})
@@ -68,7 +69,7 @@ function Conversation() {
          {/* 캐릭터 나타내는 부분 */}
         <div className='character-box'>
         <img className={`character ${talking ? 'character-talking' : ''} ${thinking ? 'character-thinking' : ''}`}
-          src={!watering ? character_list[character_index] : character_index === 0 ? character_list[3] : character_index === 1 ? character_list[4] : character_list[5]} alt="cancel" />
+          src={!watering ? character_list[character_index] : character_list2[character_index]} alt="cancel" />
 
         </div>
         {/* <div className={`bubble`}> */}
