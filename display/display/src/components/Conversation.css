@@ -10,7 +10,17 @@
     left : 580px;
   }
 
-
+  .thirsty {
+    background-image: url('../assets/thirstyback.png') !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+  }
+  .water-warning {
+    position : fixed;
+    left : 500px;
+  }
   .character-box {
     display : flex;
     position : fixed;
