@@ -2,14 +2,14 @@
 
 import './App.css';
 // 캐릭터와 배경이미지 import
-import background from './assets/BackgroundPicture.gif';
+
 import background2 from './assets/BackgroundPicture2.gif';
 
 // Router import
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 
 // useEffect
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // 시리얼 번호 등록하는 컴포넌트 import 가져오기
 import CharacterChoice from './components/CharacterChoice';
 import Conversation from './components/Conversation';

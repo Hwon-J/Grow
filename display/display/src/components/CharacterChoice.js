@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import './CharacterChoice.css';
-import lettucecharacter from '../assets/lettucecharacter.png';
 
+//각 캐릭터들 이미지 불러오기
+import lettucecharacter from '../assets/lettucecharacter.png';
 import beancharacter from '../assets/beancharacter.png';
 import tomatocharacter from '../assets/tomatocharacter.png';
 
+//router 기능 불러오기
 import { useNavigate, useParams } from 'react-router-dom';
 
 // 캐릭터 선택 컴포넌트 정의
@@ -22,8 +24,8 @@ export default function CharacterChoice() {
     
     useEffect(() => {
       // 웹소켓하고 싶은 링크 설정
-      // const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
-      const newSocket = new WebSocket('ws://192.168.100.37:30002');
+      const newSocket = new WebSocket('ws://i9c103.p.ssafy.io:30002');
+      // const newSocket = new WebSocket('ws://192.168.100.37:30002');
       
       
       // 웹소켓이 연결됐을 때 설정한 웹소켓 링크로 변경
