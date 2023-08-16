@@ -6,7 +6,7 @@ import './App.css';
 import background2 from './assets/BackgroundPicture2.gif';
 
 // Router import
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 // useEffect
 import { useEffect } from 'react';
@@ -16,12 +16,13 @@ import Conversation from './components/Conversation';
 import Verify from './components/Verify';
 
 
-function App() {
+function App(props) {
 
   // 기본적으로 라즈베리파이에 시리얼번호가 들어있다고 가정
   // 등록된 시리얼 번호는 Verify.js에서 설정
   
   
+  const id = props.id
   const navigate = useNavigate()
   // 배경화면 설정
   const backgroundStyles = {
@@ -33,14 +34,14 @@ function App() {
   }
   // App 컴포넌트가 마운트 되자마자 Verify 컴포넌트로 네비게이트
   useEffect(() => {
-    navigate('/verify')
+    navigate(`/verify/${id}`)
   }, [])
 
   return (
     
       <div className="App" style={backgroundStyles}>
         <Routes>
-          <Route path="/verify" element={<Verify />} />
+          <Route path="/verify/:id" element={<Verify />} />
           <Route path="/characterchoice/:serial_number" element={<CharacterChoice />} />
           <Route path="/conversation/:character_index/:serial_number" element={<Conversation />} />
         </Routes>
