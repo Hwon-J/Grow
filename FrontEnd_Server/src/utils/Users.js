@@ -34,7 +34,12 @@ const CheckToken = () => {
 
   // 토큰 유효성 검사 함수
   const checkToken = async () => { // 비동기 처리
+      // /home 경로에서는 아무 동작도 하지 않음
+    if (location.pathname === "/home" || location.pathname === "/home/") {
+      return;
+    }
     const checkLogin = Islogin();  // 로그인 되어있는지 확인 token ? false
+    console.log(checkLogin, "로그인 확인")
     if (!checkLogin) {            // 로그인 되어있지 않을때
       if (      // 로그인을 제외한 다른페이지에서 프로필로 갈때, plantinfo, diary페이지라면 
         (location.pathname === "/profile" && previousPath !== "/login") ||
