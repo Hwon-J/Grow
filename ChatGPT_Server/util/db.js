@@ -34,14 +34,14 @@ const queryPromise = (sql, params) => {
 const checkSerial = async (serial) => {
   winston.info(`checkSerial called. serial: ${serial}`);
   let sql =
-    "select pot.member_index, character_number as cnum from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+    "select pot.member_index, character_number as cnum from `pot` left join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
     let result = await queryPromise(sql, [serial]);
 
-    if (result.length == undefined || result.length === 0) {
+    if (result.length === undefined || result.length === 0) {
       return "not exist";
-    } else if (result[0].member_index == null) {
+    } else if (result[0].member_index === null) {
       return "unregistered";
     }
     return result[0].cnum;
@@ -54,7 +54,7 @@ const checkSerial = async (serial) => {
 const setCnum = async (serial, cnum) => {
   winston.info(`setCnum called. serial: ${serial}, cnum: ${cnum}`);
   let sql =
-    "select plant.index as `index` from `pot` join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+    "select plant.index as `index` from `pot` left join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
     let result = await queryPromise(sql, [serial]);
@@ -283,9 +283,7 @@ const getConditionGoodOrBad = async (serial) => {
     const differenceInDays = Math.floor(
       (currentDate - wateredDateTime) / (1000 * 60 * 60 * 24)
     );
-    const maxWaterInDays = Math.floor(
-      new Date(limitData.max_water_period) / (1000 * 60 * 60 * 24)
-    );
+    const maxWaterInDays = limitData.max_water_period;
 
     if (differenceInDays > maxWaterInDays) {
       waterMsg = "passed";
