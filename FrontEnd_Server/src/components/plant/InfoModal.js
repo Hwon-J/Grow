@@ -7,6 +7,7 @@ const InfoModal = ({ setModalOpen, selectedInfo }) => {
     setModalOpen(false);
   };
 
+  // 식물 선택시 해당 식물 클릭시 식물의 정보를 보여주는 모달창 띄우기
   return (
     <>
       <div className={styles.container} >

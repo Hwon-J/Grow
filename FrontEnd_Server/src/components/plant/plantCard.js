@@ -1,6 +1,10 @@
 import React from "react";
 import "./plantcard.css";
 import { useNavigate } from "react-router-dom";
+
+
+// 프로필 페이지에서 보여줄 카드 컴포넌트
+// CardSet.js에서 props로 받아온 데이터를 이용해 카드를 만든다.
 const PlantCard = (props) => {
   const data = props.props;
   console.log("식물카드 정보"+ `${data.child_name}`);
