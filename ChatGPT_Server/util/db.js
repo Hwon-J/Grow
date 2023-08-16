@@ -277,9 +277,10 @@ const getConditionGoodOrBad = async (serial) => {
       limitData.max_water_period = 3;
     }
     // 현재 날짜와 최근 물 준 날짜의 차이가 limitData.max_water_period보다 크면 passed 반환
-    let water = getWaterLog(limitData.pindex);
+    let water = await getWaterLog(limitData.pindex);
     const currentDate = new Date();
-    const wateredDateTime = new Date(water.wateredDate);
+    const wateredDateTime = new Date(water.watered_date);
+    winston.info(`currentDate: ${currentDate}, wateredDateTime: ${wateredDateTime}`);
 
     // milliseconds로 계산된 날짜 차이를 일(day) 단위로 변환
     const differenceInDays = Math.floor(
@@ -290,10 +291,10 @@ const getConditionGoodOrBad = async (serial) => {
     winston.info(
       `differenceInDays: ${differenceInDays}, maxWaterInDays: ${maxWaterInDays}`
     );
-    if (differenceInDays > maxWaterInDays) {
-      waterMsg = "passed";
-    } else {
+    if (differenceInDays <= maxWaterInDays) {
       waterMsg = "not passed";
+    } else {
+      waterMsg = "passed";
     }
 
     winston.info(
