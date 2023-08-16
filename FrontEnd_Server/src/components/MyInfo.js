@@ -82,6 +82,16 @@ const MyInfo = () => {
     "시클라멘",
     "율마",
     "알로카시아",
+    "바질",
+    "목마가렛",
+    "스파티필름",
+    "피쉬본",
+    "콤팩타",
+    "스투키",
+    "애플민트",
+    "히아신스",
+    "산세베리아",
+    "로즈마리"
   ];
 
   // 해당 식물의 정보를 가져오는 함수
@@ -98,6 +108,7 @@ const MyInfo = () => {
         config
       );
       setMyplant(response.data.data[0]);
+      console.log(response.data.data[0]);
       // 키우기 시작한 날짜를 가져와 형식을 변환한다.
       const formattedStartDay = formatDate(response.data.data[0].start_date);
       // 키우기 시작한 날짜와 오늘 날짜의 차이를 구한다.
@@ -181,7 +192,7 @@ const MyInfo = () => {
           )}
 
           {myplant && myplant.plant_info_index && (
-            <h5>종: {checkspices[(myplant.plant_info_index - 1) % 10]}</h5>
+            <h5>종: {checkspices[(myplant.plant_info_index - 1) % 20]}</h5>
           )}
           {myplant && myplant.child_name && (
             <h5>아이이름: {myplant.child_name}</h5>

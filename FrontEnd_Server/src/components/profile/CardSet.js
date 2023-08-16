@@ -32,6 +32,7 @@ export function NotcompleteCardSet(growinPlant, slidesPerView, createCard) {
         <div className="cardContainer">
           {growinPlant.map((plant) => (
             <SwiperSlide key={plant.index}>
+              {/* {PlantCard 컴포넌트로 props를 사용해 plant 정보를 넘겨준다.} */}
               <PlantCard props={plant} />
             </SwiperSlide>
           ))}
