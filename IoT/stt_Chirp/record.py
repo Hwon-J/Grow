@@ -18,7 +18,6 @@ import sys
 import pygame
 import subprocess
 import base64
-
 last_N_readings = [50, 50, 50, 50, 50]  # 마지막 N개의 측정값을 저장
 # 웹소켓 서버 설정
 ws = None
@@ -39,18 +38,19 @@ buffer = np.zeros((BUFFER_SIZE, CHANNELS), dtype='int16')
 write_ptr = 0
 recording = False
 save_data = False
-
+playing=False
 lock = threading.Lock()
+
 def play(path):
-    global playing,recording
+    print("지금 재생중~~~~~~~~~~~~~~~~~~~~")
     try:
         subprocess.run(["aplay", path], check=True)
     except:
         print("오디오 출력 에러")
-    
     #recode풀기
 def tts(recv_msg):
     
+    global playing
     client_id = "tzm493x2hf"
     client_secret = "KcnpCE2iHXwN7HLCKxoLLC12KM9TS6CZe7zNuzVF"
     encText = urllib.parse.quote(recv_msg)
@@ -72,12 +72,15 @@ def tts(recv_msg):
         print("tts에러")
     path = "/home/jamfarm/HYOCHANG/S09P12C103/IoT/stt_Chirp/tts.wav"  # 실제 WAV 파일 경로로 수정해주세요'
     play(path)
+    playing=False
+    print(f"playing: {playing}")
+
 
 # 웹소켓 서버 설정
 def on_message(ws, message):
-    global Quest    
+    global Quest
     data = json.loads(message)
-    
+
     recv_msg = data["content"]
     if recv_msg == 2:
         print("serialCheck")
@@ -106,8 +109,8 @@ def on_open(ws):
 
 def run_websocket_server():
     global ws
-    # ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
-    ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
+    ws_url = "ws://192.168.100.37:30002/"  # 원하는 주소로 변경 가능
+    # ws_url = "ws://i9c103.p.ssafy.io:30002/"  # 원하는 주소로 변경 가능
 
     ws = WebSocketApp(ws_url,
                       on_message=on_message,
@@ -121,7 +124,7 @@ def send_mp3_file(ws,path):
     chunk_size = 4096  # 전송할 데이터의 한 번에 보낼 크기 설정
 
     if os.path.exists(mp3_file_path):
-        message = json.dumps({"purpose": "file_start", "role": "raspi",  "content": mp3_file_path[49:], "serial": "97745"})
+        message = json.dumps({"purpose": "file_start", "role": "raspi",  "content": mp3_file_path[48:], "serial": "97745"})
         ws.send(message)
         with open(mp3_file_path, "rb") as mp3_file:
                 file_data = mp3_file.read()
@@ -174,10 +177,12 @@ def record_audio():
     global save_data
     global ws
     global Quest
+    global playing
     start_ptr = 0
     end_ptr = 0
 
     with sd.InputStream(samplerate=RATE, channels=CHANNELS, dtype='int16') as stream:
+        global playing
         while True:
             try:
                 data, _ = stream.read(RATE)
@@ -199,19 +204,21 @@ def record_audio():
                 now = datetime.datetime.now()
                 time_string = now.strftime("%Y%m%d_%H%M%S")
                 file_name = f"record_{time_string}.mp3"  # 예: record_20230812_153025.mp3
-                file_path = os.path.join("/home/jamfarm/HYOCHANG/S09P12C103/IoT/record_mp3", file_name)
+                file_path = os.path.join("/home/jamfarm/SUNGMIN/S09P12C103/IoT/record_mp3", file_name)
                 wavio.write(file_path, save_buffer, RATE, sampwidth=2)
                 response = transcribe_file_v2(file_path)  # 파일 저장 후 변환 함수 호출, mp3변환
                 print(response)
                 print("stt전송 완료")
-                if ws:
+                if response=="" or response==None or response==" ":
+                    playing = False
+                elif ws:
                     if Quest:
                         send_mp3_file(ws,file_path)
                         print("send mp3")
                         Quest=False
                     message = json.dumps({"purpose": "gpt", "role": "raspi",  "content": response, "serial": "97745"})  # 수정된 부분
                     ws.send(message)
-                    os.remove(file_path)
+                os.remove(file_path)
                 save_data = False
                 write_ptr = 0
             lock.release()
@@ -273,36 +280,39 @@ if __name__ == "__main__":
         record_thread = threading.Thread(target=record_audio)
         record_thread.daemon = True
         record_thread.start()
-
+        last_status=None
         while True:
-            distance = measure_distance()
-            print(f"Distance: {distance} cm")
-            lock.acquire()
+            if playing:
+                pass
+            else:
+                distance = measure_distance()
+                print(f"Distance: {distance} cm")
+                lock.acquire()
 
+                if distance < 15 and not recording: # 거리가 10cm 미만일 때 녹음 시작
+                    print("Recording started...")
+                    message = json.dumps({"purpose": "hear" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
+                    ws.send(message)
+                    recording = True
+                    last_status="hear"
 
-            if distance < 15 and not recording: # 거리가 10cm 미만일 때 녹음 시작
-                print("Recording started...")
-                message = json.dumps({"purpose": "hear" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
-                recording = True
+                elif distance < 30 and last_status != "hear":
+                    message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"})
+                    ws.send(message)
+                
+                elif distance >= 30: # 거리가 10cm 이상일 때 녹음 종료
+                    message = json.dumps({"purpose": "further" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
+                    ws.send(message)
+                    if recording:
+                        print("Recording stopped...")   
+                        recording = False
+                        save_data = True
+                        playing=True
+                        print(f"playing: {playing}")
+                        last_status="further"
 
-            elif distance < 30:
-                message = json.dumps({"purpose": "closer" ,"role": "raspi", "serial": "97745"})
-                ws.send(message)
-            
-            elif distance >= 30: # 거리가 10cm 이상일 때 녹음 종료
-                message = json.dumps({"purpose": "further" ,"role": "raspi", "serial": "97745"}) # 수정된 부분
-                ws.send(message)
-                if recording:
-                    
-                    print("Recording stopped...")   
-                    recording = False
-                    save_data = True
-
-
-
-            
-            lock.release()
+                
+                lock.release()
 
             time.sleep(0.1) # 0.1초 간격으로 거리 측정
 
