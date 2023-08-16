@@ -5,6 +5,9 @@ import register from '../assets/register.png';
 import './Verify.css';
 
 function Verify() {
+  const params = useParams()
+  const serial = params.id
+  console.log(serial)
   const navigate = useNavigate()
   // 웹소켓을 위한 소켓 설정
   const [socket, setSocket] = useState(null);
@@ -13,7 +16,7 @@ function Verify() {
     purpose: "handshake",
     role: "display",
     content: null,
-    serial: '97745'
+    serial: serial
     }
   // Alert 변경을 위한 변수 설정
   const Toast = Swal.mixin({
