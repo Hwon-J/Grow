@@ -48,7 +48,7 @@ function Conversation() {
     // 대화창 컴포넌트 구조
     return (
       
-      <div style={`${watering ? 'backgroundStyles3' : ''}`} >
+      <div  >
         {/* 센서값 나타내는 부분 */}
         <img className='blackboard' src={blackboard}/>
         <span className='information '>
