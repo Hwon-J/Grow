@@ -173,6 +173,7 @@ const getWaterLog = async (plantIndex) => {
     let sql =
       "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
     let result = await queryPromise(sql, [plantIndex]);
+    winston.info(`result: ${result[0].watered_date}`);
     return result[0];
   } catch (error) {
     winston.error(error);
