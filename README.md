@@ -1,3 +1,160 @@
+<img src="readmefile/home1.PNG">  
+<img src="readmefile/home2.PNG">  
+
+#  속닥속닥 식물친구 , Grow 🌕
+
+
+---
+
+### 1 :four_leaf_clover: 프로젝트 개요
+
+:four_leaf_clover: **개발 기간**
+
+| 개발기간 | 2023.07.10 ~ 2023.08.18 (6주) |
+| --- | --- |
+
+:four_leaf_clover: **팀원 소개**
+
+| 팀원 | 역할 |
+| --- | --- |
+| 용효창 | 팀장, IoT , 배포 |
+| 강신욱 | BE, DB, websocket, AI |
+| 김민국 | display, websocket |
+| 김태형 | FE, 디자인 |
+| 박성민 | Iot, TTS |
+| 장혜원 | FE, 디자인 |
+
+:four_leaf_clover: **기획 의도**
+
+| 코로나 이후 국내 홈가드닝 시장의 성장과 2023년 식물재매 시장 5000억원 규모 예상 |
+| --- |
+| 전국 지자체에서 반려식물 활성화 사업 진행중 |
+| 아이의 정서교감 및 안정을 심어주기 위해서 |
+
+:four_leaf_clover: **목표**
+
+|  Grow 서비스를 통해서 아이의 정서 발달을 도움 |
+|  부모가 아이를 더욱 잘 이해할 수 있도록 도움을 주는 소통창구 역할 |
+| --- |
+
+---
+
+### 2️ :four_leaf_clover: 서비스 기능 소개
+
+:four_leaf_clover: **대표기능**
+
+- 아이와 식물과의 실시간 대화기능
+- 부모의 질문지 등록
+- 대화중 질문지에 등록된 질문을 실행 후 대답을 부모가 들을 수 있음
+- 수분, 조도 센서로 식물 관리
+<br/>
+
+:four_leaf_clover: **메인기술**
+
+## STT
+
+- 아이의 음성을 받아서 음성을 텍스트로 변환
+- 클로바 API 선택 : 다양한 어린이 음성을 사용하기 위해서
+- 초음파 센서로 거리 감지 후 저장
+
+## TTS 
+
+- 
+- 
+
+## GPT
+
+<hr/>
+
+
+
+### 3️ :four_leaf_clover: 기술 스택
+
+- ***AWS S3***
+    - AWS에서 제공하는 파일 저장과 전송에 특화된 서버
+    - 이후 백엔드 서버에서 파일의 이름으로 요청을 보내면 그 파일에 해당하는 URL을 반환하며, 백엔드는 그 URL을 프론트로 전송
+- ***OPEN AI Chat API***
+    - OpenAI사에서 제공하는 챗봇 API
+    - 아이와의 대화를 구현하기 위해 사용하여 상황에 맞는 말을 생성
+    - 센서 데이터를 포함한 데이터를 전송받아 식물의 상황에 맞는 대화가 가능함
+- ***web Socket***
+    - 실시간 센서 데이터 iot, 백앤드 전송
+    - 실시간 센서테이터 백앤드 , 디스플레이 전송
+    - web Socket 두개를 통해서 iot, 백앤드 , 프론트의 유기적인 데이터 전송 
+- ***React***
+    - 다양한 라이브러리와의 호환성 , 컴포넌트 기반의 가독성 높기 떄문에 선택
+    - RESTful, axios를 통한 백엔드와의 데이터 전송방식 선택
+    - bootstrap, mui, scss등 다양한 css방식 사용
+- ***Redux-toolkit***
+    - 상태를 더욱 쉽게 예측가능하게 하기 위해서 도입
+    - Redux-toolkit으로 데이터 store에 저장 후 사용
+- ***Node.js***
+    - 백엔드 구축을 위해 사용
+    - 웹소켓 백엔드 서버와 REST API 백엔드 서버에 모두 사용
+- ***MariaDB***
+    - DB구축을 위해 사용
+    - 관계형 데이터베이스로, mysql과 같은 문법을 사용하여 쉽게 사용할 수 있음
+    
+
+
+
+### 4️ :four_leaf_clover: 아키텍처
+<img src="">  
+
+### 5 :four_leaf_clover: API 명세서 
+<img src="readmefile/API.PNG">  
+
+
+
+---
+
+### 5️ :four_leaf_clover: 서비스 화면
+
+:four_leaf_clover: **웹페이지 설명**
+
+- 식물 목록 확인
+
+<img src="readmefile/detail1.PNG" width="300">
+
+- 식물 등록
+
+<img src="readmefile/detail2.PNG" width="300">
+
+- 식물 상세보기(식물의 물 준 데이터 저장, 질문지 등록, 질문의 답 음성 듣기)
+
+<img src="readmefile/info.PNG" width="300">
+
+---
+<hr/>
+
+:four_leaf_clover: **디스플레이 설명**
+
+- 기본 페이지
+
+<img src="readmefile/display.PNG" width="300">
+
+- 식물의 물 줘야하는 표시 페이지
+
+<img src="readmefile/water.PNG" width="300">
+
+- 식물과 아이의 대화
+
+<img src="./readmefile/talk.PNG" width="300">
+
+---
+
+### 6️ :four_leaf_clover: 차별점
+
+
+---
+
+### 7️ :four_leaf_clover: 기능 개요
+
+
+
+
+
+
 # GIT, JIRA Convention
 
 # GIT Branch Convention
@@ -113,4 +270,6 @@ footer;
 - DB server : 3306
 - display : 3000
 - front server : 3001
+
+
 
