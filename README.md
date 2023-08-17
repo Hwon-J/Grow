@@ -1,7 +1,7 @@
 <img src="readmefile/home1.PNG">  
 <img src="readmefile/home2.PNG">
 
-# 속닥속닥 식물친구 , Grow <img src="readmefile/logo.png" alt="Grow 로고" width="30" height="30" />
+# 속닥속닥 식물친구 , Grow <img src="readmefile/logo.png" alt="Grow 로고" width="50" height="30" />
 
 ---
 
@@ -41,7 +41,7 @@
 ### 2️ :four_leaf_clover: 서비스 기능 소개
 
 :moyai: **대표기기**
-<img src="./readmefile/tech.PNG" alt="Grow 로고" width="30" height="30" />
+![기기](readmefile/tech.PNG)
 
 :four_leaf_clover: **대표기능**
 
@@ -97,10 +97,9 @@
   - DB구축을 위해 사용
   - 관계형 데이터베이스로, mysql과 같은 문법을 사용하여 쉽게 사용할 수 있음
 
-
 ### 4️ :four_leaf_clover: 아키텍처
 
-<img src=""> <br/>
+![아키텍쳐](readmefile/arci.PNG)
 
 ### 5 :four_leaf_clover: API 명세서
 
@@ -113,18 +112,21 @@
 :four_leaf_clover: **웹페이지 설명**
 
 - 식물 목록 확인
+![우와](readmefile/detail1.PNG)
+1. 키우는 식물 리스트 확인
+2. 완료된 식물 리스트 확인
 
-<img src="readmefile/detail1.PNG" width="80%">
-    1. 키우는 식물 리스트 확인
-    2. 완료된 식물 리스트 확인
-<br/>
+- 식물 등록
+![우와](readmefile/detail2.PNG)
+1. 새 식물등록하기 버튼으로 식물등록 페이지 이동
 
-- 식물 등록 1. 새 식물등록하기 버튼으로 식물등록 페이지 이동
-  <img src="readmefile/detail2.PNG" width="80%"><br/>
 
 - 식물 상세보기
-  <img src="readmefile/info.PNG" width="80%"><br/> 1. 식물의 물 준 데이터 저장 2. 질문지 등록 3. 질문의 답 음성 듣기 4. 식물 완료 처리
-  <br/>
+![우와](readmefile/info.PNG) 
+1. 식물의 물 준 데이터 저장 
+2. 질문지 등록 
+3. 질문의 답 음성 듣기 
+4. 식물 완료 처리
 
 ---
 
@@ -134,15 +136,15 @@
 
 - 기본 페이지
 
-<img src="readmefile/display.PNG" width="50%"><br/>
+<img src="readmefile/display.PNG" width="400"><br/>
 
 - 식물의 물 부족 표시 페이지
 
-<img src="readmefile/water.PNG" width="50%"><br/>
+<img src="readmefile/water.PNG" width="400"><br/>
 
 - 식물과 아이의 대화
 
-<img src="./readmefile/talk.PNG" width="50%"><br/>
+<img src="./readmefile/talk.PNG" width="400"><br/>
 
 ---
 
@@ -153,6 +155,7 @@
 
 <br/>
 <br/>
+
 # GIT, JIRA Convention
 
 # GIT Branch Convention
