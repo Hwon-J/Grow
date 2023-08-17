@@ -48,8 +48,9 @@ const Home = () => {
           <HomeBackground />
         <NavTop className="homenav" />
           <div className="home-main-text">  
-            <h1 style={{fontSize:"60px", fontWeight:"bold"}}>Find friend for your kids</h1>
-            <h4 style={{fontSize:"30px"}}>This service makes plant friends for your children</h4>
+            <h1 style={{fontSize:"60px", fontWeight:"bold"}}>아이에게 식물을 선물해 보세요</h1>
+            <h4 style={{fontSize:"30px"}}>대화하는 식물 친구와 함께하는 특별한 시간, 대화하는 재미를</h4>
+            <h4 style={{fontSize:"30px"}}>아이의 일상에 가득 채워 보세요</h4>
 
           </div>
           <img src="./footer/down2.png" className="aligned-image" />
