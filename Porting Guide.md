@@ -52,4 +52,37 @@
 API_KEY = "sk-..."
 ```
 
+### 실행방법
+1. ChatGPT_Server 폴더로 들어간다.
+2. npm install을 터미널에 친다(첫 실행시에만 하면 됨)
+3. node app.js로 실행시킨다.
+
+## BackEnd_Server
+### .env 파일
+- ChatGPT_Server의 .env 파일과 역할은 같지만, 들어가는 내용에 다소 차이가 있음
+#### 포함되어야 하는 요소들
+- PORT = 30001
+- DB_HOST = 앞에서 설정한 호스트(예: "localhost", "127.0.0.1")
+- DB_USER = 앞에서 설정한 유저명(예: "root")
+- DB_PASSWORD = mariaDB 설치시에 설정한 해당 유저의 비밀번호
+- DB_NAME = "grow"
+- DB_PORT = DB가 사용하는 포트. 기본값은 3306
+- JWT_SECRET_KEY = JWT 암호화를 위한 무작위 스트링. (예: sUpErDuPeRmEgAsEcReTkEy)
+- AWS_REGION = 하단의 AWS S3 참고
+- AWS_ACCESS_KEY = 하단의 AWS S3 참고
+- AWS_SECRET_KEY = 하단의 AWS S3 참고
+- AWS_BUCKET = 하단의 AWS S3 참고
+
+### 실행방법
+1. BackEnd_Server 폴더로 들어간다.
+2. npm install을 터미널에 친다(첫 실행시에만 하면 됨)
+3. node server.js로 실행시킨다.
+
 ## AWS S3
+- 참고링크: https://inpa.tistory.com/entry/AWS-%F0%9F%93%9A-S3-%EB%B2%84%ED%82%B7-%EC%83%9D%EC%84%B1-%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%8B%A4%EC%A0%84-%EA%B5%AC%EC%B6%95
+### AWS 회원가입
+- 해외 결제가 가능한 카드가 필요하다.
+- 과정은 하단의 링크를 참고할 것
+    - https://goddaehee.tistory.com/315
+
+### 
