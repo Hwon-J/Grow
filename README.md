@@ -1,7 +1,7 @@
 <img src="readmefile/home1.PNG">  
 <img src="readmefile/home2.PNG">
 
-# 속닥속닥 식물친구 , Grow <img src="readmefile/logo.PNG" alt="Grow 로고" width="30" height="30" />
+# 속닥속닥 식물친구 , Grow <img src="readmefile/logo.png" alt="Grow 로고" width="30" height="30" />
 
 ---
 
@@ -97,35 +97,6 @@
   - DB구축을 위해 사용
   - 관계형 데이터베이스로, mysql과 같은 문법을 사용하여 쉽게 사용할 수 있음
 
-## 기술 스택
-
-<div align=center><h1>📚 STACKS</h1></div>
-
-<div align=center> 
-  <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"> 
-  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <br>
-  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
-  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
-  
-  <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
-  
-  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <br>
-<img src="https://img.shields.io/badge/redux-#764ABC?style=for-the-badge&logo=redux&logoColor=white">
-  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
-
-
-  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
-  
-  <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
-  <img src="https://img.shields.io/badge/mui-#007FFF?style=for-the-badge&logo=mui&logoColor=white"><br>
-
-  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"> 
-
-<img src="https://img.shields.io/badge/Jira-#0052CC?style=for-the-badge&logo=Jira&logoColor=white">
-<img src="https://img.shields.io/badge/GitLab-#FC6D26?style=for-the-badge&logo=GitLab&logoColor=white"><br>
-<img src="https://img.shields.io/badge/mattermost-#0058CC?style=for-the-badge&logo=mattermost&logoColor=white">
-  <br>
-</div>
 
 ### 4️ :four_leaf_clover: 아키텍처
 
