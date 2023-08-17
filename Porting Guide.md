@@ -90,9 +90,9 @@ API_KEY = "sk-..."
 1. https://s3.console.aws.amazon.com/s3/buckets 로 들어간다
 2. "버킷 만들기"를 누른다.
 3. 버킷 이름을 정해주고, 리전을 "아시아 태평양(서울) ap-northeast-2"를 선택한다. 객체 소유권은 비활성화를 선택한다.
-![버켓1](Docs_images\s3-01.PNG)
+![버켓1](Docs_images/s3-01.PNG)
 4. "이 버킷의 퍼블릭 엑세스 차단 설정"은 이하와 같이 설정한다. 아래의 "현재 설정으로 인해~~"에도 체크해준다.
-![버켓2](Docs_images\s3-02.PNG)
+![버켓2](Docs_images/s3-02.PNG)
 5. 나머지 설정은 기본으로 하여 만들기를 하면 끝
 
 ### IAM 
@@ -105,40 +105,40 @@ API_KEY = "sk-..."
 #### 사용자 생성
 1. https://us-east-1.console.aws.amazon.com/iamv2/home#/home 로 들어간다.
 2. 사용자 밑의 숫자를 누른다.
-![버켓3](Docs_images\s3-03.PNG)
+![버켓3](Docs_images/s3-03.PNG)
 3. "사용자 생성"을 누른다. 
 4. 사용자의 이름을 지어주고 다음으로 넘어간다.
 5. "직접 정책 연결"을 선택하고, 검색창에 S3를 입력하여 나온 결과를 확인한다. 백엔드 용이라면 "AmazonS3ReadOnlyAccess"를, 웹소켓 용이라면 "AmazonS3FullAccess"를 선택(좌측의 체크박스 선택)한다. 만약 계정 하나만 만들 거라면 웹소켓용 하나만으로 사용해도 좋다.
-![버켓4](Docs_images\s3-04.PNG)
+![버켓4](./Docs_images/s3-04.PNG)
 6. 나머지는 기본으로 하고 생성을 완료 한다.
 
 #### 엑세스 키 생성
 1. 앞에서 만든 사용자를 누른다.
-![버켓5](Docs_images\s3-05.PNG)
+![버켓5](./Docs_images/s3-05.PNG)
 2. 보안 자격증명 -> 엑세스 키 만들기를 누른다.
-![버켓6](Docs_images\s3-06.PNG)
+![버켓6](Docs_images/s3-06.PNG)
 3. 엑세스 키 모법 사례 및 대안에서 사례를 선택한다. AWS 상에 서버를 구축했다면 "AWS 컴퓨팅 서비스에서 실행되는 애플리케이션"을 선택한다.
-![버켓7](Docs_images\s3-07.PNG)
+![버켓7](Docs_images/s3-07.PNG)
 4. 선택 후 "위의 권장 사항을 이해했으며 엑세스 키 생성을 계속하려고 합니다"에 체크하고 다음을 누른다.
-![버켓8](Docs_images\s3-08.PNG)
+![버켓8](Docs_images/s3-08.PNG)
 5. 엑세스키의 설명을 지어준 뒤 "엑세스 키 만들기"를 누른다. 한글은 쓸 수 없다.
-![버켓9](Docs_images\s3-09.PNG)
+![버켓9](Docs_images/s3-09.PNG)
 6. 엑세스 키와 비밀 엑세스 키를 저장해둔다. 엑세스 키는 여기서만 조회가 가능하고, 이후 어떠한 방법으로도 다시 조회할 수 없으므로, 키를 잊어버렸다면 IAM 사용자를 다시 만들어야 하므로 주의.
-![버켓10](Docs_images\s3-10.PNG)
+![버켓10](Docs_images/s3-10.PNG)
 7. 6에서 얻은 두 엑세스 키를 .env에 넣는다
 
 #### 버킷 정책 만들기
 1. http://awspolicygen.s3.amazonaws.com/policygen.html 에 들어간다.
 2. 표시된 부분을 입력한다. principal은 "*", Actions는 "GetObject"와 PutObject 두개를 고르고, ARN은 해당 버켓 페이지 -> 속성에서 확인 가능한 값 뒤에 "/\*"를 붙인다. (예: arn:aws:s3:::grow-test-bucket -> arn:aws:s3:::grow-test-bucket/\*)
-![버켓12](Docs_images\s3-12.PNG)
+![버켓12](Docs_images/s3-12.PNG)
 3. Add Statement를 누른 뒤, 하단의 Generate Policy를 누른다.
 4. 새로 뜬 창의 내용을 복사해둔다.
 5. 방금 만든 버켓으로 들어가 권한 탭-> 버킷 정책->편집을 누른다.
-![버켓13](Docs_images\s3-13.PNG)
+![버켓13](Docs_images/s3-13.PNG)
 6. 방금 복사한 내용을 붙여넣기 하고 변경사항 저장을 누른다.
 7. 버킷 페이지에서 권한탭->"퍼블릭 엑세스 차단(버킷 설정)"->편집을 누른다.
 8. 아래 사진같이 설정하고 변경사항 저장을 한다.
-![버켓14](Docs_images\s3-14.PNG)
+![버켓14](Docs_images/s3-14.PNG)
 
 
 #### 환경 변수
@@ -146,4 +146,4 @@ API_KEY = "sk-..."
 - AWS_ACCESS_KEY = 위에서 얻은 두 엑세스 키 중에서 "엑세스 키"의 문자열
 - AWS_SECRET_KEY = 위에서 얻은 두 엑세스 키 중에서 "비밀 엑세스 키"의 문자열
 - AWS_BUCKET = 버킷을 만들 때 지어준 이름. 버킷에 들어가서 "속성"탭에서도 확인 할 수 있다.
-![버켓11](Docs_images\s3-11.PNG)
+![버켓11](Docs_images/s3-11.PNG)
