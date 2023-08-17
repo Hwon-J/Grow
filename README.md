@@ -1,8 +1,7 @@
 <img src="readmefile/home1.PNG">  
-<img src="readmefile/home2.PNG">  
+<img src="readmefile/home2.PNG">
 
-#  속닥속닥 식물친구 , Grow <img src="./readmefile/logo.PNG" alt="Grow 로고" width="30" height="30" />
-
+# 속닥속닥 식물친구 , Grow <img src="readmefile/logo.PNG" alt="Grow 로고" width="30" height="30" />
 
 ---
 
@@ -11,30 +10,30 @@
 :four_leaf_clover: **개발 기간**
 
 | 개발기간 | 2023.07.10 ~ 2023.08.18 (6주) |
-| --- | --- |
+| -------- | ----------------------------- |
 
 :four_leaf_clover: **팀원 소개**
 
-| 팀원 | 역할 |
-| --- | --- |
-| 용효창 | 팀장, IoT , 배포 |
+| 팀원   | 역할                  |
+| ------ | --------------------- |
+| 용효창 | 팀장, IoT , 배포      |
 | 강신욱 | BE, DB, websocket, AI |
-| 김민국 | display, websocket |
-| 김태형 | FE, 디자인 |
-| 박성민 | Iot, TTS |
-| 장혜원 | FE, 디자인 |
+| 김민국 | display, websocket    |
+| 김태형 | FE, 디자인            |
+| 박성민 | Iot, TTS              |
+| 장혜원 | FE, 디자인            |
 
 :four_leaf_clover: **기획 의도**
 
 | 코로나 이후 국내 홈가드닝 시장의 성장과 2023년 식물재매 시장 5000억원 규모 예상 |
-| --- |
-| 전국 지자체에서 반려식물 활성화 사업 진행중 |
-| 아이의 정서교감 및 안정을 심어주기 위해서 |
+| ------------------------------------------------------------------------------- |
+| 전국 지자체에서 반려식물 활성화 사업 진행중                                     |
+| 아이의 정서교감 및 안정을 심어주기 위해서                                       |
 
 :four_leaf_clover: **목표**
 
-|  Grow 서비스를 통해서 아이의 정서 발달을 도움 |
-|  부모가 아이를 더욱 잘 이해할 수 있도록 도움을 주는 소통창구 역할 |
+| Grow 서비스를 통해서 아이의 정서 발달을 도움 |
+| 부모가 아이를 더욱 잘 이해할 수 있도록 도움을 주는 소통창구 역할 |
 | --- |
 
 ---
@@ -47,10 +46,10 @@
 :four_leaf_clover: **대표기능**
 
 - 아이와 식물과의 실시간 대화기능 :speaker:
-- 부모의 질문지 등록  :thought_balloon:
-- 대화중 질문지에 등록된 질문을 실행 후 대답을 부모가 들을 수 있음  :ear:
+- 부모의 질문지 등록 :thought_balloon:
+- 대화중 질문지에 등록된 질문을 실행 후 대답을 부모가 들을 수 있음 :ear:
 - 수분, 조도 센서로 식물 관리
-<br/>
+  <br/>
 
 :four_leaf_clover: **메인기술**
 
@@ -60,54 +59,81 @@
 - 클로바 API 선택 : 다양한 어린이 음성을 사용하기 위해서
 - 초음파 센서로 거리 감지 후 저장
 
-## TTS 
+## TTS
 
-- 
-- 
+-
+-
 
 ## GPT
 
 <hr/>
 
-
-
 ### 3️ :four_leaf_clover: 주요 기술 스택
 
-- ***AWS S3***
-    - AWS에서 제공하는 파일 저장과 전송에 특화된 서버
-    - 이후 백엔드 서버에서 파일의 이름으로 요청을 보내면 그 파일에 해당하는 URL을 반환하며, 백엔드는 그 URL을 프론트로 전송
-- ***OPEN AI Chat API***
-    - OpenAI사에서 제공하는 챗봇 API
-    - 아이와의 대화를 구현하기 위해 사용하여 상황에 맞는 말을 생성
-    - 센서 데이터를 포함한 데이터를 전송받아 식물의 상황에 맞는 대화가 가능함
-- ***web Socket***
-    - 실시간 센서 데이터 iot, 백앤드 전송
-    - 실시간 센서테이터 백앤드 , 디스플레이 전송
-    - web Socket 두개를 통해서 iot, 백앤드 , 프론트의 유기적인 데이터 전송 
-- ***React***
-    - 다양한 라이브러리와의 호환성 , 컴포넌트 기반의 가독성 높기 떄문에 선택
-    - RESTful, axios를 통한 백엔드와의 데이터 전송방식 선택
-    - bootstrap, mui, scss등 다양한 css방식 사용
-- ***Redux-toolkit***
-    - 상태를 더욱 쉽게 예측가능하게 하기 위해서 도입
-    - Redux-toolkit으로 데이터 store에 저장 후 사용
-- ***Node.js***
-    - 백엔드 구축을 위해 사용
-    - 웹소켓 백엔드 서버와 REST API 백엔드 서버에 모두 사용
-- ***MariaDB***
-    - DB구축을 위해 사용
-    - 관계형 데이터베이스로, mysql과 같은 문법을 사용하여 쉽게 사용할 수 있음
-    
+## 주요 기술
+
+- **_AWS S3_**
+  - AWS에서 제공하는 파일 저장과 전송에 특화된 서버
+  - 이후 백엔드 서버에서 파일의 이름으로 요청을 보내면 그 파일에 해당하는 URL을 반환하며, 백엔드는 그 URL을 프론트로 전송
+- **_OPEN AI Chat API_**
+  - OpenAI사에서 제공하는 챗봇 API
+  - 아이와의 대화를 구현하기 위해 사용하여 상황에 맞는 말을 생성
+  - 센서 데이터를 포함한 데이터를 전송받아 식물의 상황에 맞는 대화가 가능함
+- **_web Socket_**
+  - 실시간 센서 데이터 iot, 백앤드 전송
+  - 실시간 센서테이터 백앤드 , 디스플레이 전송
+  - web Socket 두개를 통해서 iot, 백앤드 , 프론트의 유기적인 데이터 전송
+- **_React_**
+  - 다양한 라이브러리와의 호환성 , 컴포넌트 기반의 가독성 높기 떄문에 선택
+  - RESTful, axios를 통한 백엔드와의 데이터 전송방식 선택
+  - bootstrap, mui, scss등 다양한 css방식 사용
+- **_Redux-toolkit_**
+  - 상태를 더욱 쉽게 예측가능하게 하기 위해서 도입
+  - Redux-toolkit으로 데이터 store에 저장 후 사용
+- **_Node.js_**
+  - 백엔드 구축을 위해 사용
+  - 웹소켓 백엔드 서버와 REST API 백엔드 서버에 모두 사용
+- **_MariaDB_**
+  - DB구축을 위해 사용
+  - 관계형 데이터베이스로, mysql과 같은 문법을 사용하여 쉽게 사용할 수 있음
+
+## 기술 스택
+
+<div align=center><h1>📚 STACKS</h1></div>
+
+<div align=center> 
+  <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"> 
+  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <br>
+  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
+  
+  <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
+  
+  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <br>
+<img src="https://img.shields.io/badge/redux-#764ABC?style=for-the-badge&logo=redux&logoColor=white">
+  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
 
 
+  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
+  
+  <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
+  <img src="https://img.shields.io/badge/mui-#007FFF?style=for-the-badge&logo=mui&logoColor=white"><br>
+
+  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"> 
+
+<img src="https://img.shields.io/badge/Jira-#0052CC?style=for-the-badge&logo=Jira&logoColor=white">
+<img src="https://img.shields.io/badge/GitLab-#FC6D26?style=for-the-badge&logo=GitLab&logoColor=white"><br>
+<img src="https://img.shields.io/badge/mattermost-#0058CC?style=for-the-badge&logo=mattermost&logoColor=white">
+  <br>
+</div>
 
 ### 4️ :four_leaf_clover: 아키텍처
-<img src="">  <br/>
 
-### 5 :four_leaf_clover: API 명세서 
-<img src="readmefile/API.PNG" width="70%">  <br/>
+<img src=""> <br/>
 
+### 5 :four_leaf_clover: API 명세서
 
+<img src="readmefile/API.PNG" width="70%"> <br/>
 
 ---
 
@@ -122,19 +148,15 @@
     2. 완료된 식물 리스트 확인
 <br/>
 
-- 식물 등록
-    1. 새 식물등록하기 버튼으로 식물등록 페이지 이동
-<img src="readmefile/detail2.PNG" width="80%"><br/>
+- 식물 등록 1. 새 식물등록하기 버튼으로 식물등록 페이지 이동
+  <img src="readmefile/detail2.PNG" width="80%"><br/>
 
 - 식물 상세보기
-<img src="readmefile/info.PNG" width="80%">
-    1. 식물의 물 준 데이터 저장
-    2. 질문지 등록
-    3. 질문의 답 음성 듣기
-    4. 식물 완료 처리
-<br/>
+  <img src="readmefile/info.PNG" width="80%"><br/> 1. 식물의 물 준 데이터 저장 2. 질문지 등록 3. 질문의 답 음성 듣기 4. 식물 완료 처리
+  <br/>
 
 ---
+
 <hr/>
 
 :four_leaf_clover: **디스플레이 설명**
@@ -155,11 +177,8 @@
 
 ### 7 :four_leaf_clover: 기대효과
 
-## 식물 키우기를 통한 아이의 정서발당
-## 부모가 자녀를 이해하도록 돕는 도구
-
-
-
+- 식물 키우기를 통한 아이의 정서발당
+- 부모가 자녀를 이해하도록 돕는 도구
 
 <br/>
 <br/>
@@ -261,6 +280,7 @@ footer;
 # CODE Convention
 
 - JS
+
   - Camel Case : 함수는 두 단어 이상
   - 주석은 최대한 자세히
   - tab은 2칸
@@ -273,11 +293,9 @@ footer;
   - 함수명은 소문자로 구성하되 필요하면 밑줄로 나눕니다.
 
 # port
+
 - ChatGPT server : 30002
 - backend server : 30001
 - DB server : 3306
 - display : 3000
 - front server : 3001
-
-
-
