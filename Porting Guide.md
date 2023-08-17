@@ -16,7 +16,90 @@
 5. `source [실행할 SQL 파일의 절대 경로];`를 친다.
 
 ## 도커
+1. 도커 설치(https://wooono.tistory.com/10)
+2. git clone https://lab.ssafy.com/s09-webmobile3-sub2/S09P12C103.git
 
+#### ChatGPT_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+ cd ChatGPT_Server/
+docker stop docker-gptserver-demo-container || true
+docker rm docker-gptserver-demo-container || true
+docker build -t docker-gptserver-demo . 
+docker run -p 30002:30002 -d --name docker-gptserver-demo-container \
+-e API_KEY={하단의 ChatGPT 참고} \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=30002 \
+-e RANDOM_MAX={부모님의 질문이 붙을 대화 수의 최댓값. 숫자를 쓸 것} \
+-e RANDOM_MIN={부모님의 질문이 붙을 대화 수의 최솟값. 숫자를 쓸 것} \
+-e AWS_REGION={하단의 AWS S3 참고} \
+-e AWS_ACCESS_KEY={하단의 AWS S3 참고} \
+-e AWS_SECRET_KEY={하단의 AWS S3 참고} \
+-e AWS_BUCKET={하단의 AWS S3 참고} \
+docker-gptserver-demo
+```
+
+#### BackEnd_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd BackEnd_Server/
+docker build -t docker-backendserver-demo . 
+docker stop docker-backendserver-demo-container || true
+docker rm docker-backendserver-demo-container || true
+docker run -p 30001:30001 -d --name docker-backendserver-demo-container \
+-e API_KEY={하단의 ChatGPT 참고} \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=30001 \
+-e JWT_SECRET_KEY={JWT 암호화를 위한 무작위 스트링. (예: sUpErDuPeRmEgAsEcReTkEy)} \
+-e RANDOM_MAX={부모님의 질문이 붙을 대화 수의 최댓값. 숫자를 쓸 것} \
+-e RANDOM_MIN={부모님의 질문이 붙을 대화 수의 최솟값. 숫자를 쓸 것} \
+-e AWS_REGION={하단의 AWS S3 참고} \
+-e AWS_ACCESS_KEY={하단의 AWS S3 참고} \
+-e AWS_SECRET_KEY={하단의 AWS S3 참고} \
+-e AWS_BUCKET={하단의 AWS S3 참고} \
+docker-backendserver-demo
+```
+
+#### FrontEnd_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd FrontEnd_Server/
+docker build -t docker-frontendserver-demo . 
+docker stop docker-frontendserver-demo-container || true
+docker rm docker-frontendserver-demo-container || true
+docker run -p 3001:3001 -d --name docker-frontendserver-demo-container \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=3001 \
+docker-frontendserver-demo
+```
+#### Display_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd display/display/
+docker build -t docker-displayserver-demo . 
+docker stop docker-displayserver-demo-container || true
+docker rm docker-displayserver-demo-container || true
+docker run -p 3000:3000 -d --name docker-displayserver-demo-container \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=3000 \
+docker-displayserver-demo
+```
 ## AWS EC2
 
 ## 젠킨스
@@ -80,9 +163,70 @@ API_KEY = "sk-..."
 
 ## AWS S3
 - 참고링크: https://inpa.tistory.com/entry/AWS-%F0%9F%93%9A-S3-%EB%B2%84%ED%82%B7-%EC%83%9D%EC%84%B1-%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%8B%A4%EC%A0%84-%EA%B5%AC%EC%B6%95
+- IAM 참고 링크: https://velog.io/@chrkb1569/AWS-S3-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-IAM-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%84%A4%EC%A0%95
 ### AWS 회원가입
 - 해외 결제가 가능한 카드가 필요하다.
 - 과정은 하단의 링크를 참고할 것
     - https://goddaehee.tistory.com/315
 
-### 
+### S3 Bucket 만들기
+1. https://s3.console.aws.amazon.com/s3/buckets 로 들어간다
+2. "버킷 만들기"를 누른다.
+3. 버킷 이름을 정해주고, 리전을 "아시아 태평양(서울) ap-northeast-2"를 선택한다. 객체 소유권은 비활성화를 선택한다.
+![버켓1](Docs_images/s3-01.PNG)
+4. "이 버킷의 퍼블릭 엑세스 차단 설정"은 이하와 같이 설정한다. 아래의 "현재 설정으로 인해~~"에도 체크해준다.
+![버켓2](Docs_images/s3-02.PNG)
+5. 나머지 설정은 기본으로 하여 만들기를 하면 끝
+
+### IAM 
+- IAM이란 AWS 서버에 엑세스 키로 접근할 수 있는 사용자이다.
+- AWS 서버에 직접 접근하는 것은 위험할 수 있으므로, 한정된 권한을 부여한 IAM을 통해 접근하는 것이 권장된다.
+- 2개의 IAM을 만들어야 한다. 하나는 백엔드에서 파일을 가져오기 위한 IAM이고, 다른 하나는 웹소켓 서버에서 파일을 업로드 하기 위한 서버이다.
+- 따라서 이하의 과정을 사용자 생성과 엑세스 키 생성을 각각 2번씩 반복해야한다.
+    - 만약 보안에 크게 신경쓰지 않는다면 하나만 가지고 진행해도 좋다.
+
+#### 사용자 생성
+1. https://us-east-1.console.aws.amazon.com/iamv2/home#/home 로 들어간다.
+2. 사용자 밑의 숫자를 누른다.
+![버켓3](Docs_images/s3-03.PNG)
+3. "사용자 생성"을 누른다. 
+4. 사용자의 이름을 지어주고 다음으로 넘어간다.
+5. "직접 정책 연결"을 선택하고, 검색창에 S3를 입력하여 나온 결과를 확인한다. 백엔드 용이라면 "AmazonS3ReadOnlyAccess"를, 웹소켓 용이라면 "AmazonS3FullAccess"를 선택(좌측의 체크박스 선택)한다. 만약 계정 하나만 만들 거라면 웹소켓용 하나만으로 사용해도 좋다.
+![버켓4](./Docs_images/s3-04.PNG)
+6. 나머지는 기본으로 하고 생성을 완료 한다.
+
+#### 엑세스 키 생성
+1. 앞에서 만든 사용자를 누른다.
+![버켓5](./Docs_images/s3-05.PNG)
+2. 보안 자격증명 -> 엑세스 키 만들기를 누른다.
+![버켓6](Docs_images/s3-06.PNG)
+3. 엑세스 키 모법 사례 및 대안에서 사례를 선택한다. AWS 상에 서버를 구축했다면 "AWS 컴퓨팅 서비스에서 실행되는 애플리케이션"을 선택한다.
+![버켓7](Docs_images/s3-07.PNG)
+4. 선택 후 "위의 권장 사항을 이해했으며 엑세스 키 생성을 계속하려고 합니다"에 체크하고 다음을 누른다.
+![버켓8](Docs_images/s3-08.PNG)
+5. 엑세스키의 설명을 지어준 뒤 "엑세스 키 만들기"를 누른다. 한글은 쓸 수 없다.
+![버켓9](Docs_images/s3-09.PNG)
+6. 엑세스 키와 비밀 엑세스 키를 저장해둔다. 엑세스 키는 여기서만 조회가 가능하고, 이후 어떠한 방법으로도 다시 조회할 수 없으므로, 키를 잊어버렸다면 IAM 사용자를 다시 만들어야 하므로 주의.
+![버켓10](Docs_images/s3-10.PNG)
+7. 6에서 얻은 두 엑세스 키를 .env에 넣는다
+
+#### 버킷 정책 만들기
+1. http://awspolicygen.s3.amazonaws.com/policygen.html 에 들어간다.
+2. 표시된 부분을 입력한다. principal은 "*", Actions는 "GetObject"와 PutObject 두개를 고르고, ARN은 해당 버켓 페이지 -> 속성에서 확인 가능한 값 뒤에 "/\*"를 붙인다. (예: arn:aws:s3:::grow-test-bucket -> arn:aws:s3:::grow-test-bucket/\*)
+![버켓12](Docs_images/s3-12.PNG)
+3. Add Statement를 누른 뒤, 하단의 Generate Policy를 누른다.
+4. 새로 뜬 창의 내용을 복사해둔다.
+5. 방금 만든 버켓으로 들어가 권한 탭-> 버킷 정책->편집을 누른다.
+![버켓13](Docs_images/s3-13.PNG)
+6. 방금 복사한 내용을 붙여넣기 하고 변경사항 저장을 누른다.
+7. 버킷 페이지에서 권한탭->"퍼블릭 엑세스 차단(버킷 설정)"->편집을 누른다.
+8. 아래 사진같이 설정하고 변경사항 저장을 한다.
+![버켓14](Docs_images/s3-14.PNG)
+
+
+#### 환경 변수
+- AWS_REGION = 버킷을 만들때 정한 지역. 메뉴얼대로 했다면 "ap-northeast-2"이다.
+- AWS_ACCESS_KEY = 위에서 얻은 두 엑세스 키 중에서 "엑세스 키"의 문자열
+- AWS_SECRET_KEY = 위에서 얻은 두 엑세스 키 중에서 "비밀 엑세스 키"의 문자열
+- AWS_BUCKET = 버킷을 만들 때 지어준 이름. 버킷에 들어가서 "속성"탭에서도 확인 할 수 있다.
+![버켓11](Docs_images/s3-11.PNG)
