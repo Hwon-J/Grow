@@ -16,12 +16,91 @@
 5. `source [실행할 SQL 파일의 절대 경로];`를 친다.
 
 ## 도커
+1. 도커 설치(https://wooono.tistory.com/10)
+2. git clone https://lab.ssafy.com/s09-webmobile3-sub2/S09P12C103.git
 
-## AWS EC2
+#### ChatGPT_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+ cd ChatGPT_Server/
+docker stop docker-gptserver-demo-container || true
+docker rm docker-gptserver-demo-container || true
+docker build -t docker-gptserver-demo . 
+docker run -p 30002:30002 -d --name docker-gptserver-demo-container \
+-e API_KEY={하단의 ChatGPT 참고} \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=30002 \
+-e RANDOM_MAX={부모님의 질문이 붙을 대화 수의 최댓값. 숫자를 쓸 것} \
+-e RANDOM_MIN={부모님의 질문이 붙을 대화 수의 최솟값. 숫자를 쓸 것} \
+-e AWS_REGION={하단의 AWS S3 참고} \
+-e AWS_ACCESS_KEY={하단의 AWS S3 참고} \
+-e AWS_SECRET_KEY={하단의 AWS S3 참고} \
+-e AWS_BUCKET={하단의 AWS S3 참고} \
+docker-gptserver-demo
+```
 
-## 젠킨스
+#### BackEnd_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd BackEnd_Server/
+docker build -t docker-backendserver-demo . 
+docker stop docker-backendserver-demo-container || true
+docker rm docker-backendserver-demo-container || true
+docker run -p 30001:30001 -d --name docker-backendserver-demo-container \
+-e API_KEY={하단의 ChatGPT 참고} \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=30001 \
+-e JWT_SECRET_KEY={JWT 암호화를 위한 무작위 스트링. (예: sUpErDuPeRmEgAsEcReTkEy)} \
+-e RANDOM_MAX={부모님의 질문이 붙을 대화 수의 최댓값. 숫자를 쓸 것} \
+-e RANDOM_MIN={부모님의 질문이 붙을 대화 수의 최솟값. 숫자를 쓸 것} \
+-e AWS_REGION={하단의 AWS S3 참고} \
+-e AWS_ACCESS_KEY={하단의 AWS S3 참고} \
+-e AWS_SECRET_KEY={하단의 AWS S3 참고} \
+-e AWS_BUCKET={하단의 AWS S3 참고} \
+docker-backendserver-demo
+```
 
-## nginx
+#### FrontEnd_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd FrontEnd_Server/
+docker build -t docker-frontendserver-demo . 
+docker stop docker-frontendserver-demo-container || true
+docker rm docker-frontendserver-demo-container || true
+docker run -p 3001:3001 -d --name docker-frontendserver-demo-container \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=3001 \
+docker-frontendserver-demo
+```
+#### Display_Server
+ - 아래의 명령어를 사용하여 도커 이미지 빌드, 실행
+ ```
+cd display/display/
+docker build -t docker-displayserver-demo . 
+docker stop docker-displayserver-demo-container || true
+docker rm docker-displayserver-demo-container || true
+docker run -p 3000:3000 -d --name docker-displayserver-demo-container \
+-e DB_HOST={앞에서 설정한 호스트(예: "localhost", "127.0.0.1")} \
+-e DB_USER={앞에서 설정한 유저명(예: "root")} \
+-e DB_PASSWORD={mariaDB 설치시에 설정한 해당 유저의 비밀번호} \
+-e DB_NAME=grow \
+-e DB_PORT={DB가 사용하는 포트. 기본값은 3306} \
+-e PORT=3000 \
+docker-displayserver-demo
+```
+
 
 ## ChatGPT_Server
 ### .env 파일

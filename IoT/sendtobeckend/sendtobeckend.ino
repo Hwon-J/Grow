@@ -17,9 +17,11 @@ void setup() {
 }
 
 void loop() {
-  soilMoistureValue = analogRead(A0);  //put Sensor insert into soil
-  CDS = analogRead(Ai1);
-  float h = dht.readHumdity();
+  float val1=analogRead(A0);
+  float val2=analogRead(A3);
+  float soilMoistureValue = (val1+val2)/2;  //put Sensor insert into soil
+  CDS = analogRead(A1);
+  float h = dht.readHumidity();
   float t = dht.readTemperature();
   Serial.print(soilMoistureValue);
   Serial.print(' ');
