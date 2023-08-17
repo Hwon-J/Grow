@@ -1,7 +1,7 @@
 <img src="readmefile/home1.PNG">  
 <img src="readmefile/home2.PNG">  
 
-#  속닥속닥 식물친구 , Grow 🌕
+#  속닥속닥 식물친구 , Grow <img src="./readmefile/logo.PNG" alt="Grow 로고" width="30" height="30" />
 
 
 ---
@@ -41,11 +41,14 @@
 
 ### 2️ :four_leaf_clover: 서비스 기능 소개
 
+:moyai: **대표기기**
+<img src="./readmefile/tech.PNG" alt="Grow 로고" width="30" height="30" />
+
 :four_leaf_clover: **대표기능**
 
-- 아이와 식물과의 실시간 대화기능
-- 부모의 질문지 등록
-- 대화중 질문지에 등록된 질문을 실행 후 대답을 부모가 들을 수 있음
+- 아이와 식물과의 실시간 대화기능 :speaker:
+- 부모의 질문지 등록  :thought_balloon:
+- 대화중 질문지에 등록된 질문을 실행 후 대답을 부모가 들을 수 있음  :ear:
 - 수분, 조도 센서로 식물 관리
 <br/>
 
@@ -68,7 +71,7 @@
 
 
 
-### 3️ :four_leaf_clover: 기술 스택
+### 3️ :four_leaf_clover: 주요 기술 스택
 
 - ***AWS S3***
     - AWS에서 제공하는 파일 저장과 전송에 특화된 서버
@@ -99,30 +102,37 @@
 
 
 ### 4️ :four_leaf_clover: 아키텍처
-<img src="">  
+<img src="">  <br/>
 
 ### 5 :four_leaf_clover: API 명세서 
-<img src="readmefile/API.PNG">  
+<img src="readmefile/API.PNG" width="70%">  <br/>
 
 
 
 ---
 
-### 5️ :four_leaf_clover: 서비스 화면
+### 6 :four_leaf_clover: 서비스 화면
 
 :four_leaf_clover: **웹페이지 설명**
 
 - 식물 목록 확인
 
-<img src="readmefile/detail1.PNG" width="300">
+<img src="readmefile/detail1.PNG" width="80%">
+    1. 키우는 식물 리스트 확인
+    2. 완료된 식물 리스트 확인
+<br/>
 
 - 식물 등록
+    1. 새 식물등록하기 버튼으로 식물등록 페이지 이동
+<img src="readmefile/detail2.PNG" width="80%"><br/>
 
-<img src="readmefile/detail2.PNG" width="300">
-
-- 식물 상세보기(식물의 물 준 데이터 저장, 질문지 등록, 질문의 답 음성 듣기)
-
-<img src="readmefile/info.PNG" width="300">
+- 식물 상세보기
+<img src="readmefile/info.PNG" width="80%">
+    1. 식물의 물 준 데이터 저장
+    2. 질문지 등록
+    3. 질문의 답 음성 듣기
+    4. 식물 완료 처리
+<br/>
 
 ---
 <hr/>
@@ -131,30 +141,28 @@
 
 - 기본 페이지
 
-<img src="readmefile/display.PNG" width="300">
+<img src="readmefile/display.PNG" width="50%"><br/>
 
-- 식물의 물 줘야하는 표시 페이지
+- 식물의 물 부족 표시 페이지
 
-<img src="readmefile/water.PNG" width="300">
+<img src="readmefile/water.PNG" width="50%"><br/>
 
 - 식물과 아이의 대화
 
-<img src="./readmefile/talk.PNG" width="300">
+<img src="./readmefile/talk.PNG" width="50%"><br/>
 
 ---
 
-### 6️ :four_leaf_clover: 차별점
+### 7 :four_leaf_clover: 기대효과
 
-
----
-
-### 7️ :four_leaf_clover: 기능 개요
-
+## 식물 키우기를 통한 아이의 정서발당
+## 부모가 자녀를 이해하도록 돕는 도구
 
 
 
 
-
+<br/>
+<br/>
 # GIT, JIRA Convention
 
 # GIT Branch Convention
