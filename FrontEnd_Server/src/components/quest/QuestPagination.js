@@ -4,7 +4,9 @@
 const renderPagination = ({questList, currentPage, Icon, handlePageChange}) => {
     // 페이지당 질문 5개
     const itemsPerPage = 5;
-    const totalPages = Math.ceil(questList.length / itemsPerPage);
+    const totalPages = questList.length ? Math.ceil(questList.length / itemsPerPage) : 1;
+    console.log(totalPages, "토탈페이지")
+
 
     // 현재 페이지가 1이면 이전버튼 비활성화
     // 현재 페이지가 마지막 페이지면 다음버튼 비활성화
