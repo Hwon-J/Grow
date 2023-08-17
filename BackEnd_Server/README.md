@@ -1,6 +1,25 @@
 # BackEnd_Server 사용 설명서
-
 모든 응답은 json 형식입니다
+
+## 시작하기
+### 환경변수
+- .env 파일을 루트에 만들어야 합니다.
+- .env 파일에 들어가야 하는 환경변수는 이하와 같습니다(빈 값은 상황에 맞게 바꿀 것)
+```
+PORT = 30001
+DB_HOST = ""
+DB_USER = ""
+DB_PASSWORD = ""
+DB_NAME = "grow"
+DB_PORT = 3306
+
+JWT_SECRET_KEY = ""
+
+AWS_REGION = ap-northeast-2
+AWS_ACCESS_KEY = ""
+AWS_SECRET_KEY = ""
+AWS_BUCKET = ""
+```
 
 ## 회원 관련
 
@@ -316,9 +335,9 @@
 - 방식: GET
 - 서버IP: 기본URI/quest/:index/audio
 - 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
-- 응답:현재는 뭐든지 다 같은 음성파일을 전송중이니 주의
+- 응답:
   - 성공
-    - 요청처리 성공:요청한 wav 파일을 전송함. status는 200이지만, 별도의 json은 전송되지 않으니 주의! 
+    - 요청처리 성공:{ code: 200, message: 요청한 파일의 URL} 
     - 유효하지 않은 id 또는 index: { code: 202, message: "유효하지 않은 id 또는 index"}
   - 실패
     - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
