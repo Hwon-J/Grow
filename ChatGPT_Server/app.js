@@ -105,7 +105,7 @@ wss.on("connection", (ws, req) => {
               })
             );
           } else {
-            // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 강제로 끊는다.
+            // 핸드셰이크 과정에서 유효하지 않은 시리얼을 보냈다면 에러를 보낸다.
             // 등록되지 않은 시리얼인 경우
             if (result === "unregistered") {
               winston.info(
@@ -138,8 +138,6 @@ wss.on("connection", (ws, req) => {
                 })
               );
             }
-
-            ws.close();
             break;
           }
 
