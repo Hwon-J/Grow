@@ -100,11 +100,7 @@ docker run -p 3000:3000 -d --name docker-displayserver-demo-container \
 -e PORT=3000 \
 docker-displayserver-demo
 ```
-## AWS EC2
 
-## 젠킨스
-
-## nginx
 
 ## ChatGPT_Server
 ### .env 파일
