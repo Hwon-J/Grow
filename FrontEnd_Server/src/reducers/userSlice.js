@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../utils/Urls";
+
 //백앤드 기본 url 설정
 
 // const API_URL = 'http://192.168.100.37:30001';
@@ -32,7 +33,10 @@ export const loginUserAction = createAsyncThunk(
     console.log(loginData);
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/user/login`, loginData);
+      const response = await axios.post(
+        `${BASE_URL}/api/user/login`,
+        loginData
+      );
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -47,6 +51,9 @@ export const loginUserAction = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    name: "",
+    email: "",
+    emailDomain: "",
     token: "",
     status: "", // 상태 초기값 추가
     error: null, // 에러 초기값 추가
@@ -56,7 +63,10 @@ const userSlice = createSlice({
     logoutUser: (state) => {
       // 로그아웃 reducer의 logoutUser액션이 불려졌을때 초기값으로 만들어 주는 코드
       return {
-        token: "",
+        name: null,
+        email: null,
+        emailDomain: null,
+        token: null,
         status: "",
         error: null,
         isAuth: false,

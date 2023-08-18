@@ -2,205 +2,171 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BsPlusCircle } from "react-icons/bs";
 import axios from "axios";
 import "./questpage.scss";
+// 오디오 , 질문 , 랜더링 페이지 컴포넌트
+import AudioComponent from "./quest/audio";
+import QuestItem from "./quest/QuestItem";
+import  renderPagination  from "./quest/QuestPagination";
+
+// 오디오 js
+import { listenAudio } from "../utils/audio";
 import { BASE_URL } from "../utils/Urls";
 import { Icon } from "@iconify/react";
+import { reSwal } from "../utils/reSwal";
+import Swal from "sweetalert2";
 
 const QuestPage = () => {
-  const currentUser = useSelector((state) => state.currentUser); // 로그인되어있는지 확인
-  const authToken = currentUser.token; // 토큰 저장
-  // const [showIcon, setShowIcon] = useState(true); // 아이콘이 보이게 할지 말지 정하는 변수
-  const [focusedInputIndex, setFocusedInputIndex] = useState(null); // 어떤 input이 포커스 받는지 확인 변수
-  const [questList, setQuestList] = useState([]); // 질문지 리스트변수
-  const [newquest, setNewquest] = useState(""); // 새로운 질문지의 value
+  const currentUser = useSelector((state) => state.currentUser);
+  const authToken = currentUser.token;
+  const [questList, setQuestList] = useState([]);
+  const [newquest, setNewquest] = useState("");
   const { id } = useParams();
-  
-  useEffect(() => {
-    getQuest();
-    inputQuest();
-  }, []); // axios를 통해서 질문지 리스트 받을 useEffect
-
-  useEffect(() => {
-    inputQuest();
-  }, [questList]);
-  const onChangeNewquest = (e) => {
-    // 새로운 질문지 작성될떄마다 value값 변경
-    setNewquest(e.target.value);
-    console.log(e.target.value);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [checkComplete, setCheckComplete] = useState();
+  const [audioData, setAudioData] = useState(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioQuest, setAudioQuest] = useState(null);
+  // 헤더용 
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${authToken}`,
+    },
   };
-
-  const handleInputFocus = (index) => {
-    setFocusedInputIndex(index);
-  }; // input이 focus되는지 확인 , index저장
-
-  const handleInputBlur = () => {
-    // input의 focus를 잃었을때 발생
-    setFocusedInputIndex(null); // 어떤 input도 focus상태가 아니다
+  // 렌더링 할때 현재페이지 변경 메서드
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
-
-  // const handleIconClick = () => {
-  //   // icon을 클릭했을때
-  //   setShowIcon(false); // 안보이게 하기
-  // };
-
-  // const handleOutsideClick = () => {
-  //   // icon이외의 것을 클릭하였을때 다시보이게 하기
-  //   setShowIcon(true);
-  // };
-
-  const createQuest = () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authToken}`,
-      },
-    };
-    const body = {
-      quest: newquest,
-    };
-    if (newquest === "") {
-      alert("공백은 질문이 될 수 없습니다.");
-    } else {
-      console.log("여기까지오나");
-      axios
-        .post(`${BASE_URL}/api/plant/quest/${id}`, body, config)
-        .then((response) => {
-          console.log("New question successfully saved:", response.data);
-          getQuest();
-          setNewquest("");
-        })
-        .catch((error) => {
-          console.error("Error while saving the new question:", error);
-        });
-    }
-  };
-
-  const getQuest = async () => {
-    // 처음시작했을떄 질문지리스트 받을예정
-    console.log("id : " + id);
-    if (authToken) {
-      // 로그인 되어있을때
-      try {
-        const response = await axios.get(`${BASE_URL}/api/plant/quest/${id}`, {
-          headers: {
-            Authorization: `${authToken}`,
-          },
-        });
-        setQuestList(response.data.data);
-        console.log("질문받아오기");
-        console.log(questList);
-      } catch (err) {
-        console.log("에러가 발생", err);
+  //질문등록 메서드
+  const createQuest = async () => {
+    if (checkComplete === 0) { // 키우는 식물일 때 
+      if (!newquest) {        // 질문이 작성되지 않았으면 경고창
+        reSwal("warning", "공백은 질문이 될 수 없습니다");
+        return;
       }
+      try {   // 질문이 작성되었으면 axios요청으로 질문 보내고 
+        await axios.post(
+          `${BASE_URL}/api/plant/quest/${id}`,
+          { quest: newquest },
+          config
+        );
+        getQuest();  // 새롭게 질문 받아오기
+        setNewquest(""); // 질문지 input 초기화
+      } catch (error) {
+        console.error("Error while saving the new question:", error);
+      }
+    } else {   // 완료처리된 식물이면 질문 등록 막기
+      reSwal("warning", "완료된 식물은 질문을 등록할 수 없습니다");
     }
   };
-
-  const inputQuest = () => {
-    // questList의 각각의 index의 값들을 빼내서 input으로 만들기
-    // value는 해당 객체의 quest값
-    console.log(questList);
-    return questList
-      .slice()
-      .reverse()
-      .map((questItem, index) => (
-        <div key={index} className="quest-tm">
-          <div className="quest-left">
-            <p>{questItem.content}</p>
-            {questItem?.registered_date && (
-              <p style={{ display: "inline-block", marginRight: "5px" }}>
-                {questItem.registered_date.slice(0,10)}일 등록
-              </p>
-            )}
-          </div>
-          <div className="quest-right">
-          {questItem?.audio_file_path && <Icon icon="bi:bell" onClick={listenAudio} />}
-            <Icon icon="bi:trash3" onClick={() => deleteQuest(questItem.index)} />
-          </div>
-        </div>
-      ));
+  // 완료처리 버튼 눌렀을때 식물의 상태를 완료 처리
+  useEffect(() => {
+    getComplete();
+  }, []);
+  // 식물의 완료처리 메서드
+  const getComplete = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/plant/myplant/${id}`,
+        config
+      );
+      setCheckComplete(response.data.data[0].complete);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  //시작할 때 getQuest, getComplete실행
+  useEffect(() => {
+    getQuest(); 
+  }, []);
+  // 식물데이터 받아오는 메서드
+  const getQuest = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/plant/quest/${id}`,
+        config
+      );
+      setQuestList(response.data.data.reverse()); // 리스트에 받아온 데이터 최근에 등록된 순으로 넣기
+    } catch (error) {
+      console.error("Error while fetching quest list:", error);
+    }
+  };
+  // 질문 삭제 메서드
+  const deleteQuest = (questId) => {
+    Swal.fire({
+      icon: "warning",
+      text: "질문지를 삭제하시겠습니까",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      confirmButtonText: "확인",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
+          .then((response) => {
+            window.location.reload(); // 화면 새로고침
+          })
+          .catch((error) => {
+            console.error("Error", error);
+          });
+      }
+    });
   };
 
-  const listenAudio = () => {
-    
-  }
-
-
-  const deleteQuest = (questId) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authToken}`,
-      },
-    };
-
-    axios
-      .delete(`${BASE_URL}/api/plant/quest/${questId}/`, config)
-      .then((response) => {
-        console.log("삭제성공:", response.data);
-        // getQuest();
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  // 음성데이터 켜는 메서드 비동기
+  const handleListenAudio = async (questId) => {
+    console.log(questId+ '퀘스트 아이디')
+    try {
+      const url = await listenAudio(questId, BASE_URL, config); //올바르게 오면 음성데이터url오고 실패하면 null값이 옴
+      // console.log(url)
+      if (url) {  // url이 온다면 오디오 데이터에 넣어주고 플레잉변수 true로 바꿔주기
+        setAudioData(url);
+        setAudioPlaying(true);
+        setAudioQuest(questId);
+      }
+    } catch (error) {
+      console.error("Error while getting audio:", error);
+    }
   };
 
   return (
-    <>
-      <div className="quest-container">
-        <h1>아이에게 질문해 주세요!</h1>
-        <div className="input-container">
-          <input
-            type="text"
-            className="quest-input plus"
-            value={newquest}
-            onChange={onChangeNewquest}
-            onFocus={() => handleInputFocus(questList.length)}
-            onBlur={handleInputBlur}
-            placeholder="질문을 등록하세요"
-          />
-
-          <button className="btnQ" onClick={createQuest}>
-            등록
-          </button>
-        </div>
-
-        <div className="quest-section">
-          {inputQuest()}
-          {/* <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아??</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right">
-              <Icon icon="bi:bell" style={{ fontSize: '30px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px' }} />
-
-              </div>
-
-            </div>
-
-            <div className="quest-tm">
-
-              <div className="quest-left">
-              <div className="question">Q: 엄마가 좋아 아빠가 좋아?나나나나나나나난나나나ㅏ나나나나난나나나나</div>
-              <div className="resister_date">2023년 8월 6일</div>
-              </div>
-
-              <div className="quest-right" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Icon icon="bi:bell" style={{ fontSize: '30px', marginLeft: '5px' }} />                
-              <Icon icon="bi:trash3" style={{ fontSize: '30px', marginLeft: '5px' }} />
-
-              </div>
-
-            </div> */}
-        </div>
+    <div className="quest-container">
+      <h1>아이에게 질문해 주세요!</h1>
+      <div className="input-container">
+        <input
+          type="text"
+          className="quest-input plus"
+          value={newquest}
+          onChange={(e) => setNewquest(e.target.value)}
+          placeholder="아이에게 말하듯 질문해주세요"
+          onKeyPress={(e) => e.key === "Enter" && createQuest()}
+        />
+        <button className="btnQ" onClick={createQuest}>
+          등록
+        </button>
       </div>
-    </>
+      {/* 오디오 컴포넌트에 필요한 데이터 넣어서 보내기 */}
+      <AudioComponent audioUrl={audioData} setAudioUrl={setAudioData}/>
+      <div className="quest-section">
+        {/* 질문리스트를 한페이지당 5개로 설정, 질문아이템 questList에서 모두 뽑아내 만들기 */}
+        {questList
+          .slice((currentPage - 1) * 5, currentPage * 5)
+          .map((questItem, index) => (
+            <QuestItem
+              key={index}
+              questItem={questItem}
+              handleListenAudio={handleListenAudio}
+              deleteQuest={deleteQuest}
+              audioQuest={audioQuest}
+            />
+          ))}
+      </div>
+      <div className="center-pagination" style={{ marginTop: "35px" }}>
+        {/* 렌더링 처리용 컴포넌트 */}
+        {renderPagination({ questList, currentPage, Icon, handlePageChange })}
+      </div>
+    </div>
   );
 };
 

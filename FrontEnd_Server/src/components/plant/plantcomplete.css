@@ -1,0 +1,18 @@
+.complete_button{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgb(49, 96, 173)
+}
+.complete_button{
+  padding: 3px 10px;
+  border-radius: 5px; 
+  border: #fff solid 1px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  &:hover{
+    background-color: #ffffff;
+    color: #293e09;
+  }
+}

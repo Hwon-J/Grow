@@ -1,6 +1,7 @@
 const maria = require("mysql");
 const winston = require("./winston.js");
 const util = require("util");
+// const newFileName = require("./new-file-name.js");
 
 const connection = maria.createConnection({
   host: process.env.DB_HOST,
@@ -16,69 +17,138 @@ connection.connect((error) => {
   winston.info("Successfully connected to the database.");
 });
 
-const query = util.promisify(connection.query).bind(connection);
+// const queryPromise = util.promisify(connection.query).bind(connection);
+const queryPromise = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    connection.query(sql, params, (error, results, fields) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
 
 // 시리얼 넘버 확인하기
 const checkSerial = async (serial) => {
   winston.info(`checkSerial called. serial: ${serial}`);
-  let sql = "select * from `pot` where `serial_number`=?";
+  let sql =
+    "select pot.member_index, character_number as cnum from `pot` left join `plant` on pot.index = plant.pot_index where `serial_number`=?";
 
   try {
-    let result = await query(sql, [serial]);
+    let result = await queryPromise(sql, [serial]);
 
-    if (result.length == undefined || result.length === 0) {
+    if (result.length === undefined || result.length === 0) {
       return "not exist";
-    } else if (result[0].member_index == null) {
+    } else if (result[0].member_index === null) {
       return "unregistered";
     }
-    return "ok";
+    return result[0].cnum;
   } catch (error) {
     winston.error(error);
     return "error";
   }
+};
 
-  // connection.query(query, [serial], (error, result) => {
-  //   console.log(result);
-  //   console.log(error);
-  //   if (result.length == undefined || result.length === 0) {
-  //     return "not exist";
-  //   } else if (result[0].member_index == null) {
-  //     return "unregistered";
-  //   } else if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return "ok";
-  // });
+const setCnum = async (serial, cnum) => {
+  winston.info(`setCnum called. serial: ${serial}, cnum: ${cnum}`);
+  let sql =
+    "select plant.index as `index` from `pot` left join `plant` on pot.index = plant.pot_index where `serial_number`=?";
+
+  try {
+    let result = await queryPromise(sql, [serial]);
+
+    if (result.length == undefined || result.length === 0) {
+      winston.info(`error occured in setCnum: not exist`);
+      return;
+    } else if (result[0].index == null) {
+      winston.info(`error occured in setCnum: unregistered`);
+      return;
+    }
+    let index = result[0].index;
+    sql = `update plant set character_number = ? where \`index\` = ?`;
+    await queryPromise(sql, [cnum, index]);
+    winston.info(`update completed in setCnum`);
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+};
+
+// 최신 채팅로그를 가져오기
+const getRecentChatLog = async (serial) => {
+  winston.info(`getRecentChatLog called. serial: ${serial}`);
+  try {
+    let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
+    let result = await queryPromise(sql, [serial]);
+    if (result.length === 0) {
+      winston.info(
+        `something wrong happened... there is no plant that pot's serial number is ${serial}`
+      );
+      return [];
+    }
+
+    sql = `SELECT \`role\`, \`content\`
+    FROM chat_log
+    WHERE plant_index = ? AND chatted_date >= NOW() - INTERVAL 3 HOUR
+    ORDER BY chatted_date DESC
+    LIMIT 16;`;
+    result = await queryPromise(sql, [result[0].pindex]);
+
+    // 만약 result가 홀수길이라면 하나 땜
+    if (result.length % 2 === 1) {
+      result.pop();
+    }
+
+    // result를 역순으로 바꾸면서 raw한 json 배열로 바꿈
+    let reversed = [];
+    for (let i = result.length - 2; i >= 0; i = i - 2) {
+      reversed.push({ role: result[i].role, content: result[i].content });
+      reversed.push({
+        role: result[i + 1].role,
+        content: result[i + 1].content,
+      });
+    }
+    return reversed;
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
 };
 
 // 사용자의 입력과 gpt의 대답을 기록하기
 const saveChatLog = async (log) => {
-  winston.info(
-    `saveChatLog called. plantIndex: ${log.plantIndex}, role: ${log.role}`
-  );
-  winston.info(`content: ${log.content}`);
+  winston.info(`saveChatLog called. serial: ${log.serial}, role: ${log.role}`);
   try {
-    let sql =
-      "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)";
-    let result = await query(sql, [log.plantIndex, log.role, log.content]);
-
-    if (result === 0) {
-      return "something wrong happened...";
+    let sql = `select plant.index as pindex from pot join plant on pot.index = plant.pot_index where pot.serial_number = ?`;
+    let result = await queryPromise(sql, [log.serial]);
+    if (result.length === 0) {
+      winston.info(
+        `something wrong happened in saveChatLog... there is no plant that pot's serial number is ${log.serial}`
+      );
+      return -1;
     }
-    return "ok";
+
+    sql =
+      "insert into `chat_log` (`plant_index`, `role`, `content`) values (?, ?, ?)";
+    result = await queryPromise(sql, [result[0].pindex, log.role, log.content]);
+
+    if (result.affectedRows === 0) {
+      winston.info(
+        "something wrong happened in saveChatLog... insert does not run normally"
+      );
+      return -1;
+    }
+
+    winston.info(
+      `Successfully saveChatLog completed. insertId: ${result.insertId}`
+    );
+    return result.insertId;
   } catch (error) {
     winston.error(error);
-    return "error";
+    return -1;
   }
-
-  // connection.query(query, [log.plantIndex, log.role, log.content], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return "ok";
-  // });
 };
 
 // 식물 상황 받아오기
@@ -88,63 +158,41 @@ const getCondition = async (plantIndex) => {
     let sql =
       "select * from `plant_condition` where `plant_index` = ? order by `measurement_date` desc limit 1";
 
-    let result = await query(sql, [plantIndex]);
+    let result = await queryPromise(sql, [plantIndex]);
     return result;
   } catch (error) {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [plantIndex], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 식물 물준 기록 받아오기
 const getWaterLog = async (plantIndex) => {
   winston.info(`getWaterLog called. plantIndex: ${plantIndex}`);
   try {
-    let sql = "select * from `water_log` where plant_index = ?";
-    let result = await query(sql, [plantIndex]);
-    return result;
+    let sql =
+      "select * from `water_log` where plant_index = ? order by watered_date desc limit 1";
+    let result = await queryPromise(sql, [plantIndex]);
+    winston.info(`result: ${result[0].watered_date}`);
+    return result[0];
   } catch (error) {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [plantIndex], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 식물 종의 정보 받아오기
 const getPlantInfoByIndex = async (index) => {
   winston.info(`getPlantInfoByIndex called. index: ${index}`);
   try {
-    let sql = "select * from `plant_info` where index = ?";
+    let sql = "select * from `plant_info` where `index` = ?";
 
-    let result = await query(sql, [index]);
-    return result;
+    let result = await queryPromise(sql, [index]);
+    return result[0];
   } catch (error) {
     winston.error(error);
     return "error";
   }
-
-  // connection.query(query, [index], (error, result) => {
-  //   if (error) {
-  //     winston.error(error);
-  //     return "error";
-  //   }
-  //   return result;
-  // });
 };
 
 // 1. 시리얼을 받는다.
@@ -153,24 +201,210 @@ const getPlantInfoByIndex = async (index) => {
 // 4. 식물 인덱스에 해당하는 최신 센서 데이터를 받는다.
 // 5. 식물 종류 데이터와 비교하여, 좋음/나쁨 등으로 치환하여 반환한다.
 const getConditionGoodOrBad = async (serial) => {
-  winston.info(`getPlantInfoByIndex called. index: ${index}`);
+  winston.info(`getConditionGoodOrBad called. serial: ${serial}`);
   try {
-    let sql = "select * from `plant_info` where index = ?";
+    let sql = `select *, plant.index as pindex
+    from \`pot\` join \`plant\` on pot.index = plant.pot_index 
+    join plant_info on plant.plant_info_index = plant_info.index
+    where serial_number = ?`;
 
-    let result = await query(sql, [index]);
-    return result;
+    let result = await queryPromise(sql, [serial]);
+    if (result.length == 0) {
+      winston.info(`getConditionGoodOrBad returned "no data"`);
+      return "no data";
+    }
+    let limitData = result[0];
+    let lightMsg = null;
+    let moistureMsg = null;
+    let temperatureMsg = null;
+    let waterMsg = null;
+
+    // 최신 센서 데이터 가져오기
+    sql = `select * from plant_condition where plant_index = ?`;
+    result = await queryPromise(sql, [limitData.pindex]);
+    let light = result[0].light;
+    let moisture = result[0].moisture;
+    let temperature = result[0].temperature;
+
+    // 조도 상황 확인
+    if (limitData.light_upper === null) {
+      limitData.light_upper = 1_000_000_000;
+    }
+    if (limitData.light_lower === null) {
+      limitData.light_lower = 0;
+    }
+    if (light < limitData.light_lower) {
+      lightMsg = "부족";
+    } else if (light < limitData.light_upper) {
+      lightMsg = "적당";
+    } else {
+      lightMsg = "과다";
+    }
+
+    // 수분량 상황 확인
+    if (limitData.moisture_upper === null) {
+      limitData.moisture_upper = 1_000_000_000;
+    }
+    if (limitData.moisture_lower === null) {
+      limitData.moisture_lower = 0;
+    }
+    if (moisture < limitData.moisture_lower) {
+      moistureMsg = "부족";
+    } else if (moisture < limitData.moisture_upper) {
+      moistureMsg = "적당";
+    } else {
+      moistureMsg = "과다";
+    }
+
+    // 온도 상황 확인
+    if (limitData.temperature_upper === null) {
+      limitData.temperature_upper = 1_000_000_000;
+    }
+    if (limitData.temperature_lower === null) {
+      limitData.temperature_lower = 0;
+    }
+    if (temperature < limitData.temperature_lower) {
+      temperatureMsg = "부족";
+    } else if (temperature < limitData.temperature_upper) {
+      temperatureMsg = "적당";
+    } else {
+      temperatureMsg = "과다";
+    }
+
+    // 물 주는 주기 확인
+    if (limitData.max_water_period === null) {
+      winston.info("max_water_period is null, so it become 3...");
+      limitData.max_water_period = 3;
+    }
+    // 현재 날짜와 최근 물 준 날짜의 차이가 limitData.max_water_period보다 크면 passed 반환
+    let water = await getWaterLog(limitData.pindex);
+    const currentDate = new Date();
+    const wateredDateTime = new Date(water.watered_date);
+    winston.info(`currentDate: ${currentDate}, wateredDateTime: ${wateredDateTime}`);
+
+    // milliseconds로 계산된 날짜 차이를 일(day) 단위로 변환
+    const differenceInDays = Math.floor(
+      (currentDate - wateredDateTime) / (1000 * 60 * 60 * 24)
+    );
+    const maxWaterInDays = limitData.max_water_period;
+
+    winston.info(
+      `differenceInDays: ${differenceInDays}, maxWaterInDays: ${maxWaterInDays}`
+    );
+    if (differenceInDays <= maxWaterInDays) {
+      waterMsg = "not passed";
+    } else {
+      waterMsg = "passed";
+    }
+
+    winston.info(
+      `getConditionGoodOrBad returned ${lightMsg}, ${moistureMsg}, ${temperatureMsg}, ${temperature}, ${waterMsg}`
+    );
+    return {
+      light: lightMsg,
+      moisture: moistureMsg,
+      temperature: temperatureMsg,
+      temperValue: temperature,
+      water: waterMsg,
+    };
   } catch (error) {
     winston.error(error);
     return "error";
   }
 };
 
+// 부모님의 랜덤질문과 랜덤 접속사 가져오기
+const addRandomQuestion = async (serial) => {
+  winston.info(`addRandomQuestion called. serial: ${serial}`);
+  try {
+    // 랜덤 접속사 가져오기
+    let sql = `SELECT * FROM conjunction
+    ORDER BY RAND()
+    LIMIT 1`;
+    let result = await queryPromise(sql, []);
+    let conjunction = result[0].content;
+
+    //랜덤 질문 가져오기
+    sql = `select question.content as content, question.index as \`index\` from 
+    pot join plant on pot.index = plant.pot_index 
+    join question on plant.index = question.plant_index
+    where pot.serial_number = ? and question.completed = 0
+    ORDER BY RAND() LIMIT 1`;
+    result = await queryPromise(sql, [serial]);
+    if (result.length === 0) {
+      return "";
+    }
+    let question = result[0].content;
+    let index = result[0].index;
+
+    winston.info(
+      `addRandomQuestion returned. {"index":${index}, "result":"${conjunction}, ${question}"}`
+    );
+    // 객체로 내보내기
+    return { index: index, result: `${conjunction}, ${question}` };
+  } catch (error) {
+    winston.error(error);
+    return { index: -1, result: "" };
+  }
+};
+
+const getplantinfo = async (serial) => {
+  winston.info(`getkidsname called. serial: ${serial}`);
+  try {
+    let sql =
+      "select *, plant.index as pindex from `plant` join pot on plant.pot_index = pot.index where `serial_number` = ?";
+
+    let result = await queryPromise(sql, [serial]);
+    return result[0];
+  } catch (error) {
+    winston.error(error);
+    return "error";
+  }
+};
+
+const saveChildAnswer = async (qindex, cindex) => {
+  winston.info(`saveChildAnswer called. qindex: ${qindex}, cindex: ${cindex}`);
+  let sql = `update question set completed = 1, chat_log_index = ?, completed_date = now() where \`index\` = ?`;
+  try {
+    // 업데이트 개시
+    await queryPromise(sql, [cindex, qindex]);
+
+    winston.info(`Successfully saveChildAnswer completed.`);
+    return;
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+};
+
+const updateFilePath = async (qindex, filePath) => {
+  winston.info(
+    `update FilePath called. qindex: ${qindex}, filePath: ${filePath}`
+  );
+  let sql = `update question set audio_file_path = ? where \`index\` = ?`;
+  try {
+    await queryPromise(sql, [filePath, qindex]);
+
+    winston.info(`Successfully updateFilePath completed.`);
+    return;
+  } catch (error) {
+    winston.error(error);
+    return;
+  }
+};
+
 module.exports = {
   connection,
   checkSerial,
+  setCnum,
+  getRecentChatLog,
   saveChatLog,
   getCondition,
   getWaterLog,
   getPlantInfoByIndex,
-  getConditionGoodOrBad
+  getConditionGoodOrBad,
+  addRandomQuestion,
+  getplantinfo,
+  saveChildAnswer,
+  updateFilePath,
 };
