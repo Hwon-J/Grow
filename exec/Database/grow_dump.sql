@@ -19,7 +19,7 @@ CREATE DATABASE IF NOT EXISTS grow;
 
 USE grow;
 
-SET time_zone = 'Asia/Seoul';
+SET GLOBAL time_zone = 'Asia/Seoul';
 
 --
 -- Table structure for table `chat_file`
