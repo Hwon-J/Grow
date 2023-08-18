@@ -1,0 +1,55 @@
+.container{
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgb(220, 233, 224);
+  overflow: hidden;
+  padding-left: 100px;
+  /* background-image: url("../../../public/footer/homeback3.jpg"); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.col1 {
+  height: 100%;
+  width: 100%;
+  padding: 25px;
+}
+.col2 {
+  padding: 25px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* flex-direction: column; */
+}
+
+.img1 {
+  height: 35%;
+  margin-left: 15%;
+  margin-top: 5%;
+}
+.img2 {
+  margin-top: 10%;
+  height: 60%;
+  margin-right: 10%;
+}
+
+.footer{
+  /* color: white;   */
+  height: 100%;
+  margin-left: 20%;
+  font-weight: bold;
+  justify-content: center;
+  display: flex;
+
+  flex-direction: column;
+}
+
+.button{
+  background-color: #fff;
+  border-radius: 10px;
+  border : 0.1rem solid black;
+  font-weight: bold;
+}

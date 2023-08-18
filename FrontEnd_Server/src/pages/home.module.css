@@ -1,0 +1,23 @@
+#root {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.down {
+
+}
+
+.content_title {
+  position: relative;
+}
+.content_title_text {
+  position: absolute;
+  top: 50%; /* 수직 중앙 정렬을 위해 50%로 설정 */
+  left: 20%; /* 수평 중앙 정렬을 위해 50%로 설정 */
+  transform: translate(-50%, -50%); /* 정렬을 위한 transform */
+  font-size: 50px; /* 원하는 폰트 크기로 조정 */
+  color: white;
+}

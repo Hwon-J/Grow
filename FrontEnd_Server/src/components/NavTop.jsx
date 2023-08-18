@@ -31,24 +31,27 @@ function NavTop() {
     };
   }, []);
 
+  // 로그인여부에 따라 navtop의 메뉴가 달라진다.
   return (
     <>
-      <section className="navigation">
+      <section className="navigation" style={{marginBottom:"0px"}}>
         <div className="nav-container">
           <div className="brand">
-            <NavLink to="/home" style={{ textDecoration: "none" }}>
-              <img src={logo} alt="Home" />
+            <NavLink to="/home#sectionOne" style={{ textDecoration: "none" }}>
+              <img style={{height:"50px"}} src={logo} alt="Home" />
             </NavLink>
           </div>
           {windowWidth <= 600 && (
             <div className="nav-mobile" onClick={toggleMobileMenu}>
-              <span className={`hamburger ${showMobileMenu ? "open" : ""}`}></span>
+              <span
+                className={`hamburger ${showMobileMenu ? "open" : ""}`}
+              ></span>
             </div>
           )}
           <nav>
             <ul className={`nav-list ${showMobileMenu ? "mobile-show" : ""}`}>
               <li>
-                <NavLink to="/" style={{ textDecoration: "none" }}>
+                <NavLink to="/home" style={{ textDecoration: "none" }}>
                   Home
                 </NavLink>
               </li>
@@ -57,16 +60,6 @@ function NavTop() {
                   <li>
                     <NavLink to="/profile" style={{ textDecoration: "none" }}>
                       Profile
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/plantinfo" style={{ textDecoration: "none" }}>
-                      plantinfo
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/shop" style={{ textDecoration: "none" }}>
-                      Shop
                     </NavLink>
                   </li>
                 </>

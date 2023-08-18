@@ -2,135 +2,101 @@
   /* border: 0.5px solid black; */
   position: relative;
   width: 250px;
-  height: 512px;
+  height: 420px;
   border-radius: 20px;
-  z-index: 1111;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  perspective: 1000px;
   
-  
+}
+.plantcard-md{
+  width: 100%; 
+  height: 100%; 
+  position: relative;
+  transform-style: preserve-3d;
+  transition: .5s .2s;
+}
+
+.bg, .blob {
+  position: absolute;
+  width: 100%; 
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 }
 
 .bg {
-  position: absolute;
-
-  width: 100%;
-  height: 512px;
-  z-index: 2;
-  background: #229a66;
-  backdrop-filter: blur(24px);
+  background: #1c5222;
   border-radius: 20px;
-  overflow: hidden;
-  
-  outline: 2px solid white;
+  transition: transform 0.3s;
+  transform: perspective(800px) rotateY(0deg);
 }
 
 .blob {
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  left: 50%;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #20b62d;
-  opacity: 1;
-  filter: blur(12px);
-  animation: blob-bounce 5s infinite ease;
+  background-image: url("../../assets/card3.png");
+  transform: rotateY(180deg);
 }
-.plantcard:hover .bg,
-.plantcard:hover .blob,
-.plantcard:hover .plantcard-details,
-.plantcard:hover .text-body,
-.plantcard:hover .text-title {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+
+.plantcard:hover .plantcard-md{
+  transform: rotateY(180deg);
 }
 
 .plantcard img {
-  height: 200px;
+  height: 300px;
   width: 100%;
   object-fit: contain;
 }
-@keyframes blob-bounce {
-  0% {
-    transform: translate(-100%, -100%) translate3d(0, 0, 0);
-  }
-
-  25% {
-    transform: translate(-100%, -100%) translate3d(100%, 0, 0);
-  }
-
-  50% {
-    transform: translate(-100%, -100%) translate3d(100%, 100%, 0);
-  }
-
-  75% {
-    transform: translate(-100%, -100%) translate3d(0, 100%, 0);
-  }
-
-  100% {
-    transform: translate(-100%, -100%) translate3d(0, 0, 0);
-  }
-}
 
 
-.plantcard-details {
-  color : white;
-  height: 100%;
-  width: 100%;
-  gap: 0.5em;
-  display: flex;
-  flex-direction: column; /* Optional: If you want to stack the text vertically */
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
-  text-align: center; /* Center the text horizontally */
-  margin: 0 auto;
-}
- 
  .plantcard-button {
   transform: translate(-50%, 125%);
   width: 45%;
   height: 50px;
   border-radius: 30px;
-  border: 1px solid #333;
+  border: 1px solid #ffffff;
   cursor: pointer;
   background-color: transparent;
   color : white;
-  font-size: 1rem;
+  font-size: 20px;
   padding: .5rem 1rem;
   position: absolute;
   overflow: hidden;
-  left: 50%;
-  bottom: 25%;
+  left: 28%;
+  bottom: 45%;
   opacity: 0;
+  transform: rotateY(180deg);
   transition: all 0.5s ease-in-out;
  }
  
- .card-text-body {
-  color : white !important;
- }
- 
- /*Text*/
+
  .text-title {
-  
-  font-size: 1.5em;
+  font-size: 40px;
   font-weight: bold;
+  margin-bottom: 0;
+  margin-top: -30px;
  }
  
- /*Hover*/
- .plantcard:hover {
-  border-color: #4db374;
-  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
- }
- 
+.card-text-body{
+  font-size: 20px;
+  margin-top: 5px;
+}
+
  .plantcard:hover .plantcard-button {
   transform: translate(-50%, -200%);
   opacity: 1;
   z-index: 1110;
+  transform: perspective(800px) rotateY(180deg);
+ }
+ .plantcard-button:hover {
+  box-shadow: 1px 1px 200px #252525;
+  color: #000000 !important;
+  border: none;
  }
 
  .type1::after {
@@ -139,13 +105,15 @@
   left: 0;
   top: 0;
   transition: all 0.5s ease-in-out;
-  background-color: #333;
+  background-color: #ffffff;
+  color: #000000;
   border-radius: 30px;
   visibility: hidden;
   height: 10px;
   width: 10px;
   z-index: -1;
 }
+
 
 .plantcard-button:hover {
   box-shadow: 1px 1px 200px #252525;

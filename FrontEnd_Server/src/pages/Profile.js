@@ -1,196 +1,125 @@
 //김태형
-import React, { useEffect, useState, useRef } from "react";
-import PlantCard from "../components/plant/plantCard";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Withdrawal from "../components/Withdrawal";
 import NavTop from "../components/NavTop";
-// import Footer from "../components/Footer";
+import {
+  NotcompleteCardSet,
+  completeCardSet,
+} from "../components/profile/CardSet";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import "./Profile.css";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 // import required modules
-import { FreeMode, Pagination } from "swiper/modules";
-import { useDispatch } from "react-redux";
+import { getPlants, withdrawal } from "../utils/ProfileUtils";
 import { logoutUser } from "../reducers/userSlice";
-import homevideo2 from "../assets/homevideo2.mp4";
-import { BASE_URL } from "../utils/Urls";
 
 const Profile = () => {
-  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const token = currentUser.token;
-  console.log(token);
   const navigate = useNavigate();
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
-  const [growinPlant, setGrowinPlant] = useState([
+  const dispatch = useDispatch();
 
-  ]);
-  const [plantComplete, setPlantComplete] = useState([
+  const [slidesPerView, setSlidesPerView] = useState(4); //슬라이드 갯수 조정
 
-  ]);
-  const withdrawal = async () => {
-    try {
-      const response = await axios.delete(`${BASE_URL}/api/user/`,config);
-      alert(response.data.message);
-      dispatch(logoutUser())
-      navigate("/signup");
-    } catch (error) {
-      console.log(error);
+  const calculateSlidesPerView = () => {
+    // 화면당 슬라이드 보여줄 개수 조정
+    const width = window.innerWidth;
+    if (width >= 1200) {
+      setSlidesPerView(4);
+    } else if (width >= 1000) {
+      setSlidesPerView(3);
+    } else if (width >= 770) {
+      setSlidesPerView(2);
+    } else {
+      setSlidesPerView(2);
     }
   };
-  // 식물 종 데이터 변경할 메서드
-  const getPlants = async () => {
-    console.log("보내기 " + token);
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/plant/myplant/`,
-        config
-      );
-      console.log(response.data.data);
-      const plantsList = response.data.data;
-      const growing = plantsList.filter((plant) => plant.complete === 0);
-      const complete = plantsList.filter((plant) => plant.complete === 1);
-      setGrowinPlant(growing);
-      setPlantComplete(complete);
-      console.log(growinPlant);
-      console.log(plantComplete);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
-    getPlants();
+    calculateSlidesPerView();
+    window.addEventListener("resize", calculateSlidesPerView);
+    return () => {
+      window.removeEventListener("resize", calculateSlidesPerView);
+    };
   }, []);
 
-  const NotcompleteCardSet = () => {
-    console.log(growinPlant)
-    return (
-      <div className="cardContainer">
-        {growinPlant.map((plant) => (
-          <SwiperSlide key={plant.index}>
-            <PlantCard  props={plant} />
-          </SwiperSlide>
-        ))}
-      </div>
-    );
-  };
+  const [showInProgress, setShowInProgress] = useState(true); // 보여줄 식물 목록 확인 변수
+  const [growinPlant, setGrowinPlant] = useState([]); //  키우는 식물 리스트
+  const [plantComplete, setPlantComplete] = useState([]); //  완료된 식물 리스트
 
-  const completeCardSet = () => {
-    return (
-      <div className="cardContainer">
-        {plantComplete.map((plant) => (
-          <SwiperSlide key={plant.index}>
-            <PlantCard  props={plant} />
-          </SwiperSlide>
-        ))}
-      </div>
-    );
+  useEffect(() => {
+    async function fetchData() {
+      // axios요청으로 식물 받아오고 키우는 식물, 완료된 식물 변수에 저장
+      const { growing, complete } = await getPlants(token);
+      setGrowinPlant(growing);
+      setPlantComplete(complete);
+    }
+    fetchData();
+  }, [token]); // token이 변경될 때마다 데이터를 가져와서 변경
+
+  const handleWithdrawal = async () => {
+    // 회원탈퇴 요청
+    const result = await withdrawal(token); // 요청이 오류없이 완료되면 로그아웃 후 회원가입 페이지로 이동
+    if (result) {
+      dispatch(logoutUser());
+      navigate("/signup");
+    }
   };
 
   const createCard = () => {
+    // 식물등록 버튼 누르면 등록페이지로 이동
     navigate("/plantinfo");
   };
-  const [showInProgress, setShowInProgress] = useState(true);
 
   return (
-    <div className="profile-total">
+    <>
       <NavTop />
+      <div className="top_section">
+        <h1 style={{ fontSize: "80px" }}>나의 식물 목록</h1>
+      </div>
       <div className="profilepage container">
         <div className="profile-row">
           <div className="container profile row">
-            <div className="col-12">
-              <h1 className="profile_title">PROFILE</h1>
-            </div>
             <div className="button-container">
-              <div>
-                <button
-                  className="btn btn-primary"
+              <div className="btn-left">
+                <div
+                  className={`plant-btn${showInProgress ? " selected" : ""}`}
                   onClick={() => setShowInProgress(true)}
                 >
-                  진행중인 식물
-                </button>
-                <span> | </span>
-                <button
-                  className="btn btn-success"
+                  관리중인 식물
+                </div>
+
+                <div
+                  className={`plant-btn${!showInProgress ? " selected" : ""}`}
                   onClick={() => setShowInProgress(false)}
                 >
                   완료된 식물
-                </button>
+                </div>
               </div>
-              <button className="btn btn-danger signout" onClick={withdrawal}>
-                회원탈퇴
-              </button>
+              <Withdrawal withdrawal={handleWithdrawal}>회원탈퇴</Withdrawal>
             </div>
 
             <div className="container plant">
-              {showInProgress && (
+              {showInProgress && ( // 진행중인 식물 클릭시 NotcompleteCardSet컴포넌트 보여주기
                 <div className="plant-ing">
-                  <div>
-                    <Swiper
-                      slidesPerView={4}
-                      spaceBetween={30}
-                      freeMode={true}
-                      pagination={{
-                        clickable: true,
-                      }}
-                      modules={[FreeMode, Pagination]}
-                      className="mySwiper"
-                    >
-                      {NotcompleteCardSet()}
-                      <SwiperSlide>
-                        <div className="plantcard">
-                          <div className="bg">
-                            <div className="plantcard-details">
-                              <h5>
-                                새 식물친구
-                                <br />
-                                등록해주기
-                              </h5>
-                            </div>
-                          </div>
-                          <div className="blob"></div>
-                          <button
-                            className="button type1 plantcard-button"
-                            onClick={createCard}
-                          >
-                            <span className="btn-txt">+</span>
-                          </button>
-                        </div>
-                      </SwiperSlide>
-                    </Swiper>
-                  </div>
+                  {NotcompleteCardSet(growinPlant, slidesPerView, createCard)}
                 </div>
               )}
-              {!showInProgress && (
+              {!showInProgress && ( // 완료된 식물 클릭시 completeCardSet컴포넌트 보여주기
                 <div className="plant-complete">
-                  <Swiper
-                    slidesPerView={3}
-                    spaceBetween={20}
-                    freeMode={true}
-                    pagination={{
-                      clickable: true,
-                    }}
-                    modules={[FreeMode, Pagination]}
-                    className="mySwiper"
-                  >
-                    {completeCardSet()}
-                  </Swiper>
+                  {completeCardSet(plantComplete, slidesPerView)}
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

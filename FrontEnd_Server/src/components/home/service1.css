@@ -1,0 +1,77 @@
+.service1-main-div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2e7;
+}
+
+.service1-row {
+  height: 90%;
+  
+  padding : 50px auto;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.service1-col{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.col1-service img {
+  width: 80%;
+  border-radius: 17px;
+}
+
+
+.service2-col{
+  /* margin-top: 16% !important; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.col2-h2{
+  font-weight: bold;  
+}
+.col2-p{
+  font-weight: bold;  
+  background-color: rgb(139, 209, 139);
+  display: inline;
+  border-radius: 5px;
+  font-size: 40px;
+  padding: 0 15px 0 10px;
+
+}
+.col2-p2{
+  font-size: 20px;
+  font-weight: 700;
+  /* background-color: #fff; */
+  display: inline;
+}
+.page2-col {
+  left: 10px;
+}
+.page2-col div p, .page2-col h2{
+  /* animation-duration: 7s; */
+  /* animation-play-state: running; */
+  /* animation-name: slidein; */
+}
+/* 
+@keyframes slidein {
+  from {
+    margin-left: 80%;
+    width: 300%
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+} */

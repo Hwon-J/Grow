@@ -7,36 +7,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { createStore } from 'redux';
 import { Provider, useSelector, useDispatch} from 'react-redux';
 
-// 현재 store에 시리얼번호가 등록됐는지에 관한 변수를 바꿔주기 위해 리듀서 설정
-function serial_reducer(current_serial, action) {
-  // 현재 시리얼번호 등록을 모른다면 false값으로 변수 설정
-  if (current_serial === undefined) {
-    return {
-      serial_number : false,
-      name : 'minguk'
-    }
-  }
-  // action type으로 Success가 들어왔을 때 current_serial의 serial_number을 true로 변경
-  if (action.type === 'SUCCESS') {
+// 현재 URL을 가져옵니다.
+const currentURL = window.location.href;
 
-    const new_serial = {...current_serial}
-    new_serial.serial_number = true
-    console.log(new_serial)
-    new_serial.name = "민국"
-    return new_serial
-  }
-  
-  console.log('serial', current_serial)
-}
-// 만들어준 리듀서를 기반으로 store 생성
-const store = createStore(serial_reducer)
+// URL을 '/'로 분할하고, 마지막 부분인 숫자 값을 추출합니다.
+const parts = currentURL.split('/');
+const lastPart = parts[parts.length - 1];
+console.log(lastPart)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-  <Provider store={store}>
-    <App />
-  </Provider>
+  
+    <App id={lastPart} />
+  
   </BrowserRouter>
 );
 

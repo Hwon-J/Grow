@@ -1,8 +1,9 @@
 // const Pot = require("../models/pot-model.js");
-const { error } = require("console");
 const connection = require("../util/connection.js");
 const winston = require("../util/winston");
+const s3 = require("../util/aws-s3.js");
 const util = require("util");
+const path = require("path");
 const queryPromise = util.promisify(connection.query).bind(connection);
 
 exports.getPlantInfos = async (req, res, next) => {
@@ -219,8 +220,8 @@ exports.getPlantByIndex = async (req, res) => {
         plant.plant_info_index as plant_info_index, plant.start_date as start_date, 
         plant.end_date as end_date, plant.plant_name as plant_name, 
         plant.child_name as child_name, plant.child_age as child_age, plant.complete as complete
-      from \`plant\` join \`member\` on plant.member_index = member.index 
-      where member.id = ? and plant.index = ?`;
+        from \`plant\` join \`member\` on plant.member_index = member.index 
+        where member.id = ? and plant.index = ?`;
 
     let result = await queryPromise(query, [id, index]);
     winston.info(
@@ -378,6 +379,155 @@ exports.registQuestion = async (req, res) => {
       .json({ code: 201, message: "요청 처리 성공", data: result });
   } catch (error) {
     winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+// 1. id와 질문의 index로 소유권을 확인한다.
+// 2. 소유권이 있다면 음성 파일을 전송한다.
+exports.getAnswerById = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController getAnswerById called. ID: ${id}, Question Index: ${index}`
+  );
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+
+    // 사용자, 사용자의 식물, 그 식물에 등록된 질문들을 조회
+    let query = `select * 
+    from \`member\` join \`plant\` on member.index = plant.member_index
+    join \`question\` on plant.index = question.plant_index
+    join \`pot\` on pot.index = plant.pot_index
+    where \`member\`.id = ? and question.index = ?
+    `;
+    let result = await queryPromise(query, [id, index]);
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    if (result.length === 0) {
+      return res
+        .status(403)
+        .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
+    }
+
+    // let keyPath = `${result[0].serial_number}/${result[0].audio_file_path.slice(2)}`
+    let keyPath = result[0].audio_file_path;
+
+    const params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: keyPath,
+      Expires: 60 * 5,
+    };
+
+    s3.getSignedUrl("getObject", params, (err, url) => {
+      winston.info(`returned url: ${url}`);
+      if (err) {
+        winston.info("Failed to generate presigned URL");
+        return res
+          .status(500)
+          .json({ error: "Failed to generate presigned URL" });
+      }
+      res.setHeader('Content-Type', 'audio/mpeg');
+      return res
+        .status(201)
+        .json({ code: 200, message: "URL 생성성공", presignedUrl: url });
+    });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+// 1. id와 질문의 index로 소유권을 확인한다.
+// 2. 소유권이 있다면 삭제를 진행한다.
+exports.deleteQuestion = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController deleteQuestion called. ID: ${id}, Question Index: ${index}`
+  );
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+
+    // 사용자, 사용자의 식물, 그 식물에 등록된 질문들을 조회
+    let query = `select * 
+    from \`member\` join \`plant\` on member.index = plant.member_index
+    join \`question\` on plant.index = question.plant_index
+    where \`member\`.id = ? and question.index = ?
+    `;
+
+    let result = await queryPromise(query, [id, index]);
+    if (result.length === 0) {
+      await queryPromise("COMMIT");
+      return res
+        .status(403)
+        .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
+    }
+
+    // 삭제 진행
+    query = `delete from question where \`index\` = ?`;
+    result = await queryPromise(query, [index]);
+
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    winston.info(`plantController deleteQuestion successfully completed`);
+    return res
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    winston.error(error);
+    return res.status(500).json({ code: 500, message: "서버 오류" });
+  }
+};
+
+exports.deletePlantByIndex = async (req, res) => {
+  const id = req.decoded.id;
+  const index = req.params.index;
+  winston.info(
+    `plantController deletePlantByIndex called. ID: ${id}, Plant Index: ${index}`
+  );
+  try {
+    // 트랜잭션 시작
+    await queryPromise("START TRANSACTION");
+
+    // 권한이 있는지 확인
+    let sql = `select *, plant.index as pindex from \`plant\` join \`member\` on plant.member_index = member.index where plant.index = ? and id = ?`;
+    let result = await queryPromise(sql, [index, id]);
+
+    // 권한이 없으면 리턴
+    if (result.length === 0) {
+      winston.info(
+        `plantController deletePlantByIndex returned 400. Forbidden`
+      );
+      await queryPromise("COMMIT");
+      return res
+        .status(400)
+        .json({ code: 400, message: "권한이 없거나 존재하지 않는 index" });
+    }
+
+    // 권한이 있으면 삭제 진행
+    sql = `delete from \`plant\` where \`index\` = ?`;
+    result = await queryPromise(sql, [result[0].pindex]);
+
+    // 트랜잭션 커밋
+    await queryPromise("COMMIT");
+
+    if (result.affectedRows === 0) {
+      winston.info(`plantController deletePlantByIndex 0 row deleted`);
+      return res.status(202).json({ code: 202, message: "삭제된 데이터 없음" });
+    }
+    winston.info(`plantController deletePlantByIndex successfully completed`);
+    return res
+      .status(201)
+      .json({ code: 201, message: "요청 처리 성공", data: result });
+  } catch (error) {
+    // 오류 발생 시 롤백
+    await queryPromise("ROLLBACK");
+    winston.error("error occurred during transaction " + error.message);
     return res.status(500).json({ code: 500, message: "서버 오류" });
   }
 };

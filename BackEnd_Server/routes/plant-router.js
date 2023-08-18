@@ -19,4 +19,10 @@ router.get("/quest/:index", verify, plantController.getQuestionList);
 
 router.post("/quest/:index", verify, plantController.registQuestion);
 
+router.get("/quest/:index/audio", verify, plantController.getAnswerById);
+
+router.delete("/quest/:index", verify, plantController.deleteQuestion);
+
+router.delete("/myplant/:index", verify, plantController.deletePlantByIndex)
+
 module.exports = router;

@@ -1,6 +1,36 @@
 # BackEnd_Server 사용 설명서
-
 모든 응답은 json 형식입니다
+
+## 시작하기
+### 환경변수
+- .env 파일을 루트에 만들어야 합니다.
+- .env 파일에 들어가야 하는 환경변수는 이하와 같습니다(빈 값은 상황에 맞게 바꿀 것)
+```
+PORT = 30001
+
+# 포팅 메뉴얼 참고
+DB_HOST = ""
+DB_USER = ""
+DB_PASSWORD = ""
+DB_NAME = "grow"
+DB_PORT = 3306
+
+# 이 값은 아무값이나 써도 괜찮음
+JWT_SECRET_KEY = ""
+
+# 포팅 메뉴얼 참고
+AWS_REGION = ap-northeast-2
+AWS_ACCESS_KEY = ""
+AWS_SECRET_KEY = ""
+AWS_BUCKET = ""
+```
+
+### 설치
+이하의 코드로 설치 후 실행합니다
+```
+npm install
+node server
+```
 
 ## 회원 관련
 
@@ -312,8 +342,45 @@
     - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
     - 서버 오류: { code: 500, message: "서버 오류" }
 
+### 특정 식물에 등록한 질문에 대한 답변음성 조회하기
+- 방식: GET
+- 서버IP: 기본URI/quest/:index/audio
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 200, message: 요청한 파일의 URL} 
+    - 유효하지 않은 id 또는 index: { code: 202, message: "유효하지 않은 id 또는 index"}
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
 ### 특정 질문 삭제하기
-- 미구현
+- 방식: DELETE
+- 서버IP: 기본URI/quest/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 201, message: "요청 처리 성공" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 권한이 없거나 존재하지 않는 index의 질문: { code:400, message: "권한이 없거나 존재하지 않는 index"}
+    - 서버 오류: { code: 500, message: "서버 오류" }
+
+### 특정 식물 삭제하기
+- 방식: DELETE
+- 서버IP: 기본URI/myplant/:index
+- 요청: headers에 JWT token을 Authorization라는 이름으로 넣을 것
+- 응답:
+  - 성공
+    - 요청처리 성공:{ code: 201, message: "요청 처리 성공" }
+    - 삭제된 데이터 없음:{ code: 202, message: "삭제된 데이터 없음" }
+  - 실패
+    - 만료된 토큰: { code: 401, message: "토큰이 만료되었습니다." }
+    - 유효하지 않은 토큰: { code: 401, message: "유효하지 않은 토큰입니다." }
+    - 권한이 없거나 존재하지 않는 index의 질문: { code:400, message: "권한이 없거나 존재하지 않는 index"}
+    - 서버 오류: { code: 500, message: "서버 오류" }
 
 ## 센서 관련
 
@@ -357,3 +424,25 @@
     - 등록 실패: { code: 202, message: "등록 실패" }
   - 실패
     - 서버 오류: { code: 500, message: "서버 오류" }
+
+## 기타 Util 폴더 설명
+### auth.js
+- 현재 기능을 tokenVerifier.js에 넘겨준 것 같으나, 혹시 모르니 그대로 둔 파일입니다.
+- 추후 삭제해도 무방할 듯 합니다
+
+### aws-s3.js
+- AWS S3 서버에 접속하기 위한 기능을 담고 있습니다.
+
+### connection.js
+- mariaDB에 접속하기 위한 connection을 생성합니다
+
+### swagger.js
+- 스웨거를 사용하기 위해 만들어든 파일입니다
+- 현재 백엔드 서버에 스웨거가 제대로 구축되어 있지 않으므로 사실상 없는 기능이라고 봐도 무방합니다
+- 삭제해도 좋지만, 관련 코드도 같이 지워야 하니 주의
+
+### tokenVerifier.js
+- JWT 토큰이 유효한지 아닌지 미리 판단하는 미들웨어 입니다.
+
+### winston.js
+- 로깅을 위해 사용합니다. 콘솔과 log파일로 출력합니다

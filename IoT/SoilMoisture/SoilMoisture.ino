@@ -12,7 +12,9 @@ void setup() {
 }
 
 void loop() {
-  soilMoistureValue = analogRead(A0);  //put Sensor insert into soil
+  val1=analogRead(A0)
+  val2=analogRead(A3)
+  soilMoistureValue = (val1+val2)/2;  //put Sensor insert into soil
 
   Serial.print("soilMoistureValue : ");
   Serial.println(soilMoistureValue);
