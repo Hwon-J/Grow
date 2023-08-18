@@ -1,19 +1,18 @@
 # Porting Guide
+
+## 버전 정리
+- node.js: v18.16.1
+- MariaDB:  11.0.2-MariaDB-1:11.0.2+maria~ubu2204
+- React.js: 18.2.0
+- Python: 3.9.2
+
 ## DB
 - 사용 프로그램: MariaDB
 ### grow_dump.sql 실행하기
-#### 방법 1: mysql WorkBench 사용하기
 1. mysql WorkBench 홈에서 "MySQL Connections"옆의 + 아이콘을 누른다.
 2. 적당한 Connection Name을 지어주고(예: MariaDB), Hostname, Port, Username을 쓴다. 만약 mariadb를 깐 뒤 별도의 처리를 하지 않았다면 기본 값들로 진행해도 좋다.
 3. (선택사항) Password의 Store in vault를 눌러 저장해두면, 해당 DB를 사용할때마다 비밀번호를 입력하지 않아도 좋다
 4. OK를 눌러 완성하고 나면, 이제 WorkBench에서 SQL 파일을 열어서 전체 실행을 한다.
-
-#### 방법 2: CLI 사용하기
-1. mariaDB가 설치된 폴더 안의 bin 폴더를 들어간다.
-2. 탐색기 주소창에 cmd을 친다
-3. `mysql -h [호스트] -u [유저명] -p`을 친다.
-4. 비밀 번호를 친다.
-5. `source [실행할 SQL 파일의 절대 경로];`를 친다.
 
 ## 도커
 1. 도커 설치(https://wooono.tistory.com/10)
@@ -100,7 +99,6 @@ docker run -p 3000:3000 -d --name docker-displayserver-demo-container \
 -e PORT=3000 \
 docker-displayserver-demo
 ```
-
 
 ## ChatGPT_Server
 ### .env 파일
